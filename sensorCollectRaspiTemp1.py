@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import os
 import time
 import datetime
@@ -8,9 +8,9 @@ import mysql.connector
 
 # Get config info
 try:
-    f = open('/home/pi/source/monitor/.sqlpassword')
+#   TODO clean this up and DO it properly
+    f = open('/home/pi/source/JPHmonitor/.sqlpassword')
     sqlpassword=f.read().strip()
-#   print ("sqlpassword: %s" % (sqlpassword))
     f.close
 except:
     print ("Unexpected error: opening .sqlpassword")
@@ -20,12 +20,11 @@ try:
 	cnx = mysql.connector.connect(user='root', password=sqlpassword,
                               host='localhost',
                               database='Sensors')
-
-
 except:
 	print ("Cannot Connect to SQL")
 	raise
 
+# GLOBAL
 add_temp = ("INSERT INTO RaspiTemp1 "
                "(Timestamp, Value) "
                "VALUES (%s, %s)")

@@ -119,14 +119,11 @@
 		}
 		myurl = JSON.stringify(myurl);
 		u="sensorSQLupdate.php?query=" + encodeURI( myurl );
-//		console.log(" url: ", u);
 
 		// process the result
 		d3.json(u, function(answer) {
-//			console.log(data[0]);
 			for (row = 0; row < answer.length; row++) {
 				var key=answer[row][0];
-//				console.log(key, answer[row].timestamp, answer[row].value);
 				var temp = {
 					timestamp: parseDate(answer[row].timestamp),
 					value: +answer[row].value
@@ -154,7 +151,6 @@
 			inProgress = false;
 		});
 
-		//console.log("The Data: ", data);
 	}
 
 	/*
@@ -177,9 +173,7 @@
 			data.push(temp);
 		});
  		initDimensions();
-		//
-		// TODO: Set date and time for autoupdate
-		//
+
 		if ( myBehavior.secondsToShow != "" ) {
 			maxTime = new Date();
 			minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
@@ -246,7 +240,6 @@
 
 	/*
 	 * Creates the SVG elements
-	 * TODO: Finish this!!!!
 	 */
 	var createGraph = function() {
 		// Add an SVG element with the desired dimensions and margin.
@@ -288,7 +281,6 @@
 		lineFunctionSeriesIndex  = -1;
 
 		// Create automated color domain
-		// TODO Let the user determine their own colors
 		color.domain(meta.names);
 
 		// Create the line function() !!! Remember lineFunctionSeriesIndex bodge
@@ -305,18 +297,13 @@
 				if ( meta.yaxes[lineFunctionSeriesIndex]  == "Right" ) {
 					return yRight(d.value);
 				} else {
-			//debug("We are here");
-				// create moving average
+
+		  // TODO (think of a more elligent way to do this) moving average
           if (i == 0) {
               prevPrevVal  = yLeft(d.value);
               prevVal = yLeft(d.value);
               curVal =  yLeft(d.value);
-          } else if (i > 0) {
-              prevPrevVal = prevVal;
-              prevVal = curVal;
-              curVal = (prevVal + yLeft(d.value)) / 2.0;
-          } 
-/*          } else if (i == 1) {
+          } else if (i == 1) {
               prevPrevVal = prevVal;
               prevVal = curVal;
               curVal = (prevVal + yLeft(d.value)) / 2.0;
@@ -325,7 +312,6 @@
               prevVal = curVal;
               curVal = (prevPrevVal + prevVal + yLeft(d.value)) / 3.0;
           }
-*/
           return curVal;
 					//return yLeft(d.value);
 				}
@@ -405,9 +391,6 @@
 				TO = setTimeout(handleWindowResizeEvent, 200); 
 		});
 
-		//
-		// TODO: Setup autoupdate timer
-		//
 		if ( myBehavior.secondsToShow != "" ) {
 			interval = setInterval(function () {
 				self.refreshData();
@@ -718,9 +701,6 @@
 		} else {
 			var v = 0;
 		}
-
-//		debug("End get Value. date: " + xValue + " value: " + v);
-//		console.log(data[index].name, xValue, v, i);
 		return {value: v, date: xValue };
 	}
 
@@ -874,16 +854,7 @@
 		if ( myBehavior.secondsToShow != "" ) {
 			//debug("Start:" + minTime + " End:" + maxTime);
 			x = d3.time.scale()
-				.domain([minTime,
-				maxTime
-/* TODO : figure out a way to process data because clocks are not in sync
-					d3.max(data, function(m) {
-						return d3.max(m.values, function(v) {
-							return v.timestamp;
-						});
-					})
-*/
-				])
+				.domain([minTime,maxTime])
 				.range([0, w]);
 		} else {
 			x = d3.time.scale()

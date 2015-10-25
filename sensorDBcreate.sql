@@ -4,6 +4,17 @@ GRANT ALL PRIVILEGES ON Sensors.* TO 'Sensors_admin'@'localhost' IDENTIFIED BY '
 FLUSH PRIVILEGES;
 
 USE Sensors;
+/* The temperature of the Raspi itself */
+CREATE TABLE `RaspiTemp1` (
+  `Timestamp` timestamp NOT NULL,
+  `Value` numeric(7,3) NOT NULL,
+  PRIMARY KEY (`Timestamp`),        
+  UNIQUE KEY `Timestamp` (`Timestamp`)
+)
+ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+/* TODO Cleanup these tables ( they are for development only) */
 CREATE TABLE `AirTemperature1` (
   `Timestamp` timestamp NOT NULL,
   `Value` numeric(7,3),
@@ -23,13 +34,6 @@ CREATE TABLE `Fan1` (
   `Timestamp` timestamp NOT NULL,
   `Value` integer NOT NULL,
   PRIMARY KEY (`Timestamp`),	      
-  UNIQUE KEY `Timestamp` (`Timestamp`)
-)
-ENGINE=MyISAM DEFAULT CHARSET=latin1;
-CREATE TABLE `RaspiTemp1` (
-  `Timestamp` timestamp NOT NULL,
-  `Value` numeric(7,3) NOT NULL,
-  PRIMARY KEY (`Timestamp`),        
   UNIQUE KEY `Timestamp` (`Timestamp`)
 )
 ENGINE=MyISAM DEFAULT CHARSET=latin1;
