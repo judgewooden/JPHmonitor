@@ -1,0 +1,1025 @@
+/**
+	Courtesy: http://bl.ocks.org/benjchristensen/2657838
+**/
+
+/*
+ *
+ * Create a draw a new graph
+ * 
+ * Arguments:
+ *	containerOd => id of Containter to inser SVG
+ *			TODO: Allow HTML to pass on margins (use constants for now)
+ *  data => a dictionary containing:
+ *	 displayNames => Name of the data series to the users
+ *	 sensorSource => The Database table containing the data
+ *	 sensorColumn => The name of the Column that should this function will plot
+ *
+ */
+
+ function LineGraph(argsMap) {
+ 	/* *************************************************************** */
+	/* public methods */
+	/* *************************************************************** */
+	var self = this;
+
+	/* *************************************************************** */
+	/* private variables */
+	/* *************************************************************** */
+	// the div we insert the graph into
+	var containerId;
+	var container;
+
+	// Detail some behavior
+	var myBehavior = {};
+	var legendFontSize = 12;
+	var transitionDuration = 300;
+
+	// Details of the data 
+	var data = [];      // D3 data for each line
+	var meta = {};      // meta data describing data for each line
+
+	// D3 functions
+	var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+	var bisectDate = d3.bisector(function(d) { return d.timestamp; }).right;
+
+	// define dimensions
+	var margin = [ 20, 40, 30, 40]; // margins (top, right, bottom, left)
+	var w, h; // Width & height
+
+	// D3 structures
+	var graph;
+	var x, xAxis;
+	var yLeft, yAxisLeft, yRight, yAxisRight, haveYAxisLeft, haveYAxisRight;
+	var color = d3.scale.category10();
+	var drawline, linesGroup, lines, linesGroupText;
+	var hoverContainer, hoverLine, hoverLineXOffset, hoverLineYOffset,
+														hoverLineGroup;
+	var lineFunctionSeriesIndex;    // special bodge !!! pay attention to it
+
+	// user behavior 
+	var menuButtons = [['update','Updating'], ['pause','Pause']];
+	var updatePaused = 'update';
+	var userCurrentlyInteracting = false;
+	var currentUserPositionX = -1;
+
+	// scrolling graph fields
+	var interval;
+	var minTime = new Date();
+	var maxTime = new Date();
+	var inProgress = false;
+
+	/* *************************************************************** */
+	/* Initiationzation and Validation */
+	/* *************************************************************** */
+
+	var _init = function() {
+		containerId = getRequiredVar(argsMap, 'containerId');
+		container = document.querySelector('#' + containerId);
+
+		loadData(getRequiredVar(argsMap, 'data'));
+		debug("Continues with processData()");
+
+	}
+
+	/*
+	 * Manager Data Update
+	 */
+
+	this.refreshData = function() {
+		maxTime = new Date();
+		minTime = new Date(maxTime .getTime()
+								- 1000 * myBehavior.secondsToShow);
+
+		if ( inProgress ){
+			redrawAxes(false);	
+			redrawLines(false);
+			return;
+		} else {
+			inProgress = true;
+		}
+
+		// build a single query
+		var myurl = [];
+		for (var key in data) {
+			//debug(key);
+
+			lastelem = data[key].values.length - 1;
+			if (lastelem < 1) {
+				queryTime=minTime.toMysqlFormat();
+			} else {
+				queryTime=data[key].values[lastelem].timestamp.toMysqlFormat();
+			};
+			var temp = {
+				table: meta.tables[key],
+				column: meta.columns[key],
+				key: key,
+				time: queryTime
+			};
+			myurl.push(temp);
+		}
+		myurl = JSON.stringify(myurl);
+		u="sensorSQLupdate.php?query=" + encodeURI( myurl );
+//		console.log(" url: ", u);
+
+		// process the result
+		d3.json(u, function(answer) {
+//			console.log(data[0]);
+			for (row = 0; row < answer.length; row++) {
+				var key=answer[row][0];
+//				console.log(key, answer[row].timestamp, answer[row].value);
+				var temp = {
+					timestamp: parseDate(answer[row].timestamp),
+					value: +answer[row].value
+				};
+				data[key].values.push(temp);
+			}
+
+			redrawAxes(false);	
+			redrawLines(false);
+
+			$(container).trigger('LineGraph:dataModification');
+
+			//pop old data from our cache
+			for (var key in data) {
+				for (elem in data[key].values) {
+					v1=new Date(data[key].values[elem].timestamp .getTime());
+					if (v1>minTime) {
+						break;
+					}
+				}
+				if (elem > 0 ) {
+					data[key].values.splice(0, elem);
+				}
+			}
+			inProgress = false;
+		});
+
+		//console.log("The Data: ", data);
+	}
+
+	/*
+	 * Prepare the data for D3 
+	 */
+	var processData = function(rawdata) {
+		$.each(rawdata, function(key, value) {
+			var temp = {
+				name: meta.names[key],
+				table: meta.tables[key],
+				column: meta.columns[key],
+				yaxis: meta.yaxes[key],
+				values: $.each(value.values, function(k, d){
+					d.timestamp=parseDate(d.timestamp);
+					d.value=+d.value;
+					return { k, d };
+				})
+			};
+			console.log(temp);
+			data.push(temp);
+		});
+ 		initDimensions();
+		//
+		// TODO: Set date and time for autoupdate
+		//
+		if ( myBehavior.secondsToShow != "" ) {
+			maxTime = new Date();
+			minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
+		}
+
+ 		createGraph();
+
+
+	}
+
+	/*
+	 * Load all the data from SQL using defers before plotting
+	 */
+	var loadData = function(dataMap) {
+
+		// Load data for graph behavior
+		myBehavior.secondsToShow = getOptionalVar(dataMap,
+											'graphSecondsToShow', "");
+		myBehavior.tickLine = getOptionalVar(dataMap, 'graphTickLine', "");
+		myBehavior.interval = getOptionalVar(dataMap,
+											'graphUpdateInterval', "2");
+		//TODO: program the following
+		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
+		myBehavior.hideLegend = getOptionalVar(dataMap, 'graphHideLegend', "");
+
+		// Load graph meta data
+		meta.names = getRequiredVar(dataMap, 'displayName',
+										"Need to plot something");
+		meta.tables = getRequiredVar(dataMap, 'sensorSource',
+										"Need to get data from somewhere");
+		meta.columns = getRequiredVar(dataMap, 'sensorColumn',
+										"Need to have value to show");
+		meta.yaxes = getOptionalVar(dataMap, 'yAxisLocation',
+										"Left");
+		// Load graph raw data
+		var rawdata = [];
+		var u;
+		var defers = [], defer;
+		// TODO rewrite to be a multi element query
+		for ( index = 0; index < meta.names.length; ++index ) {
+			u="sensorSQLinitial.php?source=" + meta.tables[index] +
+				"&column=" + meta.columns[index];
+//TODO			"&index=" + index;
+			if ( myBehavior.secondsToShow != "" ) {
+				u = u + "&seconds=" + myBehavior.secondsToShow;
+			}
+			console.log(u);
+			defer = $.ajax({
+				type : "GET",
+				dataType : "json",
+				url: u,
+				success: function(fromSQL) {
+				 	rawdata.push({
+						values: fromSQL
+					});
+				}
+			});
+			defers.push(defer);
+		}
+		$.when.apply(window, defers).done(function(){
+			processData(rawdata);
+		});
+	}
+
+	/*
+	 * Creates the SVG elements
+	 * TODO: Finish this!!!!
+	 */
+	var createGraph = function() {
+		// Add an SVG element with the desired dimensions and margin.
+		graph = d3.select("#" + containerId).append("svg:svg")
+			.attr("class", "line-graph")
+			.attr("width", w + margin[1] + margin[3])
+			.attr("height", h + margin[0] + margin[2])	
+			.append("svg:g")
+			.attr("transform", "translate(" + margin[3] + "," +
+												margin[0] + ")");
+
+		initX();
+
+		// Add the x-axis.
+		graph.append("svg:g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + h + ")")
+			.call(xAxis);
+
+		initY();
+
+		// Add the y-axis to the left
+		if (hasYaxisLeft) {
+			graph.append("svg:g")
+				.attr("class", "y axis left")
+				.attr("transform", "translate(-5,0)")
+				.call(yAxisLeft);
+		}
+
+		// Add the y-axis to the right
+		if (hasYaxisRight) {
+			graph.append("svg:g")
+				.attr("class", "y axis right")
+				.attr("transform", "translate(" + (w+10) + ",0)")
+				.call(yAxisRight);
+		}
+
+		// Remember to use the bodge !!!
+		lineFunctionSeriesIndex  = -1;
+
+		// Create automated color domain
+		// TODO Let the user determine their own colors
+		color.domain(meta.names);
+
+		// Create the line function() !!! Remember lineFunctionSeriesIndex bodge
+		var prevPrevVal = 0;
+      	var prevVal = 0;
+      	var curVal = 0;
+      	drawline = d3.svg.line()
+            .interpolate("monotone")
+			.x( function(d, i) { return x(d.timestamp); })
+			.y( function(d, i) { 
+				if ( i == 0 ) {
+					lineFunctionSeriesIndex++;
+				}
+				if ( meta.yaxes[lineFunctionSeriesIndex]  == "Right" ) {
+					return yRight(d.value);
+				} else {
+			//debug("We are here");
+				// create moving average
+          if (i == 0) {
+              prevPrevVal  = yLeft(d.value);
+              prevVal = yLeft(d.value);
+              curVal =  yLeft(d.value);
+          } else if (i > 0) {
+              prevPrevVal = prevVal;
+              prevVal = curVal;
+              curVal = (prevVal + yLeft(d.value)) / 2.0;
+          } 
+/*          } else if (i == 1) {
+              prevPrevVal = prevVal;
+              prevVal = curVal;
+              curVal = (prevVal + yLeft(d.value)) / 2.0;
+          } else {
+              prevPrevVal = prevVal;
+              prevVal = curVal;
+              curVal = (prevPrevVal + prevVal + yLeft(d.value)) / 3.0;
+          }
+*/
+          return curVal;
+					//return yLeft(d.value);
+				}
+			});
+
+		// Draw the line
+		lines = graph.append("svg:g")
+			.attr("class", "lines")
+			.selectAll("path")
+			.data(data);
+
+		// Create a hover line
+		hoverContainer = container.querySelector('g .lines');
+
+		$(container).mouseleave(function(event) {
+			handleMouseOutGraph(event);
+		});
+
+		$(container).mousemove(function(event) {
+			handleMouseOverGraph(event);
+		});
+
+		linesGroup = lines.enter().append("g")
+			.attr("class", function(d, i) {
+				return "line_group series_" + i;
+			});
+
+		linesGroup.append("path")
+			.attr("class", function(d, i) {
+				return "line series_" + i;
+			})
+			.attr("fill", "none")
+			.attr("stroke", function(d, i) {
+				return color(meta.names[i]);
+			})
+			.attr("d", function(d, i) {
+				return drawline(d.values)
+			})
+			.on('mouseover', function(d,i) {
+				handleMouseOverLine(d,i);
+			});
+		
+		// add line label to line group
+		linesGroupText = linesGroup.append("svg:text");
+		linesGroupText.attr("class", function(d, i) {
+			return "line_label series_" + i;
+		})
+		.text(function(d, i) {
+			return "";
+		});
+
+		hoverLineGroup = graph.append("svg:g")
+			.attr("class", "hover-line");
+
+		hoverLine = hoverLineGroup
+			.append("svg:line")
+			.attr("x1", 10).attr("x2", 10)
+			.attr("y1", 0).attr("y2", h);
+
+		hoverLine.classed("hide", true);
+
+		// Call functions to do additional data
+		createDateLabel();
+		createLegend();
+		// only show menu if we are updating
+		if ( myBehavior.secondsToShow != "" ) {
+			createMenuButtons();
+		}
+		setValueLabelsToLatest();
+
+
+		// window resize listener
+		var TO = false;
+		$(window).resize(function(){
+			if(TO !== false)
+				clearTimeout(TO);
+				TO = setTimeout(handleWindowResizeEvent, 200); 
+		});
+
+		//
+		// TODO: Setup autoupdate timer
+		//
+		if ( myBehavior.secondsToShow != "" ) {
+			interval = setInterval(function () {
+				self.refreshData();
+			}, myBehavior.interval * 1000);
+		}
+
+		console.log("We have finished: ", myBehavior);
+	}
+
+
+	/**
+	* Called when the window is resized to redraw graph accordingly.
+	*/
+	var handleWindowResizeEvent = function() {
+		//debug("Window Resize Event [" + containerId + "] => resizing graph")
+		initDimensions();
+		initX();
+		initY();
+
+		// reset width/height of SVG
+		d3.select("#" + containerId + " svg")
+			.attr("width", w + margin[1] + margin[3])
+			.attr("height", h + margin[0] + margin[2]);
+
+		// OOO reset transform of x axis
+		graph.selectAll("g .x.axis")
+			.attr("transform", "translate(0," + h + ")");
+
+		if (hasYaxisRight) {
+			graph.selectAll("g .y.axis.right")
+				.attr("transform", "translate(" + (w+10) + ",0)");
+		}
+
+		legendFontSize = 12;
+		graph.selectAll("text.legend.name")
+			.attr("font-size", legendFontSize);
+		graph.selectAll("text.legend.value")
+			.attr("font-size", legendFontSize);
+
+		graph.select('text.date-label')
+			.transition()
+			.duration(transitionDuration)
+			.ease("linear")
+			.attr("x", w);
+
+		redrawAxes(true);
+		redrawLines(true);
+		redrawLegendPosition(true);
+		setValueLabelsToLatest(true);
+	}
+
+	var redrawLines = function(withTransition) {
+		lineFunctionSeriesIndex  =-1; // Remember this bodge !!!
+
+		// redraw lines
+		if(withTransition) {
+			graph.selectAll("g .lines path")
+				.transition()
+					.duration(transitionDuration)
+					.ease("linear")
+					.attr("d", function(d, i) {
+						return drawline(d.values)
+					})
+					.attr("transform", null);
+		} else {
+			graph.selectAll("g .lines path")
+				.attr("d", function(d, i) {
+					return drawline(d.values)
+				})
+				.attr("transform", null);
+		}
+	}
+
+	/**
+     * Create menu buttons
+	 */
+	var createMenuButtons = function() {
+		var cumulativeWidth = 0;		
+
+		var buttonMenu = graph.append("svg:g")
+				.attr("class", "menu-group")
+			.selectAll("g")
+				.data(menuButtons)
+			.enter().append("g")
+				.attr("class", "menu-buttons")
+			.append("svg:text")
+				.attr("class", "menu-button")
+				.text(function(d, i) {
+					return d[1];
+				})
+				.attr("font-size", "12") 
+				.attr("fill", function(d) {
+					if (d[0] == updatePaused ) {
+						return "black";
+					} else {
+						return "blue";
+					}
+				})
+				.classed("selected", function(d) {
+					if (d[0] == updatePaused ) {
+						return true;
+					} else {
+						return false;
+					}
+				})
+				.attr("x", function(d, i) {
+					var returnX = cumulativeWidth;
+					cumulativeWidth += this.getComputedTextLength()+5;
+					return returnX;
+				})
+				.attr("y", -4)
+				.on('click', function(d, i) {
+					handleMouseClickMenuButton(this, d, i);
+				});
+	}
+
+	var handleMouseClickMenuButton = function(button, buttonData, index) {
+		var cumulativeWidth = 0;		
+
+		if(index == 0) {
+			// start update
+			updatePaused='update';
+			interval = setInterval(function () {
+				self.refreshData();
+			}, myBehavior.interval * 1000);
+		} else if(index == 1){
+			updatePaused='pause';
+			// pause update
+			clearInterval( interval );
+		}
+			
+		graph.selectAll('.menu-button')
+			.text(function(d, i) {
+				if (i == 0) {
+					if (updatePaused == "update" ) {
+						return "Updating";
+					} else {
+						return "Update";
+					}
+				} else {
+					if (updatePaused == "update" ) {
+						return "Pause";
+					} else {
+						return "Paused";
+					}
+				}
+			})
+			.attr("font-size", "12") 
+			.attr("fill", function(d) {
+				if (d[0] == updatePaused ) {
+					return "black";
+				} else {
+					return "blue";
+				}
+			})
+			.classed("selected", function(d) {
+				if (d[0] == updatePaused ) {
+					return true;
+				} else {
+					return false;
+				}
+			})
+			.attr("x", function(d, i) {
+				var returnX = cumulativeWidth;
+				cumulativeWidth += this.getComputedTextLength()+5;
+				return returnX;
+			})
+	}
+		
+	/**
+	 * Create a legend that displays the name of each line with appropriate colo
+	 * and allows for showing the current value when doing a mouseOver
+	 */
+	var createLegend = function() {
+	
+		var legendLabelGroup = graph.append("svg:g")
+			.attr("class", "legend-group")
+			.selectAll("g")
+			.data(meta.names)
+			.enter().append("g")
+			.attr("class", "legend-labels");
+																																			
+		legendLabelGroup.append("svg:text")
+			.attr("class", "legend name")
+			.text(function(d, i) {
+				return d;
+			})
+			.attr("font-size", legendFontSize)
+			.attr("fill", function(d, i) {
+				return color(meta.names[i]);
+			})
+			.attr("y", function(d, i) {
+				return h+28;
+			})
+
+		legendLabelGroup.append("svg:text")
+			.attr("class", "legend value")
+			.attr("font-size", legendFontSize)
+			.attr("fill", function(d, i) {
+				return color(meta.names[i]);
+				})
+			.attr("y", function(d, i) {
+				return h+28;
+			})
+	}
+
+	var redrawLegendPosition = function(animate) {
+		var legendText = graph.selectAll('g.legend-group text');
+			if(animate) {
+				legendText.transition()
+					.duration(transitionDuration)
+					.ease("linear")
+					.attr("y", function(d, i) {
+						return h+28;
+					});	
+			} else {
+				legendText.attr("y", function(d, i) {
+					return h+28;
+				});	
+			}	
+	}
+
+	/**
+	 * Create a data label
+	 */
+	var createDateLabel = function() {
+		var date = new Date();
+		var buttonGroup = graph.append("svg:g")
+			.attr("class", "date-label-group")
+			.append("svg:text")
+			.attr("class", "date-label")
+			.attr("text-anchor", "end")
+			.attr("font-size", "10") 
+			.attr("y", -4)
+			.attr("x", w)
+			.text(date.toDateString() + " " + date.toLocaleTimeString());
+	}
+
+	/**
+	 * Called when a user mouses over a line.
+	 */
+	var handleMouseOverLine = function(lineData, index) {
+//		debug("MouseOver line [" + containerId + "] => " + index);
+		userCurrentlyInteracting = true;
+	}
+
+	/**
+	* Called when a user mouses over the graph.
+	*/
+	var handleMouseOverGraph = function(event) {	
+		var mouseX = event.pageX-hoverLineXOffset;
+		var mouseY = event.pageY-hoverLineYOffset;
+										
+/*
+		debug("MouseOver graph [" + containerId + "] => x: " + mouseX +
+			" y: " + mouseY + "  height: " + h + " event.clientY: " +
+			event.clientY + " offsetY: " + event.offsetY + " pageY: " +
+			event.pageY + " hoverLineYOffset: " + hoverLineYOffset);
+*/
+
+		if(mouseX >= 0 && mouseX <= w && mouseY >= 0 && mouseY <= h) {
+			hoverLine.classed("hide", false);
+
+			// set position of hoverLine
+			hoverLine.attr("x1", mouseX).attr("x2", mouseX);
+			displayValueLabelsForPositionX(mouseX);
+
+			// user is interacting
+			currentUserPositionX = mouseX;
+		} else {
+			handleMouseOutGraph(event)
+		}
+	}
+
+	/**
+	* Called when a user mouses moves out the graph.
+	*/
+	var handleMouseOutGraph = function(event) {	
+
+		hoverLine.classed("hide", true);
+		setValueLabelsToLatest();
+
+		userCurrentlyInteracting = false;
+		currentUserPositionX = -1;
+	}
+
+	/**
+	 * Set the value labels to whatever the latest data point is.
+	 */
+	var setValueLabelsToLatest = function(withTransition) {
+		displayValueLabelsForPositionX(w, withTransition);
+	}
+
+	/**
+	 * Convert back from an X position on the graph to a data value from
+	 *	the given array (one of the lines)
+	 * Return {value: value, date, date}
+	 */
+	
+	var getValueForPositionXFromData = function(xPosition, index) {
+		var xValue = x.invert(xPosition);
+//		debug("Start get Value. Position: " + xPosition + " Index: " + index);
+		var i = bisectDate(data[index].values, xValue, 1);
+		if (i>1) {
+			//console.log(data[index].values[i-1].timestamp,
+			//		data[index].values[i-1].value);
+			var v = Math.round(data[index].values[i-1].value * 10) / 10;
+		} else {
+			var v = 0;
+		}
+
+//		debug("End get Value. date: " + xValue + " value: " + v);
+//		console.log(data[index].name, xValue, v, i);
+		return {value: v, date: xValue };
+	}
+
+	/**
+	 * Display the data values at position X in the legend value labels.
+	 */
+	var displayValueLabelsForPositionX = function(xPosition, withTransition) {
+		var animate = false;
+		if(withTransition != undefined) {
+			if(withTransition) {
+				animate = true;
+			}
+		}
+		
+//		debug("Label: [" + containerId + "], " + xPosition);
+
+		var dateToShow;
+		var labelValueWidths = [];
+
+		graph.selectAll("text.legend.value")
+			.text(function(d, i) {
+				var valuesForX = getValueForPositionXFromData(xPosition, i);
+					dateToShow = valuesForX.date;
+					return valuesForX.value;
+			})
+			.attr("x", function(d, i) {
+				labelValueWidths[i] = this.getComputedTextLength();
+			})
+
+		// position label names
+		var cumulativeWidth = 0;
+		var labelNameEnd = [];
+		
+		graph.selectAll("text.legend.name")
+			.attr("x", function(d, i) {
+				var returnX = cumulativeWidth;
+					cumulativeWidth += this.getComputedTextLength()
+						+4+labelValueWidths[i]+8;
+					labelNameEnd[i] = returnX + this.getComputedTextLength()+5;
+				return returnX;
+			})
+			
+		cumulativeWidth = cumulativeWidth - 8;
+
+		if(cumulativeWidth > w) {
+			legendFontSize = legendFontSize-1;
+
+			graph.selectAll("text.legend.name")
+				.attr("font-size", legendFontSize);
+
+			graph.selectAll("text.legend.value")
+				.attr("font-size", legendFontSize);
+
+			displayValueLabelsForPositionX(xPosition);
+			return;
+		}
+		
+		graph.selectAll("text.legend.value")
+			.attr("x", function(d, i) {
+				return labelNameEnd[i];
+			})
+			
+		graph.select('text.date-label')
+			.text(dateToShow.toDateString() + " "
+				+ dateToShow.toLocaleTimeString())
+
+		if(animate) {
+			graph.selectAll("g.legend-group g")
+				.transition()
+				.duration(transitionDuration)
+				.ease("linear")
+				.attr("transform", "translate(" + (w-cumulativeWidth) +",0)")
+		} else {
+			graph.selectAll("g.legend-group g")
+				.attr("transform", "translate(" + (w-cumulativeWidth) +",0)")
+		}
+	}
+
+	/*
+	 * Allow re-initialzing the y function at any time
+	 */
+	var initY = function() {
+
+		hasYaxisLeft=false;
+		hasYaxisRight=false;
+		for ( index = 0; index < meta.yaxes.length; ++index ) {
+			if ( meta.yaxes[index] == 'Left' ) {
+				hasYaxisLeft = true;
+			}
+			if ( meta.yaxes[index] == 'Right' ) {
+				hasYaxisRight = true;
+			}
+		}
+
+		if (hasYaxisLeft) {
+			yLeft = d3.scale
+				.linear()
+				.domain([
+					d3.min(data.filter( function (f) {
+						return f.yaxis == 'Left';
+					}), function(m) {
+							return d3.min(m.values, function(v) {
+								return v.value;
+						});
+					}),
+					d3.max(data.filter( function (f) {
+						return f.yaxis == 'Left';
+					}), function(m) {
+						return d3.max(m.values, function(v) {
+							return v.value;
+						});
+					})
+				])
+				.range([h, 0])
+				.nice();
+
+			yAxisLeft = d3.svg.axis().scale(yLeft).orient("left");
+		}
+
+		if (hasYaxisRight) {
+			yRight = d3.scale
+				.linear()
+				.domain([
+					d3.min(data.filter( function (f) {
+						return f.yaxis == 'Right';
+					}), function(m) {
+							return d3.min(m.values, function(v) {
+								return v.value;
+						});
+					}),
+					d3.max(data.filter( function (f) {
+						return f.yaxis == 'Right';
+					}), function(m) {
+						return d3.max(m.values, function(v) {
+							return v.value;
+						});
+					})
+				])
+				.range([h, 0])
+				.nice();
+
+			yAxisRight = d3.svg.axis().scale(yRight).orient("right");
+		}
+	}
+
+	/*
+	 * Allow re-initialzing the x function at any time
+	 */
+	var initX = function() {
+
+		if ( myBehavior.secondsToShow != "" ) {
+			//debug("Start:" + minTime + " End:" + maxTime);
+			x = d3.time.scale()
+				.domain([minTime,
+				maxTime
+/* TODO : figure out a way to process data because clocks are not in sync
+					d3.max(data, function(m) {
+						return d3.max(m.values, function(v) {
+							return v.timestamp;
+						});
+					})
+*/
+				])
+				.range([0, w]);
+		} else {
+			x = d3.time.scale()
+				.domain([
+					d3.min(data, function(m) {
+						return d3.min(m.values, function(v) {
+							return v.timestamp;
+						});
+					}),
+					d3.max(data, function(m) {
+						return d3.max(m.values, function(v) {
+							return v.timestamp;
+						});
+					})
+				])
+				.range([0, w]);
+		}
+
+		if ( myBehavior.tickLine != "" ) {
+			xAxis = d3.svg.axis()
+				.scale(x)
+				.tickSize(-h)
+				.tickSubdivide(myBehavior.tickLine);
+		} else {
+			xAxis = d3.svg.axis()
+				.scale(x);
+		}
+	}
+
+	var redrawAxes = function(withTransition) {
+		initY();
+		initX();
+							
+		if(withTransition) {
+		// slide x-axis to updated location
+			graph.selectAll("g .x.axis").transition()
+				.duration(transitionDuration)
+				.ease("linear")
+				.call(xAxis)				  
+
+			if (hasYaxisLeft) {
+				graph.selectAll("g .y.axis.left").transition()
+					.duration(transitionDuration)
+					.ease("linear")
+					.call(yAxisLeft)
+			}
+			if (hasYaxisRight) {
+				graph.selectAll("g .y.axis.right").transition()
+					.duration(transitionDuration)
+					.ease("linear")
+					.call(yAxisRight)
+			}
+		} else {
+			graph.selectAll("g .x.axis")
+				.call(xAxis)				  
+			
+			if (hasYaxisLeft) {
+				graph.selectAll("g .y.axis.left")
+					.call(yAxisLeft)
+			}
+
+			if (hasYaxisRight) {
+				graph.selectAll("g .y.axis.right")
+					.call(yAxisRight)
+			}
+		}
+	}
+
+	/*
+	 * Set height/width dimensions based on container
+	 */
+	var initDimensions = function() {
+		// automatically size to the container using JQuery to get width/height
+		w = $("#" + containerId).width() - margin[1] - margin[3]; // width
+		h = $("#" + containerId).height() - margin[0] - margin[2]; // height
+
+		// make sure to use offset() and not position() as we want it relative
+		//	to the document, not its parent
+		hoverLineXOffset = margin[3]+$(container).offset().left;
+		hoverLineYOffset = margin[0]+$(container).offset().top;
+	}
+
+	/*
+	 * Return the value from argsMap for key or throw error if no value found
+	 */	  
+ 	var getRequiredVar = function(argsMap, key, message) {
+		if(!argsMap[key]) {
+			if(!message) {
+				throw new Error(key + " is required")
+			} else {
+				throw new Error(message)
+			}
+		} else {
+			return argsMap[key]
+		}
+	}
+
+	/*
+	 * Return the value from argsMap for key or defaultValue if no value found
+	 */
+	var getOptionalVar = function(argsMap, key, defaultValue) {
+		if(!argsMap[key]) {
+			return defaultValue
+		} else {
+			return argsMap[key]
+		}
+	}
+
+	/*
+	 * programmers stuff
+	 */
+	var error = function(message) {
+		console.log("ERROR: ", message)
+	}
+
+	var debug = function(message) {
+		console.log("DEBUG: ",  message)
+	}
+																			
+	/*
+	 * function to create SQL date format
+	 */
+	function twoDigits(d) {
+		if(0 <= d && d < 10) return "0" + d.toString();
+		if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+		return d.toString();
+	}
+				
+	Date.prototype.toMysqlFormat = function() {
+    	return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+	};
+
+
+/* *************************************************************** */
+/* execute init now that everything is defined */
+/* *************************************************************** */
+	_init();
+}
+
