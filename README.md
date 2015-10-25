@@ -13,6 +13,7 @@ Control and monitor water cooling using raspi
 The user interface is based on D3 and various displays can be created using paramaters.
 
 Basic Architecture:
+
 	 	- Each components can run on a seperate raspi
 	 	- All data is stored in Sybase
 	 	- All control data is available on the http server
