@@ -51,18 +51,18 @@
 
 	var source = {};
 	// The source of the data and how to display it
-    source["displayName"] = ["Raspi"];
+    source["displayName"] = ["Raspi"];			
 	source["sensorSource"] = ["RaspiTemp1"];
 	source["sensorColumn"] = ["Value"];
 	source["yAxisLocation"] = ["Left"];
 
 	// Instructions for how the graph 
-	source["graphSecondsToShow"] = "1000";
-	source["graphUpdateInterval"] = "1";
-	source["graphTitle"] = "Raspberry Temperatures";
-	source["graphTickLine"] = "";
-	source["graphLeftMin"] = "32";
-	source["graphLeftMax"] = "40";
+	source["graphSecondsToShow"] = 3600;   // If 0 a static graph will be loaded else a dynamic updated graph using graphUpdateInterval  (default =0)
+	source["graphUpdateInterval"] = 1;     // Will update the graph every X seconds (default:2)
+	source["graphTitle"] = "Raspberry Pi Temperatures";   // Title of grap top left
+	source["graphTickLine"] = 0;
+	source["graphLeftMin"] = 0;
+	source["graphLeftMax"] = 40;
 
 	var l1 = new LineGraph({containerId: 'graph1', data: source});
 

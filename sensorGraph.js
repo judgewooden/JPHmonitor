@@ -174,7 +174,7 @@
 		});
  		initDimensions();
 
-		if ( myBehavior.secondsToShow != "" ) {
+		if ( myBehavior.secondsToShow != 0 ) {
 			maxTime = new Date();
 			minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
 		}
@@ -222,7 +222,7 @@
 			u="sensorSQLinitial.php?source=" + meta.tables[index] +
 				"&column=" + meta.columns[index];
 //TODO			"&index=" + index;
-			if ( myBehavior.secondsToShow != "" ) {
+			if ( myBehavior.secondsToShow != 0 ) {
 				u = u + "&seconds=" + myBehavior.secondsToShow;
 			}
 			console.log(u);
@@ -395,11 +395,10 @@
 		createDateLabel();
 		createLegend();
 		// only show menu if we are updating
-		if ( myBehavior.secondsToShow != "" ) {
+		if ( myBehavior.secondsToShow != 0 ) {
 			createMenuButtons();
 		}
 		setValueLabelsToLatest();
-
 
 		// window resize listener
 		var TO = false;
@@ -409,7 +408,7 @@
 				TO = setTimeout(handleWindowResizeEvent, 200); 
 		});
 
-		if ( myBehavior.secondsToShow != "" ) {
+		if ( myBehavior.secondsToShow != 0 ) {
 			interval = setInterval(function () {
 				self.refreshData();
 			}, myBehavior.interval * 1000);
@@ -831,9 +830,9 @@
 						lValue=d3.min(m.values, function(v) {
 								return v.value;
 						});
-						if ( lValue < myBehavior.axisLeftMin ) 
+						if ( lValue < myBehavior.axisLeftMin || myBehavior.axisLeftMin == 0) 
 							return lValue;
-						else
+						else 
 							return myBehavior.axisLeftMin;
 						//return d3.min( lValue, myBehavior.axisLeftMin );
 					}),
@@ -843,7 +842,7 @@
 						lValue=d3.max(m.values, function(v) {
 							return v.value;
 						});
-						if ( lValue > myBehavior.axisLeftMax ) 
+						if ( lValue > myBehavior.axisLeftMax || myBehavior.axisLeftMax == 0 ) 
 							return lValue;
 						else
 							return myBehavior.axisLeftMax;
@@ -865,7 +864,7 @@
 						lValue=d3.min(m.values, function(v) {
 								return v.value;
 						});
-						if ( lValue < myBehavior.axisRightMin ) 
+						if ( lValue < myBehavior.axisRightMin || myBehavior.axisRightMin == 0) 
 							return lValue;
 						else
 							return myBehavior.axisRightMin;
@@ -876,7 +875,7 @@
 						lValue=d3.max(m.values, function(v) {
 							return v.value;
 						});
-						if ( lValue > myBehavior.axisRightMax ) 
+						if ( lValue > myBehavior.axisRightMax || myBehavior.axisRightMax == 0) 
 							return lValue;
 						else
 							return myBehavior.axisRightMax;
@@ -894,7 +893,7 @@
 	 */
 	var initX = function() {
 
-		if ( myBehavior.secondsToShow != "" ) {
+		if ( myBehavior.secondsToShow != 0 ) {
 			//debug("Start:" + minTime + " End:" + maxTime);
 			x = d3.time.scale()
 				.domain([minTime,maxTime])
@@ -916,7 +915,7 @@
 				.range([0, w]);
 		}
 
-		if ( myBehavior.tickLine != "" ) {
+		if ( myBehavior.tickLine != 0 ) {
 			xAxis = d3.svg.axis()
 				.scale(x)
 				.tickSize(-h)
