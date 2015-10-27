@@ -1,4 +1,4 @@
-/**
+/***
 	Courtesy: http://bl.ocks.org/benjchristensen/2657838
 **/
 
@@ -190,13 +190,18 @@
 	var loadData = function(dataMap) {
 
 		// Load data for graph behavior
-		myBehavior.secondsToShow = getOptionalVar(dataMap,
+		myBehavior.secondsToShow = +getOptionalVar(dataMap,
 											'graphSecondsToShow', "");
-		myBehavior.tickLine = getOptionalVar(dataMap, 'graphTickLine', "");
-		myBehavior.interval = getOptionalVar(dataMap,
+		myBehavior.tickLine = +getOptionalVar(dataMap, 'graphTickLine', "");
+		myBehavior.axisLeftMin = +getOptionalVar(dataMap, 'graphLeftMin', "");
+		myBehavior.axisLeftMax = +getOptionalVar(dataMap, 'graphLeftMax', "");
+		myBehavior.axisRightMin = +getOptionalVar(dataMap, 'graphRightMin', "");
+		myBehavior.axisRightMax = +getOptionalVar(dataMap, 'graphRightMax', "");
+		myBehavior.interval = +getOptionalVar(dataMap,
 											'graphUpdateInterval', "2");
-		//TODO: program the following
 		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
+		//TODO: program the following
+
 		myBehavior.hideLegend = getOptionalVar(dataMap, 'graphHideLegend', "");
 
 		// Load graph meta data
@@ -250,6 +255,18 @@
 			.append("svg:g")
 			.attr("transform", "translate(" + margin[3] + "," +
 												margin[0] + ")");
+
+		
+		if (myBehavior.title != "" ) {
+			title = graph.append("svg:g")
+				.attr("class", "title-group")
+					.append("text")
+					.attr("class", "title")
+	        		.attr("x", (w / 2))             
+	        		.attr("y", 0 - (margin.top / 2))
+	        		.attr("text-anchor", "middle")  
+	        		.text(myBehavior.title);
+	    }
 
 		initX();
 
@@ -316,6 +333,7 @@
 					//return yLeft(d.value);
 				}
 			});
+
 
 		// Draw the line
 		lines = graph.append("svg:g")
@@ -435,6 +453,14 @@
 			.duration(transitionDuration)
 			.ease("linear")
 			.attr("x", w);
+
+		if (myBehavior.title != "" ) {
+			graph.select('text.title')
+				.transition()
+				.duration(transitionDuration)
+				.ease("linear")
+	        	.attr("x", (w / 2));       
+	    }
 
 		redrawAxes(true);
 		redrawLines(true);
@@ -802,16 +828,25 @@
 					d3.min(data.filter( function (f) {
 						return f.yaxis == 'Left';
 					}), function(m) {
-							return d3.min(m.values, function(v) {
+						lValue=d3.min(m.values, function(v) {
 								return v.value;
 						});
+						if ( lValue < myBehavior.axisLeftMin ) 
+							return lValue;
+						else
+							return myBehavior.axisLeftMin;
+						//return d3.min( lValue, myBehavior.axisLeftMin );
 					}),
 					d3.max(data.filter( function (f) {
 						return f.yaxis == 'Left';
 					}), function(m) {
-						return d3.max(m.values, function(v) {
+						lValue=d3.max(m.values, function(v) {
 							return v.value;
 						});
+						if ( lValue > myBehavior.axisLeftMax ) 
+							return lValue;
+						else
+							return myBehavior.axisLeftMax;
 					})
 				])
 				.range([h, 0])
@@ -827,16 +862,24 @@
 					d3.min(data.filter( function (f) {
 						return f.yaxis == 'Right';
 					}), function(m) {
-							return d3.min(m.values, function(v) {
+						lValue=d3.min(m.values, function(v) {
 								return v.value;
 						});
+						if ( lValue < myBehavior.axisRightMin ) 
+							return lValue;
+						else
+							return myBehavior.axisRightMin;
 					}),
 					d3.max(data.filter( function (f) {
 						return f.yaxis == 'Right';
 					}), function(m) {
-						return d3.max(m.values, function(v) {
+						lValue=d3.max(m.values, function(v) {
 							return v.value;
 						});
+						if ( lValue > myBehavior.axisRightMax ) 
+							return lValue;
+						else
+							return myBehavior.axisRightMax;
 					})
 				])
 				.range([h, 0])

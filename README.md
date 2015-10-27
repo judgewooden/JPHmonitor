@@ -15,7 +15,7 @@ The user interface is based on D3 and various displays can be created using para
 Basic Architecture:
 
 	 	- Each components can run on a seperate raspi
-	 	- All data is stored in Sybase
+	 	- All data is stored in MYSQL
 	 	- All control data is available on the http server
 	 	- All displays are available on the http server
 	 	- All python is installed on /usr/local/JPHmonitor
