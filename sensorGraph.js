@@ -7,12 +7,32 @@
  * Create a draw a new graph
  * 
  * Arguments:
- *	containerOd => id of Containter to inser SVG
- *			TODO: Allow HTML to pass on margins (use constants for now)
- *  data => a dictionary containing:
- *	 displayNames => Name of the data series to the users
- *	 sensorSource => The Database table containing the data
- *	 sensorColumn => The name of the Column that should this function will plot
+ *	containerId => id of Containter to inser SVG
+ *			
+ *  data => containing:
+ *
+ *  Array of Data Elements (Mandatory)
+ *  ---------------------- 
+ *	displayNames  => Name of the data series to the users on the Graph
+ *	sensorSource  => The Database table containing the data (Primary key = 'Timestamp')
+ *	sensorColumn  => The name of the SQL Column that function will plot in sensorSource
+ *  yAxisLocation => Explain to what Axis this data series should be bound, values are "Left" or "Right"
+ *
+ *  Fields to control the behaviour of the Graph (Optional)
+ *  -------------------------------------------
+ * 	graphSecondsToShow  => The X axis range in seconds, (will load data from SQL in this range)
+ *                         If 0 a static graph will be loaded with all the data stored in the SQL
+ *                         If not 0 the graph will update every <interval> seconds with new data from SQL
+ *                         (default=0)
+ *	graphUpdateInterval => Will update the graph every X seconds (default:2)
+ *  graphTitle          => Title of graph top middle (default:"")
+ *  graphTickLine       => Number of horizontal lines to show per tick (default:0);
+ *  graphLeftMin        => The minimum value to show on the left Axis. If=0 auto adjust to data range. (default:0)
+ *  graphLeftMax        => The maximum value to show on the left Axis. If=0 auto adjust to data range. (default:0)
+ *  graphRightMin       => The minimum value to show on the right Axis. If=0 auto adjust to data range. (default:0)
+ *  graphRightMax       => The maximum value to show on the right Axis. If=0 auto adjust to data range. (default:0)
+ *  grepLeftLegend      => The legend to show for data on the left access
+ *  grepRightLegend     => The legend to show for data on the right access
  *
  */
 
