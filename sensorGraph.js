@@ -94,9 +94,9 @@
 			redrawAxes(false);	
 			redrawLines(false);
 			return;
-		} else {
-			inProgress = true;
-		}
+		} 
+			
+		inProgress = true;
 
 		// build a single query
 		var myurl = [];
@@ -104,6 +104,7 @@
 			//debug(key);
 
 			lastelem = data[key].values.length - 1;
+
 			if (lastelem < 1) {
 				queryTime=minTime.toMysqlFormat();
 			} else {
@@ -134,9 +135,10 @@
 			redrawAxes(false);	
 			redrawLines(false);
 
-			$(container).trigger('LineGraph:dataModification');
+//			$(container).trigger('LineGraph:dataModification');
 
 			//pop old data from our cache
+			var elem=0;
 			for (var key in data) {
 				for (elem in data[key].values) {
 					v1=new Date(data[key].values[elem].timestamp .getTime());
@@ -150,7 +152,6 @@
 			}
 			inProgress = false;
 		});
-
 	}
 
 	/*
@@ -190,16 +191,16 @@
 	var loadData = function(dataMap) {
 
 		// Load data for graph behavior
-		myBehavior.secondsToShow = +getOptionalVar(dataMap,
-											'graphSecondsToShow', "");
+		myBehavior.secondsToShow = +getOptionalVar(dataMap,	'graphSecondsToShow', "");
 		myBehavior.tickLine = +getOptionalVar(dataMap, 'graphTickLine', "");
 		myBehavior.axisLeftMin = +getOptionalVar(dataMap, 'graphLeftMin', "");
 		myBehavior.axisLeftMax = +getOptionalVar(dataMap, 'graphLeftMax', "");
 		myBehavior.axisRightMin = +getOptionalVar(dataMap, 'graphRightMin', "");
 		myBehavior.axisRightMax = +getOptionalVar(dataMap, 'graphRightMax', "");
-		myBehavior.interval = +getOptionalVar(dataMap,
-											'graphUpdateInterval', "2");
+		myBehavior.interval = +getOptionalVar(dataMap, 'graphUpdateInterval', "2");
 		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
+		myBehavior.axisLeftLegend = getOptionalVar(dataMap, 'grepLeftLegend', "");
+		myBehavior.axisRightLegend = getOptionalVar(dataMap, 'grepRightLegend', "");
 		//TODO: program the following
 
 		myBehavior.hideLegend = getOptionalVar(dataMap, 'graphHideLegend', "");
@@ -263,7 +264,7 @@
 					.append("text")
 					.attr("class", "title")
 	        		.attr("x", (w / 2))             
-	        		.attr("y", 0 - (margin.top / 2))
+	        		.attr("y", 0 - 5)
 	        		.attr("text-anchor", "middle")  
 	        		.text(myBehavior.title);
 	    }
@@ -280,18 +281,40 @@
 
 		// Add the y-axis to the left
 		if (hasYaxisLeft) {
-			graph.append("svg:g")
+			leftYaxis = graph.append("svg:g")
 				.attr("class", "y axis left")
 				.attr("transform", "translate(-5,0)")
 				.call(yAxisLeft);
+
+			if (myBehavior.axisLeftLegend != "") {
+				leftYaxislegend = leftYaxis.append("text")
+					.attr("class", "y-left-legend")
+			    	.attr("transform", "rotate(-90)")
+			    	.attr("y", 4)
+			    	.attr("x", -8)
+			    	.attr("dy", ".71em")
+			   		.style("text-anchor", "end")
+			    	.text(myBehavior.axisLeftLegend);
+			}
 		}
 
 		// Add the y-axis to the right
 		if (hasYaxisRight) {
-			graph.append("svg:g")
+			rightYaxis = graph.append("svg:g")
 				.attr("class", "y axis right")
 				.attr("transform", "translate(" + (w+10) + ",0)")
-				.call(yAxisRight);
+				.call(yAxisRight)
+
+			if (myBehavior.axisRightLegend != "") {
+				rightYaxislegend = rightYaxis.append("text")
+					.attr("class", "y-right-legend")
+			    	.attr("transform", "rotate(-90)")
+			    	.attr("y", -12)
+			    	.attr("x", -8)
+			    	.attr("dy", ".71em")
+			   		.style("text-anchor", "end")
+			    	.text(myBehavior.axisRightLegend);
+			}
 		}
 
 		// Remember to use the bodge !!!

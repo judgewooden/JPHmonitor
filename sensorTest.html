@@ -29,6 +29,7 @@
 <div id="graph1" class="aGraph" style="position:relative;width:100%;height:400px"></div>
 <div id="graph2" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
 <div id="graph3" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
+<div id="graph4" class="aGraph" style="float:left;position:relative;width:100%;height:400px"></div>
 
 <script>
 
@@ -51,35 +52,41 @@
 
 	var source = {};
 	// The source of the data and how to display it
-    source["displayName"] = ["Raspi"];			
-	source["sensorSource"] = ["RaspiTemp1"];
-	source["sensorColumn"] = ["Value"];
-	source["yAxisLocation"] = ["Left"];
+    source["displayName"] = ["Raspi1", "Raspi2"];			
+	source["sensorSource"] = ["RaspiTemp1", "RaspiTemp1"];
+	source["sensorColumn"] = ["Value", "Value"];
+	source["yAxisLocation"] = ["Right", "Left"];
 
 	// Instructions for how the graph 
-	source["graphSecondsToShow"] = 3600;   // If 0 a static graph will be loaded else a dynamic updated graph using graphUpdateInterval  (default =0)
+	source["graphSecondsToShow"] = 2400;   // If 0 a static graph will be loaded with all the data stored
+										// else a dynamic updated graph using graphUpdateInterval  (default =0)
 	source["graphUpdateInterval"] = 1;     // Will update the graph every X seconds (default:2)
 	source["graphTitle"] = "Raspberry Pi Temperatures";   // Title of grap top left
 	source["graphTickLine"] = 0;
-	source["graphLeftMin"] = 0;
-	source["graphLeftMax"] = 40;
+	source["graphLeftMin"] = 1;
+	source["graphLeftMax"] = 100;
+	source["graphRightMin"] = 1;
+	source["graphRightMax"] = 100;
+	source["grepLeftLegend"] = "Temprature (K)";
+	source["grepRightLegend"] = "Humidity (%)";
 
 	var l1 = new LineGraph({containerId: 'graph1', data: source});
 
-	/*
-	var source = {};
+/*
+	var source4 = {};
 	// The source of the data and how to display it
-    source["displayName"] = ["KastBuiten", "RadiatorUit", "KastBinnen"];
-	source["sensorSource"] = ["AirTemperature1", "WaterTemperature1", "AirTemperature1"];
-	source["sensorColumn"] = ["Humidity", "Value", "Value"];
-	source["yAxisLocation"] = ["Right", "Left", "Left"];
+    source4["displayName"] = ["KastBuiten", "RadiatorUit", "KastBinnen"];
+	source4["sensorSource"] = ["AirTemperature1", "WaterTemperature1", "AirTemperature1"];
+	source4["sensorColumn"] = ["Humidity", "Value", "Value"];
+	source4["yAxisLocation"] = ["Right", "Left", "Left"];
 
 	// Instructions for how the graph 
-	source["graphSecondsToShow"] = "600";
-	source["graphTitle"] = "I am still Experimental";
-	source["graphTickLine"] = "1";
-	source["graphUpdateInterval"] = "2";
-	var l1 = new LineGraph({containerId: 'graph1', data: source});
+	source4["graphSecondsToShow"] = "0";
+	source4["graphTitle"] = "Multi Line Experiment";
+	source4["graphTickLine"] = "1";
+	source4["graphUpdateInterval"] = "2";
+	var l4 = new LineGraph({containerId: 'graph4', data: source4});
+
 
 	var source2 = {};
 	// The source of the data and how to display it

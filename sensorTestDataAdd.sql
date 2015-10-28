@@ -23,7 +23,8 @@ BEGIN
 		ORDER BY Timestamp DESC
 		LIMIT 1;
 
-		IF ( lastTemperature = NULL ) THEN
+		SELECT FOUND_ROWS() INTO i;
+		IF ( i=0 )  THEN
 			SET lastTemperature = 1 + CEIL(RAND() * (100 - 1));
 		END IF;
 
@@ -49,7 +50,8 @@ BEGIN
 		ORDER BY Timestamp DESC
 		LIMIT 1;
 
-		IF ( lastHumidity = NULL ) THEN
+		SELECT FOUND_ROWS() INTO i;
+		IF ( i=0 )  THEN
 			SET lastHumidity = 50 + CEIL(RAND() * (100 - 50));
 		END IF;
 
@@ -89,10 +91,11 @@ BEGIN
 		ORDER BY Timestamp DESC
 		LIMIT 1;
 
-		IF ( lastTemperature = NULL ) THEN
+		SELECT FOUND_ROWS() INTO i;
+		IF ( i=0 )  THEN
 			SET lastTemperature = 1 + CEIL(RAND() * (100 - 1));
 		END IF;
-
+		
 		SET valueTemperature = 1 + RAND() * (4 - 8);
 		IF (lastTemperature>60) THEN
 			SET valueTemperature = 1 + RAND() * (2 - 8);
@@ -106,11 +109,8 @@ BEGIN
 		INSERT INTO WaterTemperature1
 		VALUES ( startdate, valueTemperature);
 
-		/* TODO Figure out all data possibilities for FANS */
-
-
 	COMMIT;
 END$$
 DELIMITER ;
 CALL InsertRandAdd();
-DROP PROCEDURE IF EXISTS InsertRand;
+DROP PROCEDURE IF EXISTS InsertRandAdd;

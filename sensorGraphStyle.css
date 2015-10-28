@@ -1,6 +1,8 @@
 
-svg.line-graph .title text {
-	font-size: 16px;
+
+
+svg.line-graph .title {
+	font-size: 14px;
 	text-decoration: underline;
 }
 
@@ -43,7 +45,7 @@ svg.line-graph .y.axis line, .y.axis path {
 }
 																				
 svg.line-graph .y.axis text {
-	font-size: 12px;
+	font-size: 10px;
 }
 
 svg.line-graph .menu-button:not(.selected):hover {
