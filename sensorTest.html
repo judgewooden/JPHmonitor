@@ -29,7 +29,7 @@
 <div id="graph1" class="aGraph" style="position:relative;width:100%;height:400px"></div>
 <div id="graph2" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
 <div id="graph3" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
-<div id="graph4" class="aGraph" style="float:left;position:relative;width:100%;height:400px"></div>
+// <div id="graph4" class="aGraph" style="float:left;position:relative;width:100%;height:400px"></div>
 
 <script>
 
@@ -41,48 +41,52 @@
 	source1["yAxisLocation"] = ["Left"];
 
 	// Instructions for how the graph
-	source1["graphSecondsToShow"] = 2400;   // If 0 a static graph will be loaded with all the data
+	source1["graphSecondsToShow"] = 3600;   // If 0 a static graph will be loaded with all the data
 										// else a dynamic updated graph using graphUpdateInterval  (default =0)
 	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
-	source1["graphTitle"] = "Arduino Flow";   // Title of grap top left
-	source1["graphTickLine"] = 5;
+	source1["graphTitle"] = "Arduino Flow (Last Hour)";   // Title of grap top left
+	source1["graphTickLine"] = 0.1;
 //	source["graphRightMin"] = 1;
 //	source["graphRightMax"] = 100;
 	source1["grepLeftLegend"] = "Liters (pm)";
 //	source["grepRightLegend"] = "Humidity (%)";
-
 	var l1 = new LineGraph({containerId: 'graph1', data: source1});
-
-/*
-	var source4 = {};
-	// The source of the data and how to display it
-    source4["displayName"] = ["KastBuiten", "RadiatorUit", "KastBinnen"];
-	source4["sensorSource"] = ["AirTemperature1", "WaterTemperature1", "AirTemperature1"];
-	source4["sensorColumn"] = ["Humidity", "Value", "Value"];
-	source4["yAxisLocation"] = ["Right", "Left", "Left"];
-
-	// Instructions for how the graph
-	source4["graphSecondsToShow"] = "0";
-	source4["graphTitle"] = "Multi Line Experiment";
-	source4["graphTickLine"] = "1";
-	source4["graphUpdateInterval"] = "2";
-	var l4 = new LineGraph({containerId: 'graph4', data: source4});
-
 
 	var source2 = {};
 	// The source of the data and how to display it
-    source2["displayName"] = ["KastHumidity"];
-	source2["sensorSource"] = ["AirTemperature1"];
-	source2["sensorColumn"] = ["Humidity"];
+    source2["displayName"] = ["Flow"];
+	source2["sensorSource"] = ["ArduinoMonitor1"];
+	source2["sensorColumn"] = ["LitersPerMinute"];
 	source2["yAxisLocation"] = ["Left"];
 
 	// Instructions for how the graph
-	source2["graphSecondsToShow"] = "300";
-	source2["graphTitle"] = "I am still Experimental";
-	source2["graphTickLine"] = "";
-	source2["graphUpdateInterval"] = "1";
+	source2["graphSecondsToShow"] = 86400;   // If 0 a static graph will be loaded with all the data
+										// else a dynamic updated graph using graphUpdateInterval  (default =0)
+	source2["graphUpdateInterval"] = 30;     // Will update the graph every X seconds (default:2)
+	source2["graphTitle"] = "Arduino Flow 24-hours";   // Title of grap top left
+	source2["graphTickLine"] = 0;
+
+	source2["grepLeftLegend"] = "Liters (pm)";
 	var l2 = new LineGraph({containerId: 'graph2', data: source2});
 
+
+	var source3 = {};
+	// The source of the data and how to display it
+    source3["displayName"] = ["ServerTemp"];
+	source3["sensorSource"] = ["RaspiTemp1"];
+	source3["sensorColumn"] = ["Value"];
+	source3["yAxisLocation"] = ["Right"];
+
+	// Instructions for how the graph
+	source3["graphSecondsToShow"] = 86400;
+	source3["graphTitle"] = "Server Temp 24-hours";
+	source3["graphTickLine"] = 0;
+	source3["graphRightMin"] = 25;
+	source3["graphRightMax"] = 50;
+	source3["graphUpdateInterval"] = 30;
+	var l3 = new LineGraph({containerId: 'graph3', data: source3});
+
+/*
 	var source3 = {};
     source3["displayName"] = ["KastTemp"];
 	source3["sensorSource"] = ["AirTemperature1"];
