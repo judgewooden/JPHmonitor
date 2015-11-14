@@ -9,7 +9,7 @@ import mysql.connector
 # Get config info
 try:
 #   TODO clean this up and DO it properly
-    f = open('/home/pi/source/JPHmonitor/.sqlpassword')
+    f = open(os.path.expanduser('~/.sqlpassword'))
     sqlpassword=f.read().strip()
     f.close
 except:
@@ -35,7 +35,7 @@ while True:
 	piTemp=float(f.read())
 	piTemp=piTemp/1000
 	print ("Temp: %f" % (piTemp))
-	
+
 	cursor = cnx.cursor()
 	lastValue=(tnow,piTemp)
 	cursor.execute(add_temp, lastValue)

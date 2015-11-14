@@ -4,7 +4,7 @@
 <script src="http://d3js.org/d3.v2.js"></script>
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 <script src="sensorGraph.js"></script>
-<!-- 
+<!--
 	courtesy: benjchristensen - Interactive Line Graph
 -->
 
@@ -18,7 +18,7 @@
 	p {
 		clear:both;
 		top: 20px;
-	}		
+	}
 
 	div.aGraph {
 			margin-bottom: 30px;
@@ -33,44 +33,25 @@
 
 <script>
 
-
-/*
-	var source = {};
+	var source1 = {};
 	// The source of the data and how to display it
-    source["displayName"] = ["KastHumidity", "WaterTempRadUit"];
-	source["sensorSource"] = ["AirTemperature1", "WaterTemperature1"];
-	source["sensorColumn"] = ["Humidity", "Value", ];
-	source["yAxisLocation"] = ["Right", "Left"];
+    source1["displayName"] = ["Flow"];
+	source1["sensorSource"] = ["ArduinoMonitor1"];
+	source1["sensorColumn"] = ["LitersPerMinute"];
+	source1["yAxisLocation"] = ["Left"];
 
-	// Instructions for how the graph 
-	source["graphSecondsToShow"] = "600";
-	source["graphTitle"] = "I am still Experimental";
-	source["graphTickLine"] = "1";
-	source["graphUpdateInterval"] = "2";
-	var l1 = new LineGraph({containerId: 'graph1', data: source});
-*/
-
-	var source = {};
-	// The source of the data and how to display it
-    source["displayName"] = ["Raspi1", "Raspi2"];			
-	source["sensorSource"] = ["RaspiTemp1", "RaspiTemp1"];
-	source["sensorColumn"] = ["Value", "Value"];
-	source["yAxisLocation"] = ["Right", "Left"];
-
-	// Instructions for how the graph 
-	source["graphSecondsToShow"] = 2400;   // If 0 a static graph will be loaded with all the data stored
+	// Instructions for how the graph
+	source1["graphSecondsToShow"] = 2400;   // If 0 a static graph will be loaded with all the data
 										// else a dynamic updated graph using graphUpdateInterval  (default =0)
-	source["graphUpdateInterval"] = 1;     // Will update the graph every X seconds (default:2)
-	source["graphTitle"] = "Raspberry Pi Temperatures";   // Title of grap top left
-	source["graphTickLine"] = 0;
-	source["graphLeftMin"] = 1;
-	source["graphLeftMax"] = 100;
-	source["graphRightMin"] = 1;
-	source["graphRightMax"] = 100;
-	source["grepLeftLegend"] = "Temprature (K)";
-	source["grepRightLegend"] = "Humidity (%)";
+	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
+	source1["graphTitle"] = "Arduino Flow";   // Title of grap top left
+	source1["graphTickLine"] = 5;
+//	source["graphRightMin"] = 1;
+//	source["graphRightMax"] = 100;
+	source1["grepLeftLegend"] = "Liters (pm)";
+//	source["grepRightLegend"] = "Humidity (%)";
 
-	var l1 = new LineGraph({containerId: 'graph1', data: source});
+	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
 /*
 	var source4 = {};
@@ -80,7 +61,7 @@
 	source4["sensorColumn"] = ["Humidity", "Value", "Value"];
 	source4["yAxisLocation"] = ["Right", "Left", "Left"];
 
-	// Instructions for how the graph 
+	// Instructions for how the graph
 	source4["graphSecondsToShow"] = "0";
 	source4["graphTitle"] = "Multi Line Experiment";
 	source4["graphTickLine"] = "1";
@@ -95,7 +76,7 @@
 	source2["sensorColumn"] = ["Humidity"];
 	source2["yAxisLocation"] = ["Left"];
 
-	// Instructions for how the graph 
+	// Instructions for how the graph
 	source2["graphSecondsToShow"] = "300";
 	source2["graphTitle"] = "I am still Experimental";
 	source2["graphTickLine"] = "";
@@ -108,12 +89,13 @@
 	source3["sensorColumn"] = ["Value"];
 	source3["yAxisLocation"] = ["Right"];
 
-	// Instructions for how the graph 
+	// Instructions for how the graph
 	source3["graphSecondsToShow"] = "1500";
 	source3["graphTitle"] = "I am still Experimental";
 	source3["graphTickLine"] = "";
 	source3["graphUpdateInterval"] = "5";
 	var l3 = new LineGraph({containerId: 'graph3', data: source3});
 */
+
 
 </script>
