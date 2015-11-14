@@ -1,5 +1,5 @@
 #!/bin/sh
-sqlpw=`cat .sqlpassword`
+sqlpw=`cat ~/.sqlpassword`
 
 while [ 1 ]
 do
