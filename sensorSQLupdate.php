@@ -1,6 +1,6 @@
 <?php
 
-require 'sensorsDBconfig.php';
+require '/usr/share/nginx/sensorsDBconfig.php';
 
 $outputArray = array();
 $mysqli = new mysqli($dbhostname, $dbuser, $dbpassword, $dbname);
@@ -13,7 +13,7 @@ if (mysqli_connect_errno()) {
 // TODO: Make this safe against SQL injections
 //       And remove and warning messages in the PHP log
 
-// Get the value table 
+// Get the value table
 if ($_GET["query"]) {
 	$data = $_GET["query"];
 } else {
@@ -36,7 +36,7 @@ foreach ( $myArray as $row ) {
 	$query = $query . "SELECT \"" . $row->key . "\",";
 	$query = $query . " Timestamp AS timestamp, " . $row->column . " AS value";
 	$query = $query . " FROM " . $row->table . " WHERE " . $row->column . " IS NOT NULL";
-	$query = $query . " AND CONVERT_TZ(Timestamp, \"SYSTEM\", \"UTC\") >"; 
+	$query = $query . " AND CONVERT_TZ(Timestamp, \"SYSTEM\", \"UTC\") >";
 	$query = $query . " \"" . $row->time . "\"";
 }
 $query = $query . " ORDER BY Timestamp";

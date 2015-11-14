@@ -1,6 +1,6 @@
 <?php
 
-require 'sensorsDBconfig.php';
+require '/usr/share/nginx/sensorsDBconfig.php';
 
 $outputArray = array();
 $mysqli = new mysqli($dbhostname, $dbuser, $dbpassword, $dbname);
@@ -13,7 +13,7 @@ if (mysqli_connect_errno()) {
 // TODO: Make this safe against SQL injections
 //       And remove and warning messages in the PHP log
 
-// Get the value table 
+// Get the value table
 if ($_GET["source"]) {
 	$DBtable= $_GET["source"];
 } else {
@@ -21,7 +21,7 @@ if ($_GET["source"]) {
     die;
 }
 
-// Get the value column 
+// Get the value column
 if ($_GET["column"]) {
 	$DBcolumn = $_GET["column"];
 } else {
@@ -32,7 +32,7 @@ if ($_GET["column"]) {
 // Get the numbers of seconds to extract
 if ($_GET["seconds"]) {
 	$DBseconds = $_GET["seconds"];
-} 
+}
 
 // Build a query a return the results as JSON
 $query = "SELECT Timestamp AS timestamp, " . $DBcolumn . " AS value FROM " . $DBtable . " WHERE " . $DBcolumn . " IS NOT NULL";
