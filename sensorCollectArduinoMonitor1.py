@@ -15,16 +15,19 @@ try:
     sqlpassword=f.read().strip()
     f.close
 except:
-    print ("Unexpected error: opening .sqlpassword")
+    print ("ArduinoMonitor1: Unexpected error opening .sqlpassword")
     raise
 
-try:
- cnx = mysql.connector.connect(user='root', password=sqlpassword,
+while True:
+    try:
+        cnx = mysql.connector.connect(user='root', password=sqlpassword,
                               host='localhost',
                               database='Sensors')
-except:
- print ("Cannot Connect to SQL")
- raise
+    except:
+        print ("ArduinoMonitor1: Cannot Connect to SQL (retry)")
+        time.sleep(5)
+        continue
+    break
 
 # GLOBAL
 add_temp = ("INSERT INTO ArduinoMonitor1 "

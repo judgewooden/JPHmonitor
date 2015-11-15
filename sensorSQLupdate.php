@@ -21,11 +21,10 @@ if ($_GET["query"]) {
     die;
 }
 
-
 //echo "Origin:$data<br />\n";
 $myArray = array();
 $myArray = json_decode( $data );
-//echo Print_r($myArray) . "<br />\n";
+// echo Print_r($myArray) . "<br />\n";
 
 // Build a query a return the results as JSON
 $query = "";
@@ -40,7 +39,7 @@ foreach ( $myArray as $row ) {
 	$query = $query . " \"" . $row->time . "\"";
 }
 $query = $query . " ORDER BY Timestamp";
-//echo "query: " . $query . "<BR />\n";
+// echo "query: " . $query . "<BR />\n";
 
 if ($result = $mysqli->query($query)) {
     while ($row = $result->fetch_array(MYSQL_ASSOC)) {

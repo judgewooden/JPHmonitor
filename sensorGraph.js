@@ -4,10 +4,10 @@
 
 /*
  * Create and draw a new graph
- * 
+ *
  * Arguments:
  *	containerId => id of Containter to insert SVG
- *			
+ *
  *  data => containing:
  *
  *  Array of Data Elements (Mandatory)
@@ -53,7 +53,7 @@
 	var legendFontSize = 12;
 	var transitionDuration = 300;
 
-	// Details of the data 
+	// Details of the data
 	var data = [];      // D3 data for each line
 	var meta = {};      // meta data describing data for each line
 
@@ -75,7 +75,7 @@
 														hoverLineGroup;
 	var lineFunctionSeriesIndex;    // special bodge !!! pay attention to it
 
-	// user behavior 
+	// user behavior
 	var menuButtons = [['update','Updating'], ['pause','Pause']];
 	var updatePaused = 'update';
 	var userCurrentlyInteracting = false;
@@ -110,11 +110,11 @@
 								- 1000 * myBehavior.secondsToShow);
 
 		if ( inProgress ){
-			redrawAxes(false);	
+			redrawAxes(false);
 			redrawLines(false);
 			return;
-		} 
-			
+		}
+
 		inProgress = true;
 
 		// build a single query
@@ -139,7 +139,7 @@
 		}
 		myurl = JSON.stringify(myurl);
 		u="sensorSQLupdate.php?query=" + encodeURI( myurl );
-
+		console.log(u);
 		// process the result
 		d3.json(u, function(answer) {
 			for (row = 0; row < answer.length; row++) {
@@ -151,7 +151,7 @@
 				data[key].values.push(temp);
 			}
 
-			redrawAxes(false);	
+			redrawAxes(false);
 			redrawLines(false);
 
 //			$(container).trigger('LineGraph:dataModification');
@@ -174,7 +174,7 @@
 	}
 
 	/*
-	 * Prepare the data for D3 
+	 * Prepare the data for D3
 	 */
 	var processData = function(rawdata) {
 		$.each(rawdata, function(key, value) {
@@ -271,20 +271,20 @@
 		graph = d3.select("#" + containerId).append("svg:svg")
 			.attr("class", "line-graph")
 			.attr("width", w + margin[1] + margin[3])
-			.attr("height", h + margin[0] + margin[2])	
+			.attr("height", h + margin[0] + margin[2])
 			.append("svg:g")
 			.attr("transform", "translate(" + margin[3] + "," +
 												margin[0] + ")");
 
-		
+
 		if (myBehavior.title != "" ) {
 			title = graph.append("svg:g")
 				.attr("class", "title-group")
 					.append("text")
 					.attr("class", "title")
-	        		.attr("x", (w / 2))             
+	        		.attr("x", (w / 2))
 	        		.attr("y", 0 - 5)
-	        		.attr("text-anchor", "middle")  
+	        		.attr("text-anchor", "middle")
 	        		.text(myBehavior.title);
 	    }
 
@@ -349,7 +349,7 @@
       	drawline = d3.svg.line()
             .interpolate("monotone")
 			.x( function(d, i) { return x(d.timestamp); })
-			.y( function(d, i) { 
+			.y( function(d, i) {
 				if ( i == 0 ) {
 					lineFunctionSeriesIndex++;
 				}
@@ -413,7 +413,7 @@
 			.on('mouseover', function(d,i) {
 				handleMouseOverLine(d,i);
 			});
-		
+
 		// add line label to line group
 		linesGroupText = linesGroup.append("svg:text");
 		linesGroupText.attr("class", function(d, i) {
@@ -447,7 +447,7 @@
 		$(window).resize(function(){
 			if(TO !== false)
 				clearTimeout(TO);
-				TO = setTimeout(handleWindowResizeEvent, 200); 
+				TO = setTimeout(handleWindowResizeEvent, 200);
 		});
 
 		if ( myBehavior.secondsToShow != 0 ) {
@@ -500,7 +500,7 @@
 				.transition()
 				.duration(transitionDuration)
 				.ease("linear")
-	        	.attr("x", (w / 2));       
+	        	.attr("x", (w / 2));
 	    }
 
 		redrawAxes(true);
@@ -535,7 +535,7 @@
      * Create menu buttons
 	 */
 	var createMenuButtons = function() {
-		var cumulativeWidth = 0;		
+		var cumulativeWidth = 0;
 
 		var buttonMenu = graph.append("svg:g")
 				.attr("class", "menu-group")
@@ -548,7 +548,7 @@
 				.text(function(d, i) {
 					return d[1];
 				})
-				.attr("font-size", "12") 
+				.attr("font-size", "12")
 				.attr("fill", function(d) {
 					if (d[0] == updatePaused ) {
 						return "black";
@@ -575,7 +575,7 @@
 	}
 
 	var handleMouseClickMenuButton = function(button, buttonData, index) {
-		var cumulativeWidth = 0;		
+		var cumulativeWidth = 0;
 
 		if(index == 0) {
 			// start update
@@ -588,7 +588,7 @@
 			// pause update
 			clearInterval( interval );
 		}
-			
+
 		graph.selectAll('.menu-button')
 			.text(function(d, i) {
 				if (i == 0) {
@@ -605,7 +605,7 @@
 					}
 				}
 			})
-			.attr("font-size", "12") 
+			.attr("font-size", "12")
 			.attr("fill", function(d) {
 				if (d[0] == updatePaused ) {
 					return "black";
@@ -626,20 +626,20 @@
 				return returnX;
 			})
 	}
-		
+
 	/**
 	 * Create a legend that displays the name of each line with appropriate colo
 	 * and allows for showing the current value when doing a mouseOver
 	 */
 	var createLegend = function() {
-	
+
 		var legendLabelGroup = graph.append("svg:g")
 			.attr("class", "legend-group")
 			.selectAll("g")
 			.data(meta.names)
 			.enter().append("g")
 			.attr("class", "legend-labels");
-																																			
+
 		legendLabelGroup.append("svg:text")
 			.attr("class", "legend name")
 			.text(function(d, i) {
@@ -672,12 +672,12 @@
 					.ease("linear")
 					.attr("y", function(d, i) {
 						return h+28;
-					});	
+					});
 			} else {
 				legendText.attr("y", function(d, i) {
 					return h+28;
-				});	
-			}	
+				});
+			}
 	}
 
 	/**
@@ -690,7 +690,7 @@
 			.append("svg:text")
 			.attr("class", "date-label")
 			.attr("text-anchor", "end")
-			.attr("font-size", "10") 
+			.attr("font-size", "10")
 			.attr("y", -4)
 			.attr("x", w)
 			.text(date.toDateString() + " " + date.toLocaleTimeString());
@@ -707,10 +707,10 @@
 	/**
 	* Called when a user mouses over the graph.
 	*/
-	var handleMouseOverGraph = function(event) {	
+	var handleMouseOverGraph = function(event) {
 		var mouseX = event.pageX-hoverLineXOffset;
 		var mouseY = event.pageY-hoverLineYOffset;
-										
+
 /*
 		debug("MouseOver graph [" + containerId + "] => x: " + mouseX +
 			" y: " + mouseY + "  height: " + h + " event.clientY: " +
@@ -735,7 +735,7 @@
 	/**
 	* Called when a user mouses moves out the graph.
 	*/
-	var handleMouseOutGraph = function(event) {	
+	var handleMouseOutGraph = function(event) {
 
 		hoverLine.classed("hide", true);
 		setValueLabelsToLatest();
@@ -756,7 +756,7 @@
 	 *	the given array (one of the lines)
 	 * Return {value: value, date, date}
 	 */
-	
+
 	var getValueForPositionXFromData = function(xPosition, index) {
 		var xValue = x.invert(xPosition);
 //		debug("Start get Value. Position: " + xPosition + " Index: " + index);
@@ -781,7 +781,7 @@
 				animate = true;
 			}
 		}
-		
+
 //		debug("Label: [" + containerId + "], " + xPosition);
 
 		var dateToShow;
@@ -800,7 +800,7 @@
 		// position label names
 		var cumulativeWidth = 0;
 		var labelNameEnd = [];
-		
+
 		graph.selectAll("text.legend.name")
 			.attr("x", function(d, i) {
 				var returnX = cumulativeWidth;
@@ -809,7 +809,7 @@
 					labelNameEnd[i] = returnX + this.getComputedTextLength()+5;
 				return returnX;
 			})
-			
+
 		cumulativeWidth = cumulativeWidth - 8;
 
 		if(cumulativeWidth > w) {
@@ -824,12 +824,12 @@
 			displayValueLabelsForPositionX(xPosition);
 			return;
 		}
-		
+
 		graph.selectAll("text.legend.value")
 			.attr("x", function(d, i) {
 				return labelNameEnd[i];
 			})
-			
+
 		graph.select('text.date-label')
 			.text(dateToShow.toDateString() + " "
 				+ dateToShow.toLocaleTimeString())
@@ -872,9 +872,9 @@
 						lValue=d3.min(m.values, function(v) {
 								return v.value;
 						});
-						if ( lValue < myBehavior.axisLeftMin || myBehavior.axisLeftMin == 0) 
+						if ( lValue < myBehavior.axisLeftMin || myBehavior.axisLeftMin == 0)
 							return lValue;
-						else 
+						else
 							return myBehavior.axisLeftMin;
 						//return d3.min( lValue, myBehavior.axisLeftMin );
 					}),
@@ -884,7 +884,7 @@
 						lValue=d3.max(m.values, function(v) {
 							return v.value;
 						});
-						if ( lValue > myBehavior.axisLeftMax || myBehavior.axisLeftMax == 0 ) 
+						if ( lValue > myBehavior.axisLeftMax || myBehavior.axisLeftMax == 0 )
 							return lValue;
 						else
 							return myBehavior.axisLeftMax;
@@ -906,7 +906,7 @@
 						lValue=d3.min(m.values, function(v) {
 								return v.value;
 						});
-						if ( lValue < myBehavior.axisRightMin || myBehavior.axisRightMin == 0) 
+						if ( lValue < myBehavior.axisRightMin || myBehavior.axisRightMin == 0)
 							return lValue;
 						else
 							return myBehavior.axisRightMin;
@@ -917,7 +917,7 @@
 						lValue=d3.max(m.values, function(v) {
 							return v.value;
 						});
-						if ( lValue > myBehavior.axisRightMax || myBehavior.axisRightMax == 0) 
+						if ( lValue > myBehavior.axisRightMax || myBehavior.axisRightMax == 0)
 							return lValue;
 						else
 							return myBehavior.axisRightMax;
@@ -971,13 +971,13 @@
 	var redrawAxes = function(withTransition) {
 		initY();
 		initX();
-							
+
 		if(withTransition) {
 		// slide x-axis to updated location
 			graph.selectAll("g .x.axis").transition()
 				.duration(transitionDuration)
 				.ease("linear")
-				.call(xAxis)				  
+				.call(xAxis)
 
 			if (hasYaxisLeft) {
 				graph.selectAll("g .y.axis.left").transition()
@@ -993,8 +993,8 @@
 			}
 		} else {
 			graph.selectAll("g .x.axis")
-				.call(xAxis)				  
-			
+				.call(xAxis)
+
 			if (hasYaxisLeft) {
 				graph.selectAll("g .y.axis.left")
 					.call(yAxisLeft)
@@ -1023,7 +1023,7 @@
 
 	/*
 	 * Return the value from argsMap for key or throw error if no value found
-	 */	  
+	 */
  	var getRequiredVar = function(argsMap, key, message) {
 		if(!argsMap[key]) {
 			if(!message) {
@@ -1057,7 +1057,7 @@
 	var debug = function(message) {
 		console.log("DEBUG: ",  message)
 	}
-																			
+
 	/*
 	 * function to create SQL date format
 	 */
@@ -1066,7 +1066,7 @@
 		if(-10 < d && d < 0) return "-0" + (-1*d).toString();
 		return d.toString();
 	}
-				
+
 	Date.prototype.toMysqlFormat = function() {
     	return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 	};
