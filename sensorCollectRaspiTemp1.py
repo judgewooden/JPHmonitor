@@ -8,7 +8,6 @@ import mysql.connector
 
 # Get config info
 try:
-#   TODO clean this up and DO it properly
     f = open(os.path.expanduser('~/.sqlpassword'))
     sqlpassword=f.read().strip()
     f.close
