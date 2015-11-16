@@ -60,10 +60,10 @@
 	source2["yAxisLocation"] = ["Left"];
 
 	// Instructions for how the graph
-	source2["graphSecondsToShow"] = 86400;   // If 0 a static graph will be loaded with all the data
+	source2["graphSecondsToShow"] = 0;   // If 0 a static graph will be loaded with all the data
 										// else a dynamic updated graph using graphUpdateInterval  (default =0)
 	source2["graphUpdateInterval"] = 30;     // Will update the graph every X seconds (default:2)
-	source2["graphTitle"] = "Arduino Flow 24-hours";   // Title of grap top left
+	source2["graphTitle"] = "Arduino Flow 24-hours (not updating)";   // Title of grap top left
 	source2["graphTickLine"] = 0;
 
 	source2["grepLeftLegend"] = "Liters (pm)";
@@ -78,8 +78,8 @@
 	source3["yAxisLocation"] = ["Right"];
 
 	// Instructions for how the graph
-	source3["graphSecondsToShow"] = 86400;
-	source3["graphTitle"] = "Server Temp 24-hours";
+	source3["graphSecondsToShow"] = 00;
+	source3["graphTitle"] = "Server Temp 24-hours (not updating)";
 	source3["graphTickLine"] = 0;
 	source3["graphRightMin"] = 46;
 	source3["graphRightMax"] = 44;
