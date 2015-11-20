@@ -376,7 +376,7 @@
       	var prevVal = 0;
       	var curVal = 0;
       	drawline = d3.svg.line()
-            .interpolate("basis")
+            .interpolate("bundle")
 			.x( function(d, i) { return x(d.timestamp); })
 			.y( function(d, i) {
 				if ( i == 0 ) {
