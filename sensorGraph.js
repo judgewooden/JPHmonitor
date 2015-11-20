@@ -192,6 +192,35 @@
 			console.log(temp);
 			data.push(temp);
 		});
+
+		// remove repeating data elements
+		// TODO: FIX IT YOU IDIOT !!!!
+		/*
+		var elem=0;
+		for (var key in data) {
+			var tollerance=5;
+			var lastvalue=0;
+			//for (elem = 0; elem < data[key].values.length; elem++) {
+			for (elem in data[key].values) {
+				console.log(elem, data[key].values[elem].value, data[key].values[elem].value - lastvalue);
+				if (elem==0) {
+						lastvalue = data[key].values[elem].value;
+				} else {
+					if ( Math.abs(data[key].values[elem].value - lastvalue) < tollerance ) {
+						lastvalue = data[key].values[elem].value;
+						console.log("remove");
+						data[key].values.splice(elem, 1);
+					} else {
+						lastvalue = data[key].values[elem].value;
+					}
+				}
+			}
+			for (elem in data[key].values) {
+				console.log(elem, data[key].values[elem].value);
+			}
+		}
+		*/
+
  		initDimensions();
 
 		if ( myBehavior.secondsToShow != 0 ) {
@@ -356,8 +385,10 @@
 				if ( meta.yaxes[lineFunctionSeriesIndex]  == "Right" ) {
 					return yRight(d.value);
 				} else {
+					return yLeft(d.value);
 
 		  // TODO (think of a more elligent way to do this) moving average
+          /*
           if (i == 0) {
               prevPrevVal  = yLeft(d.value);
               prevVal = yLeft(d.value);
@@ -372,7 +403,8 @@
               curVal = (prevPrevVal + prevVal + yLeft(d.value)) / 3.0;
           }
           return curVal;
-					//return yLeft(d.value);
+          */
+
 				}
 			});
 
