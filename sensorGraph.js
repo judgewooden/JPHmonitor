@@ -178,6 +178,8 @@
 	 * Prepare the data for D3
 	 */
 	var processData = function(rawdata) {
+		var loopValue=-1;
+		var lastValue=0;
 		$.each(rawdata, function(key, value) {
 			var temp = {
 				name: meta.names[key],
@@ -187,6 +189,12 @@
 				values: $.each(value.values, function(k, d){
 					d.timestamp=parseDate(d.timestamp);
 					d.value=+d.value;
+
+					loopValue++;
+					//if (loopValue>0) {
+						console.log(loopValue, d.value, lastValue, d.value - lastValue)
+					//}
+
 					return { k, d };
 				})
 			};
