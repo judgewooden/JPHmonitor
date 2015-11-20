@@ -192,7 +192,7 @@
 
 					loopValue++;
 					if (loopValue>0) {
-						difference = math.abs(lastValue-d.value);
+						difference = Math.abs(lastValue-d.value);
 						if (difference < -0.02 )
 							return;
 						if ( lastValue == d.value)
