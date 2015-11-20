@@ -180,6 +180,7 @@
 	var processData = function(rawdata) {
 		var loopValue=-1;
 		var lastValue=0;
+		var difference=0;
 		$.each(rawdata, function(key, value) {
 			var temp = {
 				name: meta.names[key],
@@ -193,12 +194,12 @@
 					loopValue++;
 					if (loopValue>0) {
 						difference = Math.abs(lastValue-d.value);
-						if (difference < -0.02 )
+						if (difference > 0.02 )
 							return;
 						if ( lastValue == d.value)
 							return;
 					}
-					console.log(loopValue, d.value, lastValue, d.value - lastValue)
+					console.log(loopValue, d.value, lastValue, difference)
 					lastValue = d.value;
 					return { k, d };
 				})
