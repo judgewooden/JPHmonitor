@@ -194,7 +194,7 @@
 					loopValue++;
 					if (loopValue>0) {
 						difference = Math.abs(lastValue - d.value);
-						//console.log(loopValue, d.value, lastValue, difference);
+						console.log(loopValue, d.value, lastValue, difference);
 						if (difference > 0.5 )
 							return;
 						if ( lastValue == d.value)
@@ -202,6 +202,7 @@
 					}
 					//console.log(loopValue, d.value, lastValue, difference);
 					lastValue = d.value;
+
 					return { k, d };
 				})
 			};
