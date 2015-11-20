@@ -200,13 +200,15 @@
 						console.log(loopValue, d.value, lastValue, difference);
 						//if (difference > 0.5 )
 						//	return {};
-						if ( lastValue == d.value)
-							return {};
+						if ( lastValue != d.value) {
+							lastValue = d.value;
+							return { k, d };
+						}
+					} else {
+						//console.log(loopValue, d.value, lastValue, difference);
+						lastValue = d.value;
+						return { k, d };
 					}
-					//console.log(loopValue, d.value, lastValue, difference);
-					lastValue = d.value;
-
-					return { k, d };
 				})
 			};
 			console.log(temp);
