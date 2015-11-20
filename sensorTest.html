@@ -41,8 +41,8 @@
 	source1["yAxisLocation"] = ["Left"];
 
 	// Instructions for how the graph
-	source1["graphSecondsToShow"] = 3600;   // If 0 a static graph will be loaded with all the data
-										// else a dynamic updated graph using graphUpdateInterval  (default =0)
+	source1["graphSecondsToShow"] = 3600;
+	source1["graphAutoUpdate"] = 1;
 	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
 	source1["graphTitle"] = "Arduino Flow (Last Hour)";   // Title of grap top left
 	source1["graphTickLine"] = 1;
@@ -59,15 +59,15 @@
 	source2["sensorColumn"] = ["LitersPerMinute"];
 	source2["yAxisLocation"] = ["Left"];
 	// Instructions for how the graph
-	source2["graphSecondsToShow"] = 0;   // If 0 a static graph will be loaded with all the data
-										// else a dynamic updated graph using graphUpdateInterval  (default =0)
-	source2["graphUpdateInterval"] = 30;     // Will update the graph every X seconds (default:2)
+	source2["graphSecondsToShow"] = 86400;
+	source2["graphAutoUpdate"] = 0;
+	source2["graphUpdateInterval"] = 0;     // Will update the graph every X seconds (default:2)
 	source2["graphTitle"] = "Arduino Flow 24-hours (not updating)";   // Title of grap top left
 	source2["graphTickLine"] = 0;
 	source2["grepLeftLegend"] = "Liters (pm)";
 	var l2 = new LineGraph({containerId: 'graph2', data: source2});
 
-
+/*
 	var source3 = {};
 	// The source of the data and how to display it
     source3["displayName"] = ["ServerTemp"];
@@ -82,7 +82,7 @@
 	source3["graphRightMax"] = 44;
 	source3["graphUpdateInterval"] = 30;
 	var l3 = new LineGraph({containerId: 'graph3', data: source3});
-
+*/
 /*
 	var source3 = {};
     source3["displayName"] = ["KastTemp"];
