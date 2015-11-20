@@ -21,7 +21,8 @@
  *  -------------------------------------------------------
  *  graphSecondsToShow  => The X axis range in seconds, (will load data from SQL in this range)
  *                         If 0 a static graph will be loaded with all the data stored in the SQL
- *                         If not 0 the graph will update every <interval> seconds with new data from SQL
+ *  graphAutoUpdate     => If 1 (the graph will auto update - if 0 it is static)
+ *                         If 1 the graph will update every <interval> seconds with new data from SQL
  *                         (default=0)
  *  graphUpdateInterval => Will update the graph every X seconds (default:2)
  *  graphTitle          => Title of graph top middle (default:"")
@@ -223,9 +224,14 @@
 
  		initDimensions();
 
-		if ( myBehavior.secondsToShow != 0 ) {
-			maxTime = new Date();
-			minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
+		if ( myBehavior.autoUpdate = 1 ) {
+			if ( myBehavior.secondsToShow != 0 ) {
+				maxTime = new Date();
+				minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
+			}
+			else {
+				console.log("Expected secondsToShow to be non zero")
+			}
 		}
 
  		createGraph();
@@ -239,7 +245,8 @@
 	var loadData = function(dataMap) {
 
 		// Load data for graph behavior
-		myBehavior.secondsToShow = +getOptionalVar(dataMap,	'graphSecondsToShow', "");
+		myBehavior.secondsToShow = +getOptionalVar(dataMap,	'graphSecondsToShow', "5");
+		myBehavior.autoUpdate = +getOptionalVar(dataMap, 'graphAutoUpdate', "0");
 		myBehavior.tickLine = +getOptionalVar(dataMap, 'graphTickLine', "");
 		myBehavior.axisLeftMin = +getOptionalVar(dataMap, 'graphLeftMin', "");
 		myBehavior.axisLeftMax = +getOptionalVar(dataMap, 'graphLeftMax', "");
@@ -469,7 +476,7 @@
 		createDateLabel();
 		createLegend();
 		// only show menu if we are updating
-		if ( myBehavior.secondsToShow != 0 ) {
+		if ( myBehavior.autoUpdate = 1 ) {
 			createMenuButtons();
 		}
 		setValueLabelsToLatest();
@@ -482,10 +489,12 @@
 				TO = setTimeout(handleWindowResizeEvent, 200);
 		});
 
-		if ( myBehavior.secondsToShow != 0 ) {
-			interval = setInterval(function () {
-				self.refreshData();
-			}, myBehavior.interval * 1000);
+		if ( myBehavior.autoUpdate = 1 ) {
+			if ( myBehavior.secondsToShow != 0 ) {
+				interval = setInterval(function () {
+					self.refreshData();
+				}, myBehavior.interval * 1000);
+			}
 		}
 
 		console.log("We have finished: ", myBehavior);
