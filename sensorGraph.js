@@ -193,6 +193,7 @@
 					loopValue++;
 					//if (loopValue>0) {
 						console.log(loopValue, d.value, lastValue, d.value - lastValue)
+						lastValue = d.value;
 					//}
 
 					return { k, d };
