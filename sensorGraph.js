@@ -224,7 +224,7 @@
 
  		initDimensions();
 
-		if ( myBehavior.autoUpdate = 1 ) {
+		if ( myBehavior.autoUpdate == 1 ) {
 			if ( myBehavior.secondsToShow != 0 ) {
 				maxTime = new Date();
 				minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
@@ -489,7 +489,7 @@
 				TO = setTimeout(handleWindowResizeEvent, 200);
 		});
 
-		if ( myBehavior.autoUpdate = 1 ) {
+		if ( myBehavior.autoUpdate == 1 ) {
 			if ( myBehavior.secondsToShow != 0 ) {
 				interval = setInterval(function () {
 					self.refreshData();
