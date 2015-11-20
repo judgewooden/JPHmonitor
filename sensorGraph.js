@@ -22,8 +22,8 @@
  *  graphSecondsToShow  => The X axis range in seconds, (will load data from SQL in this range)
  *                         If 0 a static graph will be loaded with all the data stored in the SQL
  *  graphAutoUpdate     => If 1 (the graph will auto update - if 0 it is static)
- *                         If 1 the graph will update every <interval> seconds with new data from SQL
- *                         (default=0)
+ *                         If 1 the graph will update every <grapUpdateInterval> seconds with new
+ *                         data from SQL (default=0)
  *  graphUpdateInterval => Will update the graph every X seconds (default:2)
  *  graphTitle          => Title of graph top middle (default:"")
  *  graphTickLine       => Number of horizontal lines to show per tick (default:0);
@@ -83,7 +83,7 @@
 	var currentUserPositionX = -1;
 
 	// scrolling graph fields
-	var interval;
+	var myInterval;
 	var minTime = new Date();
 	var maxTime = new Date();
 	var inProgress = false;
@@ -476,7 +476,7 @@
 		createDateLabel();
 		createLegend();
 		// only show menu if we are updating
-		if ( myBehavior.autoUpdate = 1 ) {
+		if ( myBehavior.autoUpdate == 1 ) {
 			createMenuButtons();
 		}
 		setValueLabelsToLatest();
@@ -491,7 +491,7 @@
 
 		if ( myBehavior.autoUpdate == 1 ) {
 			if ( myBehavior.secondsToShow != 0 ) {
-				interval = setInterval(function () {
+				myInterval = setInterval(function () {
 					self.refreshData();
 				}, myBehavior.interval * 1000);
 			}
@@ -621,13 +621,13 @@
 		if(index == 0) {
 			// start update
 			updatePaused='update';
-			interval = setInterval(function () {
+			myInterval = setInterval(function () {
 				self.refreshData();
 			}, myBehavior.interval * 1000);
 		} else if(index == 1){
 			updatePaused='pause';
 			// pause update
-			clearInterval( interval );
+			clearInterval( myInterval );
 		}
 
 		graph.selectAll('.menu-button')
