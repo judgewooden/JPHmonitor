@@ -191,14 +191,17 @@
 					d.timestamp=parseDate(d.timestamp);
 					d.value=+d.value;
 
+/*
+  TODO : Get this right you idiot
+*/
 					loopValue++;
 					if (loopValue>0) {
 						difference = Math.abs(lastValue - d.value);
 						console.log(loopValue, d.value, lastValue, difference);
-						if (difference > 0.5 )
-							return;
+						//if (difference > 0.5 )
+						//	return {};
 						if ( lastValue == d.value)
-							return;
+							return {};
 					}
 					//console.log(loopValue, d.value, lastValue, difference);
 					lastValue = d.value;
