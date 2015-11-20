@@ -191,11 +191,12 @@
 					d.value=+d.value;
 
 					loopValue++;
-					//if (loopValue>0) {
-						console.log(loopValue, d.value, lastValue, d.value - lastValue)
-						lastValue = d.value;
-					//}
-
+					if (loopValue>0) {
+						if ( lastValue == d.value)
+							return;
+					}
+					console.log(loopValue, d.value, lastValue, d.value - lastValue)
+					lastValue = d.value;
 					return { k, d };
 				})
 			};
