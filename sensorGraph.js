@@ -976,7 +976,9 @@
 	 */
 	var initX = function() {
 
-		if ( myBehavior.secondsToShow != 0 ) {
+		// TODO : CHECK THIS
+		// if ( myBehavior.secondsToShow != 0 ) {
+		if ( myBehavior.autoUpdate != 0 ) {
 			//debug("Start:" + minTime + " End:" + maxTime);
 			x = d3.time.scale()
 				.domain([minTime,maxTime])
