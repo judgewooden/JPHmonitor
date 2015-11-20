@@ -194,7 +194,7 @@
 					loopValue++;
 					if (loopValue>0) {
 						difference = Math.abs(lastValue - d.value);
-						if (difference > 0.1 )
+						if (difference > 0.5 )
 							return;
 						if ( lastValue == d.value)
 							return;
