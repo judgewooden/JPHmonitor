@@ -12,10 +12,11 @@
  *
  *  Array of Data Elements (Mandatory)
  *  ----------------------------------
- *  displayNames  => Name of the data series to the users on the Graph
- *  sensorSource  => The Database table containing the data (Primary key = 'Timestamp')
- *  sensorColumn  => The name of the SQL Column that function will plot in sensorSource
- *  yAxisLocation => Explain to what Axis this data series should be bound, values are "Left" or "Right"
+ *  sensorDisplayName  => Name of the data series to the users on the Graph
+ *  sensorSource       => The Database table containing the data (Primary key = 'Timestamp')
+ *  sensorColumn       => The name of the SQL Column that function will plot in sensorSource
+ *  sensorAxisLocation => Explain to what Axis this data series should be bound, values are "Left" or "Right"
+ *  sensorUpdateTimeSeconds => "Show a gap in graph if data did not update for x seconds
  *
  *  Fields to control the behaviour of the Graph (Optional)
  *  -------------------------------------------------------
@@ -86,6 +87,8 @@
 	var myInterval;
 	var minTime = new Date();
 	var maxTime = new Date();
+	var lastThreeValues;
+	var lastTimeValue;
 	var inProgress = false;
 
 	/* *************************************************************** */
@@ -95,9 +98,29 @@
 		containerId = getRequiredVar(argsMap, 'containerId');
 		container = document.querySelector('#' + containerId);
 
-		loadData(getRequiredVar(argsMap, 'data'));
-		debug("Continues with processData()");
+		// load the configuration
+		loadConfig(getRequiredVar(argsMap, 'data'));
 
+		// Create the Graph
+ 		createGraph();
+
+		// Load data into SQL
+		self.refreshData();
+
+		// window resize listener
+		var TO = false;
+		$(window).resize(function(){
+			if(TO !== false)
+				clearTimeout(TO);
+				TO = setTimeout(handleWindowResizeEvent, 200);
+		});
+
+		// Auto update the data if needed
+		if ( myBehavior.autoUpdate == 1 ) {
+			myInterval = setInterval(function () {
+				self.refreshData();
+			}, myBehavior.interval * 1000);
+		}
 	}
 
 	/*
@@ -119,7 +142,6 @@
 		// build a single query
 		var myurl = [];
 		for (var key in data) {
-			//debug(key);
 
 			lastelem = data[key].values.length - 1;
 
@@ -137,11 +159,11 @@
 			myurl.push(temp);
 		}
 		myurl = JSON.stringify(myurl);
-		u="sensorSQLupdate.php?query=" + encodeURI( myurl );
+		var u="sensorSQLupdate.php?query=" + encodeURI( myurl );
 		console.log(u);
 		// process the result
 		d3.json(u, function(answer) {
-			for (row = 0; row < answer.length; row++) {
+			for (var row = 0; row < answer.length; row++) {
 				var key=answer[row][0];
 				var temp = {
 					timestamp: parseDate(answer[row].timestamp),
@@ -153,7 +175,7 @@
 			redrawAxes(false);
 			redrawLines(false);
 
-//			$(container).trigger('LineGraph:dataModification');
+			$(container).trigger('LineGraph:dataModification');
 
 			//pop old data from our cache
 			var elem=0;
@@ -173,161 +195,76 @@
 	}
 
 	/*
-	 * Prepare the data for D3
-	 */
-	var processData = function(rawdata) {
-		var loopValue=-1;
-		var lastValue=0;
-		var difference=0;
-		console.log(rawdata);
-		$.each(rawdata, function(key, value) {
-			var temp = {
-				name: meta.names[key],
-				table: meta.tables[key],
-				column: meta.columns[key],
-				yaxis: meta.yaxes[key],
-				values: $.each(value.values, function(k, d){
-					d.timestamp=parseDate(d.timestamp);
-					d.value=+d.value;
-					return { k, d };
-
-/*
-  TODO : Get this right you idiot
-
-					loopValue++;
-					if (loopValue>0) {
-						difference = Math.abs(lastValue - d.value);
-						console.log(loopValue, d.value, lastValue, difference);
-						//if (difference > 0.5 )
-						//	return {};
-						if ( lastValue != d.value) {
-							lastValue = d.value;
-							return { k, d };
-						}
-					} else {
-						//console.log(loopValue, d.value, lastValue, difference);
-						lastValue = d.value;
-						return { k, d };
-					}
-*/
-				})
-			};
-			console.log(temp);
-			data.push(temp);
-		});
-
-		// According to stackoverflow... if you assign a large variable NULL it will free up RAM
-		// rawdata=null;
-
-		// remove repeating data elements
-		// TODO: FIX IT YOU IDIOT !!!!
-		/*
-		var elem=0;
-		for (var key in data) {
-			var tollerance=5;
-			var lastvalue=0;
-			//for (elem = 0; elem < data[key].values.length; elem++) {
-			for (elem in data[key].values) {
-				console.log(elem, data[key].values[elem].value, data[key].values[elem].value - lastvalue);
-				if (elem==0) {
-						lastvalue = data[key].values[elem].value;
-				} else {
-					if ( Math.abs(data[key].values[elem].value - lastvalue) < tollerance ) {
-						lastvalue = data[key].values[elem].value;
-						console.log("remove");
-						data[key].values.splice(elem, 1);
-					} else {
-						lastvalue = data[key].values[elem].value;
-					}
-				}
-			}
-			for (elem in data[key].values) {
-				console.log(elem, data[key].values[elem].value);
-			}
-		}
-		*/
-
- 		initDimensions();
-
-		if ( myBehavior.autoUpdate == 1 ) {
-			if ( myBehavior.secondsToShow != 0 ) {
-				maxTime = new Date();
-				minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
-			}
-			else {
-				console.log("Expected secondsToShow to be non zero")
-			}
-		}
-
- 		createGraph();
-
-
-	}
-
-	/*
 	 * Load all the data from SQL using defers before plotting
 	 */
-	var loadData = function(dataMap) {
+	var loadConfig = function(dataMap) {
 
 		// Load data for graph behavior
-		myBehavior.secondsToShow = +getOptionalVar(dataMap,	'graphSecondsToShow', "5");
+		myBehavior.secondsToShow = +getOptionalVar(dataMap,	'graphSecondsToShow', "3600");
 		myBehavior.autoUpdate = +getOptionalVar(dataMap, 'graphAutoUpdate', "0");
+		myBehavior.interval = +getOptionalVar(dataMap, 'graphUpdateInterval', "5");
 		myBehavior.tickLine = +getOptionalVar(dataMap, 'graphTickLine', "");
 		myBehavior.axisLeftMin = +getOptionalVar(dataMap, 'graphLeftMin', "");
 		myBehavior.axisLeftMax = +getOptionalVar(dataMap, 'graphLeftMax', "");
 		myBehavior.axisRightMin = +getOptionalVar(dataMap, 'graphRightMin', "");
 		myBehavior.axisRightMax = +getOptionalVar(dataMap, 'graphRightMax', "");
-		myBehavior.interval = +getOptionalVar(dataMap, 'graphUpdateInterval', "2");
 		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
 		myBehavior.axisLeftLegend = getOptionalVar(dataMap, 'grepLeftLegend', "");
 		myBehavior.axisRightLegend = getOptionalVar(dataMap, 'grepRightLegend', "");
-		//TODO: program the following
-
+		//TODO: program the following !!!!!!
 		myBehavior.hideLegend = getOptionalVar(dataMap, 'graphHideLegend', "");
 
 		// Load graph meta data
-		meta.names = getRequiredVar(dataMap, 'displayName',
-										"Need to plot something");
-		meta.tables = getRequiredVar(dataMap, 'sensorSource',
-										"Need to get data from somewhere");
-		meta.columns = getRequiredVar(dataMap, 'sensorColumn',
-										"Need to have value to show");
-		meta.yaxes = getOptionalVar(dataMap, 'yAxisLocation',
-										"Left");
-		// Load graph raw data
-		var rawdata = [];
-		var u;
-		var defers = [], defer;
-		// TODO rewrite to be a multi element query
-		for ( index = 0; index < meta.names.length; ++index ) {
-			u="sensorSQLinitial.php?source=" + meta.tables[index] +
-				"&column=" + meta.columns[index];
-//TODO			"&index=" + index;
-			if ( myBehavior.secondsToShow != 0 ) {
-				u = u + "&seconds=" + myBehavior.secondsToShow;
+		meta.names = getRequiredVar(dataMap, 'sensorDisplayName', "Need to plot something");
+		meta.tables = getRequiredVar(dataMap, 'sensorSource', "Need to get data from somewhere");
+		meta.columns = getRequiredVar(dataMap, 'sensorColumn', "Need to have value to show");
+		meta.yaxes = getRequiredVar(dataMap, 'sensorAxisLocation', "Must specify Axis");
+		meta.datagap = getRequiredVar(dataMap, 'sensorUpdateGapSeconds', "Must specify [0=valid]");
+		//TODO: program the following !!!!!!
+		meta.interpolation = getRequiredVar(dataMap, 'sensorInterpolation', "Must specify Interpolation");
+
+		console.log(myBehavior);
+
+		//Create the data object
+		for (var key in meta.names) {
+			// Do some data value checks
+			if ( meta.datagap[key] > 0 ) {
+				meta.datagap[key] = meta.datagap[key] * 1000;
 			}
-			console.log(u);
-			defer = $.ajax({
-				type : "GET",
-				dataType : "json",
-				url: u,
-				success: function(fromSQL) {
-				 	rawdata.push({
-						values: fromSQL
-					});
-				}
-			});
-			defers.push(defer);
-		}
-		$.when.apply(window, defers).done(function(){
-			processData(rawdata);
-		});
+
+			// push each line to the data stack
+			var temp = {
+				name: meta.names[key],
+				table: meta.tables[key],
+				column: meta.columns[key],
+				yaxis: meta.yaxes[key],
+				interpolation: meta.interpolation[key],
+				datagap: meta.datagap[key],
+				values: []
+			};
+			console.log(temp);
+			data.push(temp);
+	 	}
+
+	 	// Do some data value checks
+	 	if ( myBehavior.autoUpdate > 0 ) {
+	 		if ( myBehavior.secondsToShow < 1 ) {
+	 			throw new Error("secondsToShow must be provided for autoupdate");
+	 		}
+	 		if ( myBehavior.interval < 1 ) {
+	 			throw new Error("interval must be provided for autoupdate");
+	 		}
+	 	}
+
 	}
 
 	/*
 	 * Creates the SVG elements
 	 */
 	var createGraph = function() {
+
+ 		initDimensions();
+
 		// Add an SVG element with the desired dimensions and margin.
 		graph = d3.select("#" + containerId).append("svg:svg")
 			.attr("class", "line-graph")
@@ -349,13 +286,30 @@
 	        		.text(myBehavior.title);
 	    }
 
+	    // X - Axis
+		if ( myBehavior.secondsToShow != 0 ) {
+			maxTime = new Date();
+			minTime.setSeconds(maxTime.getSeconds() - myBehavior.secondsToShow);
+		}
+
 		initX();
 
-		// Add the x-axis.
 		graph.append("svg:g")
 			.attr("class", "x axis")
 			.attr("transform", "translate(0," + h + ")")
 			.call(xAxis);
+
+	    // Y - Axis
+		hasYaxisLeft=false;
+		hasYaxisRight=false;
+		for (var key in meta.yaxes) {
+			if ( meta.yaxes[key] == 'Left' ) {
+				hasYaxisLeft = true;
+			}
+			if ( meta.yaxes[key] == 'Right' ) {
+				hasYaxisRight = true;
+			}
+		}
 
 		initY();
 
@@ -397,40 +351,42 @@
 			}
 		}
 
-		// Remember to use the bodge !!!
-		lineFunctionSeriesIndex  = -1;
-
 		// Create automated color domain
 		color.domain(meta.names);
 
+		// Remember to use the bodge !!!
+		lineFunctionSeriesIndex  = -1;
 		// Create the line function() !!! Remember lineFunctionSeriesIndex bodge
 
-		// TODO: These should  be global values
-		//       And they must be reset evertime before calling drawline()
-		// TODO: These values should also become Arrays, with [i] as index
-		var prevPrevVal = 0;
-      	var prevVal = 0;
-      	var curVal = 0;
-      	var prevTimeVal = null;
+		// Creating global variables to figure out where
+		// if there is a data gap and create a moving average
+		// NOTE: This is a serious bodge !!! but it works
+		var numberOfLines = 3;
+		lastTimeValue = new Array(numberOfLines);
+		for (var row = 0; row < numberOfLines; row++) {
+			threeLastValues = new Array(3);
+		}
 
       	drawline = d3.svg.line()
             // TODO: write interpolation routine
             //.interpolate("step-before")
             .interpolate("basis")
-            // TODO: Figure out what to do for 0 values
             //.defined()
             .defined(function(d, i) {
-            	if (prevTimeVal != null) {
-            		//console.log( "defined: ", lineFunctionSeriesIndex );
-            		var dif = d.timestamp.getTime() - prevTimeVal.getTime();
-					//console.log("here:", dif, prevTimeVal, d.timestamp, d.value);
-            		if (dif > 15000) {
-            			prevTimeVal = null;
-            			return false;
+            	// If there is no data for a certain while (stop interpolation !!)
+            	if (meta.datagap[lineFunctionSeriesIndex] > 0 ) {
+            		if (lastTimeValue[lineFunctionSeriesIndex] != null) {
+            			var dif = d.timestamp.getTime() - lastTimeValue[lineFunctionSeriesIndex].getTime();
+            			if (dif > meta.datagap[lineFunctionSeriesIndex]) {
+            				lastTimeValue[lineFunctionSeriesIndex] = null;
+            				return false;
+            			}
             		}
-            	}
-            	prevTimeVal = d.timestamp;
-             	return true;
+            		lastTimeValue[lineFunctionSeriesIndex] = d.timestamp;
+             		return true;
+             	} else {
+             		return true;
+             	}
             })
 			.x( function(d, i) { return x(d.timestamp); })
 			.y( function(d, i) {
@@ -443,24 +399,35 @@
 				} else {
 					return yLeft(d.value);
 
-		  // TODO (think of a more elligent way to do this) moving average
-          /*
-          if (i == 0) {
-              prevPrevVal  = yLeft(d.value);
-              prevVal = yLeft(d.value);
-              curVal =  yLeft(d.value);
-          } else if (i == 1) {
-              prevPrevVal = prevVal;
-              prevVal = curVal;
-              curVal = (prevVal + yLeft(d.value)) / 2.0;
-          } else {
-              prevPrevVal = prevVal;
-              prevVal = curVal;
-              curVal = (prevPrevVal + prevVal + yLeft(d.value)) / 3.0;
-          }
-          return curVal;
-          */
-
+					// TODO (think of a more elligent way to do this) moving average
+			        /*
+					// TODO - remember we need to reset this at the moment
+					//        the line stops being defined too !!!!!!
+					//        (so htf do we do that??? )
+			        if (i == 0) {
+			            lastThreeValues[lineFunctionSeriesIndex][2] = yLeft(d.value);
+			            lastThreeValues[lineFunctionSeriesIndex][1] = yLeft(d.value);
+			            lastThreeValues[lineFunctionSeriesIndex][0] = yLeft(d.value);
+			        } else if (i == 1) {
+			            lastThreeValues[lineFunctionSeriesIndex][2] =
+			            								lastThreeValues[lineFunctionSeriesIndex][1];
+			            lastThreeValues[lineFunctionSeriesIndex][1] =
+					              						lastThreeValues[lineFunctionSeriesIndex][0];
+			            lastThreeValues[lineFunctionSeriesIndex][0] =
+			              							   (lastThreeValues[lineFunctionSeriesIndex][1]
+			              							   + yLeft(d.value)) / 2.0;
+			        } else {
+			            lastThreeValues[lineFunctionSeriesIndex][2] =
+			              								lastThreeValues[lineFunctionSeriesIndex][1];
+			            lastThreeValues[lineFunctionSeriesIndex][1] =
+			              								lastThreeValues[lineFunctionSeriesIndex][0];
+			            lastThreeValues[lineFunctionSeriesIndex][0] =
+			              							   (lastThreeValues[lineFunctionSeriesIndex][2]
+			              							    lastThreeValues[lineFunctionSeriesIndex][1]
+			              							   + yLeft(d.value)) / 2.0;
+			        }
+			        return lastThreeValues[lineFunctionSeriesIndex][0];
+			        */
 				}
 			});
 
@@ -528,25 +495,8 @@
 		if ( myBehavior.autoUpdate == 1 ) {
 			createMenuButtons();
 		}
-		setValueLabelsToLatest();
 
-		// window resize listener
-		var TO = false;
-		$(window).resize(function(){
-			if(TO !== false)
-				clearTimeout(TO);
-				TO = setTimeout(handleWindowResizeEvent, 200);
-		});
-
-		if ( myBehavior.autoUpdate == 1 ) {
-			if ( myBehavior.secondsToShow != 0 ) {
-				myInterval = setInterval(function () {
-					self.refreshData();
-				}, myBehavior.interval * 1000);
-			}
-		}
-
-		console.log("We have finished: ", myBehavior);
+		//console.log("We have finished creating Graph.");
 	}
 
 	/**
@@ -848,13 +798,14 @@
 		var xValue = x.invert(xPosition);
 //		debug("Start get Value. Position: " + xPosition + " Index: " + index);
 		var i = bisectDate(data[index].values, xValue, 1);
+		var v;
 		if (i>1) {
-			//console.log(data[index].values[i-1].timestamp,
-			//		data[index].values[i-1].value);
-			// TODO: Round values based on size..... eg. do below for values > 100
-			var v = Math.round(data[index].values[i-1].value * 10) / 10;
+			if (data[index].values[i-1].value > 10)
+				v = Math.round(data[index].values[i-1].value * 10) / 10;
+			else
+				v = data[index].values[i-1].value;
 		} else {
-			var v = 0;
+			v = 0;
 		}
 		return {value: v, date: xValue };
 	}
@@ -938,18 +889,6 @@
 	 */
 	var initY = function() {
 
-		// TODO: Can this code not be moved to init section ????
-		hasYaxisLeft=false;
-		hasYaxisRight=false;
-		for ( index = 0; index < meta.yaxes.length; ++index ) {
-			if ( meta.yaxes[index] == 'Left' ) {
-				hasYaxisLeft = true;
-			}
-			if ( meta.yaxes[index] == 'Right' ) {
-				hasYaxisRight = true;
-			}
-		}
-
 		if (hasYaxisLeft) {
 			yLeft = d3.scale
 				.linear()
@@ -1023,9 +962,7 @@
 	 */
 	var initX = function() {
 
-		// TODO : CHECK THIS
-		// if ( myBehavior.secondsToShow != 0 ) {
-		if ( myBehavior.autoUpdate != 0 ) {
+		if ( myBehavior.secondsToShow != 0 ) {
 			//debug("Start:" + minTime + " End:" + maxTime);
 			x = d3.time.scale()
 				.domain([minTime,maxTime])

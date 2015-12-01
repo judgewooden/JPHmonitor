@@ -35,12 +35,18 @@
 
 	var source1 = {};
 	// The source of the data and how to display it
-    source1["displayName"] = ["Flow", "Temp"];
-	source1["sensorSource"] = ["ArduinoMonitor1", "RaspiTemp1"];
-	source1["sensorColumn"] = ["LitersPerMinute", "Value"];
-	source1["yAxisLocation"] = ["Left", "Right"];
-    // TODO: Add a tollerate time second value to adjust emptyu
-    // source1["sensorUpdateTimeSeconds"] = [15, 30];
+    source1["sensorDisplayName"] = ["Flow", "Temp"];
+    source1["sensorSource"] = ["ArduinoMonitor1", "RaspiTemp1"];
+    source1["sensorColumn"] = ["LitersPerMinute", "Value"];
+    source1["sensorAxisLocation"] = ["Left", "Right"];
+    source1["sensorInterpolation"] = ["Basis", "Basis"];
+    source1["sensorUpdateGapSeconds"] = ["15", "15"];
+    /*source1["sensorDisplayName"] = ["Flow"];
+	source1["sensorSource"] = ["ArduinoMonitor1"];
+	source1["sensorColumn"] = ["LitersPerMinute"];
+    source1["sensorAxisLocation"] = ["Left"];
+    source1["sensorInterpolation"] = ["Basis"];
+    source1["sensorUpdateGapSeconds"] = ["15"];*/
 
 	// Instructions for how the graph
 	source1["graphSecondsToShow"] = 3600;
@@ -54,12 +60,15 @@
 //	source["grepRightLegend"] = "Humidity (%)";
 	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
+
 	var source2 = {};
 	// The source of the data and how to display it
-    source2["displayName"] = ["Flow"];
+    source2["sensorDisplayName"] = ["Flow"];
 	source2["sensorSource"] = ["ArduinoMonitor1"];
 	source2["sensorColumn"] = ["LitersPerMinute"];
-	source2["yAxisLocation"] = ["Left"];
+	source2["sensorAxisLocation"] = ["Left"];
+    source2["sensorInterpolation"] = ["Basis"];
+    source2["sensorUpdateGapSeconds"] = ["15"];
 	// Instructions for how the graph
 	source2["graphSecondsToShow"] = 86400;
 	source2["graphAutoUpdate"] = 0;
@@ -69,12 +78,13 @@
 	var l2 = new LineGraph({containerId: 'graph2', data: source2});
 
 /*
+
 	var source3 = {};
 	// The source of the data and how to display it
-    source3["displayName"] = ["ServerTemp"];
+    source3["sensorDisplayName"] = ["ServerTemp"];
 	source3["sensorSource"] = ["RaspiTemp1"];
 	source3["sensorColumn"] = ["Value"];
-	source3["yAxisLocation"] = ["Right"];
+	source3["sensorAxisLocation"] = ["Right"];
 	// Instructions for how the graph
 	source3["graphSecondsToShow"] = 0;
 	source3["graphTitle"] = "Server Temp 24-hours (not updating)";
@@ -86,10 +96,10 @@
 */
 /*
 	var source3 = {};
-    source3["displayName"] = ["KastTemp"];
+    source3["sensorDisplayName"] = ["KastTemp"];
 	source3["sensorSource"] = ["AirTemperature1"];
 	source3["sensorColumn"] = ["Value"];
-	source3["yAxisLocation"] = ["Right"];
+	source3["sensorAxisLocation"] = ["Right"];
 
 	// Instructions for how the graph
 	source3["graphSecondsToShow"] = "1500";
@@ -100,17 +110,3 @@
 */
 
 </script>
-
-     <!-- Metric 2 -->
-      <div class="col-sm-3">
-        <div class="chart-wrapper">
-          <div class="chart-title">
-            Total Donations in USD
-          </div>
-          <div class="chart-stage">
-            <div id="total-donations-nd"></div>
-          </div>
-        </div>
-      </div>
-      <!-- Metric 2 -->
-
