@@ -35,10 +35,12 @@
 
 	var source1 = {};
 	// The source of the data and how to display it
-    source1["displayName"] = ["Flow"];
-	source1["sensorSource"] = ["ArduinoMonitor1"];
-	source1["sensorColumn"] = ["LitersPerMinute"];
-	source1["yAxisLocation"] = ["Left"];
+    source1["displayName"] = ["Flow", "Temp"];
+	source1["sensorSource"] = ["ArduinoMonitor1", "RaspiTemp1"];
+	source1["sensorColumn"] = ["LitersPerMinute", "Value"];
+	source1["yAxisLocation"] = ["Left", "Right"];
+    // TODO: Add a tollerate time second value to adjust emptyu
+    // source1["sensorUpdateTimeSeconds"] = [15, 30];
 
 	// Instructions for how the graph
 	source1["graphSecondsToShow"] = 3600;
@@ -61,7 +63,6 @@
 	// Instructions for how the graph
 	source2["graphSecondsToShow"] = 86400;
 	source2["graphAutoUpdate"] = 0;
-	source2["graphUpdateInterval"] = 0;     // Will update the graph every X seconds (default:2)
 	source2["graphTitle"] = "Arduino Flow 24-hours (not updating)";   // Title of grap top left
 	source2["graphTickLine"] = 0;
 	source2["grepLeftLegend"] = "Liters (pm)";
@@ -98,5 +99,18 @@
 	var l3 = new LineGraph({containerId: 'graph3', data: source3});
 */
 
-
 </script>
+
+     <!-- Metric 2 -->
+      <div class="col-sm-3">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Total Donations in USD
+          </div>
+          <div class="chart-stage">
+            <div id="total-donations-nd"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Metric 2 -->
+

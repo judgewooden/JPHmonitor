@@ -16,5 +16,5 @@ webWatch()
 
 }
 
-webWatch sensorGraph.js sensorGraphStyle.css sensorSQLinitial.php sensorSQLupdate.php sensorTest.html
+webWatch sensorGraph.js sensorSQLinitial.php sensorSQLupdate.php `ls -1 *html *css` 
 

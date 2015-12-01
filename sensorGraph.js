@@ -21,9 +21,9 @@
  *  -------------------------------------------------------
  *  graphSecondsToShow  => The X axis range in seconds, (will load data from SQL in this range)
  *                         If 0 a static graph will be loaded with all the data stored in the SQL
- *  graphAutoUpdate     => If 1 (the graph will auto update - if 0 it is static)
+ *  graphAutoUpdate     => If 1 the graph will auto update - if 0 it is static (default=0)
  *                         If 1 the graph will update every <grapUpdateInterval> seconds with new
- *                         data from SQL (default=0)
+ *                         data from SQL
  *  graphUpdateInterval => Will update the graph every X seconds (default:2)
  *  graphTitle          => Title of graph top middle (default:"")
  *  graphTickLine       => Number of horizontal lines to show per tick (default:0);
@@ -91,7 +91,6 @@
 	/* *************************************************************** */
 	/* Initiationzation and Validation */
 	/* *************************************************************** */
-
 	var _init = function() {
 		containerId = getRequiredVar(argsMap, 'containerId');
 		container = document.querySelector('#' + containerId);
@@ -104,7 +103,6 @@
 	/*
 	 * Manager Data Update
 	 */
-
 	this.refreshData = function() {
 		maxTime = new Date();
 		minTime = new Date(maxTime .getTime()
@@ -181,6 +179,7 @@
 		var loopValue=-1;
 		var lastValue=0;
 		var difference=0;
+		console.log(rawdata);
 		$.each(rawdata, function(key, value) {
 			var temp = {
 				name: meta.names[key],
@@ -190,10 +189,11 @@
 				values: $.each(value.values, function(k, d){
 					d.timestamp=parseDate(d.timestamp);
 					d.value=+d.value;
+					return { k, d };
 
 /*
   TODO : Get this right you idiot
-*/
+
 					loopValue++;
 					if (loopValue>0) {
 						difference = Math.abs(lastValue - d.value);
@@ -209,11 +209,15 @@
 						lastValue = d.value;
 						return { k, d };
 					}
+*/
 				})
 			};
 			console.log(temp);
 			data.push(temp);
 		});
+
+		// According to stackoverflow... if you assign a large variable NULL it will free up RAM
+		// rawdata=null;
 
 		// remove repeating data elements
 		// TODO: FIX IT YOU IDIOT !!!!
@@ -400,14 +404,37 @@
 		color.domain(meta.names);
 
 		// Create the line function() !!! Remember lineFunctionSeriesIndex bodge
+
+		// TODO: These should  be global values
+		//       And they must be reset evertime before calling drawline()
+		// TODO: These values should also become Arrays, with [i] as index
 		var prevPrevVal = 0;
       	var prevVal = 0;
       	var curVal = 0;
+      	var prevTimeVal = null;
+
       	drawline = d3.svg.line()
             // TODO: write interpolation routine
-            //.interpolate("bundle")
+            //.interpolate("step-before")
+            .interpolate("basis")
+            // TODO: Figure out what to do for 0 values
+            //.defined()
+            .defined(function(d, i) {
+            	if (prevTimeVal != null) {
+            		//console.log( "defined: ", lineFunctionSeriesIndex );
+            		var dif = d.timestamp.getTime() - prevTimeVal.getTime();
+					//console.log("here:", dif, prevTimeVal, d.timestamp, d.value);
+            		if (dif > 15000) {
+            			prevTimeVal = null;
+            			return false;
+            		}
+            	}
+            	prevTimeVal = d.timestamp;
+             	return true;
+            })
 			.x( function(d, i) { return x(d.timestamp); })
 			.y( function(d, i) {
+				//console.log( "y-axis: ", lineFunctionSeriesIndex );
 				if ( i == 0 ) {
 					lineFunctionSeriesIndex++;
 				}
@@ -521,7 +548,6 @@
 
 		console.log("We have finished: ", myBehavior);
 	}
-
 
 	/**
 	* Called when the window is resized to redraw graph accordingly.
@@ -780,7 +806,6 @@
 			event.clientY + " offsetY: " + event.offsetY + " pageY: " +
 			event.pageY + " hoverLineYOffset: " + hoverLineYOffset);
 */
-
 		if(mouseX >= 0 && mouseX <= w && mouseY >= 0 && mouseY <= h) {
 			hoverLine.classed("hide", false);
 
@@ -819,7 +844,6 @@
 	 *	the given array (one of the lines)
 	 * Return {value: value, date, date}
 	 */
-
 	var getValueForPositionXFromData = function(xPosition, index) {
 		var xValue = x.invert(xPosition);
 //		debug("Start get Value. Position: " + xPosition + " Index: " + index);
@@ -827,6 +851,7 @@
 		if (i>1) {
 			//console.log(data[index].values[i-1].timestamp,
 			//		data[index].values[i-1].value);
+			// TODO: Round values based on size..... eg. do below for values > 100
 			var v = Math.round(data[index].values[i-1].value * 10) / 10;
 		} else {
 			var v = 0;
@@ -874,7 +899,6 @@
 			})
 
 		cumulativeWidth = cumulativeWidth - 8;
-
 		if(cumulativeWidth > w) {
 			legendFontSize = legendFontSize-1;
 
@@ -914,6 +938,7 @@
 	 */
 	var initY = function() {
 
+		// TODO: Can this code not be moved to init section ????
 		hasYaxisLeft=false;
 		hasYaxisRight=false;
 		for ( index = 0; index < meta.yaxes.length; ++index ) {
