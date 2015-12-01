@@ -70,7 +70,7 @@
 	// D3 structures
 	var graph;
 	var x, xAxis;
-	var yLeft, yAxisLeft, yRight, yAxisRight, haveYAxisLeft, haveYAxisRight;
+	var yLeft, yAxisLeft, yRight, yAxisRight, hasYAxisLeft, hasYAxisRight;
 	var color = d3.scale.category10();
 	var drawline, linesGroup, lines, linesGroupText;
 	var hoverContainer, hoverLine, hoverLineXOffset, hoverLineYOffset,
@@ -300,21 +300,21 @@
 			.call(xAxis);
 
 	    // Y - Axis
-		hasYaxisLeft=false;
-		hasYaxisRight=false;
+		hasYAxisLeft=false;
+		hasYAxisRight=false;
 		for (var key in meta.yaxes) {
 			if ( meta.yaxes[key] == 'Left' ) {
-				hasYaxisLeft = true;
+				hasYAxisLeft = true;
 			}
 			if ( meta.yaxes[key] == 'Right' ) {
-				hasYaxisRight = true;
+				hasYAxisRight = true;
 			}
 		}
 
 		initY();
 
 		// Add the y-axis to the left
-		if (hasYaxisLeft) {
+		if (hasYAxisLeft) {
 			leftYaxis = graph.append("svg:g")
 				.attr("class", "y axis left")
 				.attr("transform", "translate(-5,0)")
@@ -333,7 +333,7 @@
 		}
 
 		// Add the y-axis to the right
-		if (hasYaxisRight) {
+		if (hasYAxisRight) {
 			rightYaxis = graph.append("svg:g")
 				.attr("class", "y axis right")
 				.attr("transform", "translate(" + (w+10) + ",0)")
@@ -431,7 +431,6 @@
 				}
 			});
 
-
 		// Draw the line
 		lines = graph.append("svg:g")
 			.attr("class", "lines")
@@ -517,7 +516,7 @@
 		graph.selectAll("g .x.axis")
 			.attr("transform", "translate(0," + h + ")");
 
-		if (hasYaxisRight) {
+		if (hasYAxisRight) {
 			graph.selectAll("g .y.axis.right")
 				.attr("transform", "translate(" + (w+10) + ",0)");
 		}
@@ -889,7 +888,7 @@
 	 */
 	var initY = function() {
 
-		if (hasYaxisLeft) {
+		if (hasYAxisLeft) {
 			yLeft = d3.scale
 				.linear()
 				.domain([
@@ -923,7 +922,7 @@
 			yAxisLeft = d3.svg.axis().scale(yLeft).orient("left");
 		}
 
-		if (hasYaxisRight) {
+		if (hasYAxisRight) {
 			yRight = d3.scale
 				.linear()
 				.domain([
@@ -1006,13 +1005,13 @@
 				.ease("linear")
 				.call(xAxis)
 
-			if (hasYaxisLeft) {
+			if (hasYAxisLeft) {
 				graph.selectAll("g .y.axis.left").transition()
 					.duration(transitionDuration)
 					.ease("linear")
 					.call(yAxisLeft)
 			}
-			if (hasYaxisRight) {
+			if (hasYAxisRight) {
 				graph.selectAll("g .y.axis.right").transition()
 					.duration(transitionDuration)
 					.ease("linear")
@@ -1022,12 +1021,12 @@
 			graph.selectAll("g .x.axis")
 				.call(xAxis)
 
-			if (hasYaxisLeft) {
+			if (hasYAxisLeft) {
 				graph.selectAll("g .y.axis.left")
 					.call(yAxisLeft)
 			}
 
-			if (hasYaxisRight) {
+			if (hasYAxisRight) {
 				graph.selectAll("g .y.axis.right")
 					.call(yAxisRight)
 			}
