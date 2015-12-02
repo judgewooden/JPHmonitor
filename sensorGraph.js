@@ -91,6 +91,11 @@
 	var lastTimeValue;
 	var inProgress = false;
 
+	// Include
+	var spinner;
+	var spinneropts;
+	var spinnerActive = true;
+
 	/* *************************************************************** */
 	/* Initiationzation and Validation */
 	/* *************************************************************** */
@@ -104,6 +109,7 @@
 		// Create the Graph
  		createGraph();
 
+ 		spinner = new Spinner(spinneropts).spin(container);
 		// Load data into SQL
 		self.refreshData();
 
@@ -191,6 +197,10 @@
 				}
 			}
 			inProgress = false;
+			if (spinnerActive) {
+				spinnerActive=false;
+				spinner.stop();
+			}
 		});
 	}
 
@@ -256,7 +266,14 @@
 	 		}
 	 	}
 
+	 	// spinner variables
+	 	spinnterOpts = {lines: 13, length: 28, width: 14, radius: 42, scale: 1, corners:1,
+	 					color: '#000', opacity: 0.25, rotate: 0, direction: 1, speed: 1.1,
+	 					trail: 60, fps: 20, zIndex: 2e9, className: 'spinner', top: '50%',
+	 					left: '50%', shadow: false, hwaccel: false, position: 'absolute'}
+
 	}
+
 
 	/*
 	 * Creates the SVG elements
@@ -502,6 +519,8 @@
 		if ( myBehavior.autoUpdate == 1 ) {
 			createMenuButtons();
 		}
+
+		setValueLabelsToLatest();
 
 		//console.log("We have finished creating Graph.");
 	}
@@ -1110,5 +1129,7 @@
 /* execute init now that everything is defined */
 /* *************************************************************** */
 	_init();
+
+
 }
 

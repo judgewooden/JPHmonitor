@@ -3,6 +3,7 @@
 <title>Line Graph (template)</title>
 <script src="http://d3js.org/d3.v2.js"></script>
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
 <script src="sensorGraph.js"></script>
 <!--
 	courtesy: benjchristensen - Interactive Line Graph
@@ -54,10 +55,12 @@
 	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
 	source1["graphTitle"] = "Arduino Flow (Last Hour)";   // Title of grap top left
 	source1["graphTickLine"] = 1;
-//	source["graphRightMin"] = 1;
-//	source["graphRightMax"] = 100;
+    source1["graphRightMin"] = 40;
+    source1["graphRightMax"] = 55;
+    source1["graphLeftMin"] = 0;
+    source1["graphLeftMax"] = 1;
 	source1["grepLeftLegend"] = "Liters (pm)";
-//	source["grepRightLegend"] = "Humidity (%)";
+	source1["grepRightLegend"] = "Degrees (C)";
 	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
 
