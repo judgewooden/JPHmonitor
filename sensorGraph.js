@@ -374,10 +374,16 @@
             //.defined()
             .defined(function(d, i) {
             	// If there is no data for a certain while (stop interpolation !!)
+            	// debug("defined: " + containerId + " => i: " + lineFunctionSeriesIndex);
             	if (meta.datagap[lineFunctionSeriesIndex] > 0 ) {
             		if (lastTimeValue[lineFunctionSeriesIndex] != null) {
             			var dif = d.timestamp.getTime() - lastTimeValue[lineFunctionSeriesIndex].getTime();
-            			if (dif > meta.datagap[lineFunctionSeriesIndex]) {
+	        			if (dif > meta.datagap[lineFunctionSeriesIndex]) {
+            				debug("defined: " + containerId +
+            					" => i: " + lineFunctionSeriesIndex +
+            					" diff: " + dif +
+            					" last: " + lastTimeValue[lineFunctionSeriesIndex].getTime() +
+            					" curr: " + d.timestamp.getTime());
             				lastTimeValue[lineFunctionSeriesIndex] = null;
             				return false;
             			}
