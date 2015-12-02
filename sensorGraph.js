@@ -374,16 +374,18 @@
             //.defined()
             .defined(function(d, i) {
             	// If there is no data for a certain while (stop interpolation !!)
-            	// debug("defined: " + containerId + " => i: " + lineFunctionSeriesIndex);
+//				debug("defined: " + containerId + " => i: " + lineFunctionSeriesIndex);
             	if (meta.datagap[lineFunctionSeriesIndex] > 0 ) {
             		if (lastTimeValue[lineFunctionSeriesIndex] != null) {
             			var dif = d.timestamp.getTime() - lastTimeValue[lineFunctionSeriesIndex].getTime();
 	        			if (dif > meta.datagap[lineFunctionSeriesIndex]) {
+/*
             				debug("defined: " + containerId +
             					" => i: " + lineFunctionSeriesIndex +
             					" diff: " + dif +
             					" last: " + lastTimeValue[lineFunctionSeriesIndex].getTime() +
             					" curr: " + d.timestamp.getTime());
+*/
             				lastTimeValue[lineFunctionSeriesIndex] = null;
             				return false;
             			}
@@ -968,7 +970,7 @@
 	var initX = function() {
 
 		if ( myBehavior.secondsToShow != 0 ) {
-			//debug("Start:" + minTime + " End:" + maxTime);
+//			debug("Start:" + minTime + " End:" + maxTime);
 			x = d3.time.scale()
 				.domain([minTime,maxTime])
 				.range([0, w]);
