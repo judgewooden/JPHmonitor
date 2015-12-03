@@ -55,8 +55,8 @@
 	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
 	source1["graphTitle"] = "Arduino Flow (Last Hour)";   // Title of grap top left
 	source1["graphTickLine"] = 1;
-    source1["graphRightMin"] = 40;
-    source1["graphRightMax"] = 55;
+    source1["graphRightMin"] = 46;
+    source1["graphRightMax"] = 52;
     source1["graphLeftMin"] = 0;
     source1["graphLeftMax"] = 1;
 	source1["grepLeftLegend"] = "Liters (pm)";
@@ -75,12 +75,14 @@
 	// Instructions for how the graph
     source2["graphRightMin"] = -0.1;
     source2["graphRightMax"] = 1.1;
+    source1["graphLeftMin"] = 0;
+    source1["graphLeftMax"] = 1;
 	source2["graphSecondsToShow"] = 86400;
 	source2["graphAutoUpdate"] = 0;
 	source2["graphTitle"] = "Arduino Flow 24-hours (not updating)";   // Title of grap top left
 	source2["graphTickLine"] = 0;
     source2["grepLeftLegend"] = "Liters (pm)";
-    source2["grepRightLegend"] = "Power (1=ON/0=OFF)";
+    source2["grepRightLegend"] = "Power: 1=on / 0=off";
 	var l2 = new LineGraph({containerId: 'graph2', data: source2});
 /*
 

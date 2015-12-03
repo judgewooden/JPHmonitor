@@ -91,10 +91,14 @@
 	var lastTimeValue;
 	var inProgress = false;
 
-	// Include
+	// Include a spin component when loading data
 	var spinner;
 	var spinneropts;
 	var spinnerActive = true;
+
+	// Filter data values if they are the same value as previous with tollerance ...
+	var lastTimestamp;
+	var lastValue;
 
 	/* *************************************************************** */
 	/* Initiationzation and Validation */
@@ -168,21 +172,99 @@
 		var u="sensorSQLupdate.php?query=" + encodeURI( myurl );
 		console.log(u);
 		// process the result
+		// Consider doing the below once during initialization
+
+		// Prepare variables for filtering
+		// TODO
+		var skipped = new Array(data.length);
+		var filtercount = new Array(data.length);
+		var prev = new Array(data.length);
+		for (var i = 0; i < data.length; i++) {
+			skipped[i] = false;
+			filtercount[i]=0;
+		}
+
 		d3.json(u, function(answer) {
+
 			for (var row = 0; row < answer.length; row++) {
 				var key=answer[row][0];
+
 				var temp = {
 					timestamp: parseDate(answer[row].timestamp),
 					value: +answer[row].value
 				};
-				data[key].values.push(temp);
+
+//BEGIN ROUTINE FOR FILTERING
+
+				// data[key].values.push(temp);
+
+				// TODO : Clean this  up
+				//
+				// Consider doing this only while spinner is active
+				//
+				// adapt this for a tollerance value
+				//
+				// Only do this if the user requested a filter
+
+
+
+				// Go reconsider this you fool !!!!
+				if ( lastTimestamp[key] == null) {
+					data[key].values.push(temp);
+					lastTimestamp[key]=temp.timestamp;
+					lastValue[key]=temp.value;
+					skipped[key]=false;
+					//debug(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
+				} else {
+					var dif = temp.timestamp.getTime() - lastTimestamp[key].getTime();
+					if  (dif > meta.datagap[key]) {
+						if ( skipped[key] == true) {
+							data[key].values.push(prev[key]);
+							lastTimestamp[key]=prev[key].timestamp;
+							lastValue[key]=prev[key].value;
+							//debug(key + " add:" + prev[key].timestamp.getTime()
+							//	+ " V:" + prev[key].value + " diff:" + dif);
+							filtercount[key] = filtercount[key] - 1;
+						}
+					}
+					if (lastValue[key] != temp.value) {
+						data[key].values.push(temp);
+						lastTimestamp[key]=temp.timestamp;
+						lastValue[key]=temp.value;
+						skipped[key]=false;
+						//debug(key + " new:" + temp.timestamp.getTime()
+						//		+ " V:" + temp.value + " diff:" + dif);
+					} else {
+						skipped[key]=true;
+						filtercount[key] = filtercount[key] + 1;
+						prev[key]=temp;
+						//debug(key + " hop:" + temp.timestamp.getTime()
+						//	+ " V:" + temp.value + " diff:" + dif);
+					}
+
+				}
 			}
+			if ( skipped[key] == true) {
+				data[key].values.push(temp);
+				lastTimestamp[key]=temp.timestamp;
+				lastValue[key]=temp.value;
+				filtercount[key] = filtercount[key] - 1;
+				skipped[key]=false;
+				//debug(key + " end:" + temp.timestamp.getTime()
+				//				+ " V:" + temp.value + " diff:" + dif);
+			}
+			for (var i = 0; i < data.length; i++)
+				console.log("Total Values Filtered: ", meta.names[i], filtercount[i]);
+
+// END ROUTINE FOR FILTERING
 
 			redrawAxes(false);
 			redrawLines(false);
 
 			$(container).trigger('LineGraph:dataModification');
 
+			// Destroy answer to free up ram
+			answer=0;
 			//pop old data from our cache
 			var elem=0;
 			for (var key in data) {
@@ -196,11 +278,13 @@
 					data[key].values.splice(0, elem);
 				}
 			}
+
 			inProgress = false;
 			if (spinnerActive) {
 				spinnerActive=false;
 				spinner.stop();
 			}
+
 		});
 	}
 
@@ -237,7 +321,7 @@
 
 		//Create the data object
 		for (var key in meta.names) {
-			// Do some data value checks
+			// Do some data validation checks
 			if ( meta.datagap[key] > 0 ) {
 				meta.datagap[key] = meta.datagap[key] * 1000;
 			}
@@ -256,7 +340,7 @@
 			data.push(temp);
 	 	}
 
-	 	// Do some data value checks
+	 	// Do some data validation checks
 	 	if ( myBehavior.autoUpdate > 0 ) {
 	 		if ( myBehavior.secondsToShow < 1 ) {
 	 			throw new Error("secondsToShow must be provided for autoupdate");
@@ -271,6 +355,10 @@
 	 					color: '#000', opacity: 0.25, rotate: 0, direction: 1, speed: 1.1,
 	 					trail: 60, fps: 20, zIndex: 2e9, className: 'spinner', top: '50%',
 	 					left: '50%', shadow: false, hwaccel: false, position: 'absolute'}
+
+	 	// Prepare variables for filtering
+		lastTimestamp = new Array(data.length);
+		lastValue = new Array(data.length);
 
 	}
 
@@ -378,9 +466,8 @@
 		// Creating global variables to figure out where
 		// if there is a data gap and create a moving average
 		// NOTE: This is a serious bodge !!! but it works
-		var numberOfLines = 3;
-		lastTimeValue = new Array(numberOfLines);
-		for (var row = 0; row < numberOfLines; row++) {
+		lastTimeValue = new Array(data.length);
+		for (var row = 0; row < data.length; row++) {
 			threeLastValues = new Array(3);
 		}
 
