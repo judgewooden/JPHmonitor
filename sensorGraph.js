@@ -107,13 +107,14 @@
 		containerId = getRequiredVar(argsMap, 'containerId');
 		container = document.querySelector('#' + containerId);
 
+
 		// load the configuration
 		loadConfig(getRequiredVar(argsMap, 'data'));
 
 		// Create the Graph
  		createGraph();
+		spinner = new Spinner(spinneropts).spin(container);
 
- 		spinner = new Spinner(spinneropts).spin(container);
 		// Load data into SQL
 		self.refreshData();
 
@@ -131,6 +132,7 @@
 				self.refreshData();
 			}, myBehavior.interval * 1000);
 		}
+
 	}
 
 	/*
@@ -194,54 +196,48 @@
 					value: +answer[row].value
 				};
 
-//BEGIN ROUTINE FOR FILTERING
-
-				// data[key].values.push(temp);
-
-				// TODO : Clean this  up
-				//
-				// Consider doing this only while spinner is active
-				//
-				// adapt this for a tollerance value
-				//
-				// Only do this if the user requested a filter
-
-
-
-				// Go reconsider this you fool !!!!
-				if ( lastTimestamp[key] == null) {
+				//BEGIN ROUTINE FOR FILTERING
+				if ( meta.filter[key] == -1 ) {
 					data[key].values.push(temp);
 					lastTimestamp[key]=temp.timestamp;
 					lastValue[key]=temp.value;
-					skipped[key]=false;
-					//debug(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
 				} else {
-					var dif = temp.timestamp.getTime() - lastTimestamp[key].getTime();
-					if  (dif > meta.datagap[key]) {
-						if ( skipped[key] == true) {
-							data[key].values.push(prev[key]);
-							lastTimestamp[key]=prev[key].timestamp;
-							lastValue[key]=prev[key].value;
-							//debug(key + " add:" + prev[key].timestamp.getTime()
-							//	+ " V:" + prev[key].value + " diff:" + dif);
-							filtercount[key] = filtercount[key] - 1;
-						}
-					}
-					if (lastValue[key] != temp.value) {
+					if ( lastTimestamp[key] == null) {
 						data[key].values.push(temp);
 						lastTimestamp[key]=temp.timestamp;
 						lastValue[key]=temp.value;
 						skipped[key]=false;
-						//debug(key + " new:" + temp.timestamp.getTime()
-						//		+ " V:" + temp.value + " diff:" + dif);
+						//debug(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
 					} else {
-						skipped[key]=true;
-						filtercount[key] = filtercount[key] + 1;
-						prev[key]=temp;
-						//debug(key + " hop:" + temp.timestamp.getTime()
-						//	+ " V:" + temp.value + " diff:" + dif);
+						var dif = temp.timestamp.getTime() - lastTimestamp[key].getTime();
+						if  (dif > meta.datagap[key]) {
+							if ( skipped[key] == true) {
+								data[key].values.push(prev[key]);
+								lastTimestamp[key]=prev[key].timestamp;
+								lastValue[key]=prev[key].value;
+								//debug(key + " add:" + prev[key].timestamp.getTime()
+								//	+ " V:" + prev[key].value + " diff:" + dif);
+								filtercount[key] = filtercount[key] - 1;
+							}
+						}
+						var change=Math.abs(temp.value - lastValue[key]);
+						//debug(key + " del:" + change + " L:" + lastValue[key]
+						//		+ " V:" + temp.value);
+						if (change > meta.filter[key]) {
+							data[key].values.push(temp);
+							lastTimestamp[key]=temp.timestamp;
+							lastValue[key]=temp.value;
+							skipped[key]=false;
+							//debug(key + " new:" + temp.timestamp.getTime()
+							//		+ " V:" + temp.value + " diff:" + dif);
+						} else {
+							skipped[key]=true;
+							filtercount[key] = filtercount[key] + 1;
+							prev[key]=temp;
+							//debug(key + " hop:" + temp.timestamp.getTime()
+							//	+ " V:" + temp.value + " diff:" + dif);
+						}
 					}
-
 				}
 			}
 			if ( skipped[key] == true) {
@@ -255,8 +251,7 @@
 			}
 			for (var i = 0; i < data.length; i++)
 				console.log("Total Values Filtered: ", meta.names[i], filtercount[i]);
-
-// END ROUTINE FOR FILTERING
+			// END ROUTINE FOR FILTERING
 
 			redrawAxes(false);
 			redrawLines(false);
@@ -314,6 +309,7 @@
 		meta.columns = getRequiredVar(dataMap, 'sensorColumn', "Need to have value to show");
 		meta.yaxes = getRequiredVar(dataMap, 'sensorAxisLocation', "Must specify Axis");
 		meta.datagap = getRequiredVar(dataMap, 'sensorUpdateGapSeconds', "Must specify [0=valid]");
+		meta.filter = getRequiredVar(dataMap, 'sensorFilterTolerance', "Must specify [-1=none]");
 		//TODO: program the following !!!!!!
 		meta.interpolation = getRequiredVar(dataMap, 'sensorInterpolation', "Must specify Interpolation");
 
@@ -322,9 +318,18 @@
 		//Create the data object
 		for (var key in meta.names) {
 			// Do some data validation checks
+			meta.datagap[key]=+meta.datagap[key];
 			if ( meta.datagap[key] > 0 ) {
 				meta.datagap[key] = meta.datagap[key] * 1000;
+			} else {
+				meta.datagap[key]=0;
 			}
+
+			meta.filter[key]=+meta.filter[key];
+			if ( meta.datagap[key] < 0 ) {
+				meta.datagap[key] = -1;
+			}
+
 
 			// push each line to the data stack
 			var temp = {
@@ -333,7 +338,8 @@
 				column: meta.columns[key],
 				yaxis: meta.yaxes[key],
 				interpolation: meta.interpolation[key],
-				datagap: meta.datagap[key],
+				datagap: +meta.datagap[key],
+				filter: +meta.filter[key],
 				values: []
 			};
 			console.log(temp);

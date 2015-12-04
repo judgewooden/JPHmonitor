@@ -42,6 +42,7 @@
     source1["sensorAxisLocation"] = ["Left", "Right"];
     source1["sensorInterpolation"] = ["Basis", "Basis"];
     source1["sensorUpdateGapSeconds"] = ["15", "15"];
+    source1["sensorFilterTolerance"] = [0.05, 0.1];
     /*source1["sensorDisplayName"] = ["Flow"];
 	source1["sensorSource"] = ["ArduinoMonitor1"];
 	source1["sensorColumn"] = ["LitersPerMinute"];
@@ -71,7 +72,8 @@
 	source2["sensorColumn"] = ["LitersPerMinute", "Power"];
 	source2["sensorAxisLocation"] = ["Left", "Right"];
     source2["sensorInterpolation"] = ["Basis", "step-after"];
-    source2["sensorUpdateGapSeconds"] = ["15", "60"];
+    source2["sensorUpdateGapSeconds"] = [180, 60];
+    source2["sensorFilterTolerance"] = [.1, 0];
 	// Instructions for how the graph
     source2["graphRightMin"] = -0.1;
     source2["graphRightMax"] = 1.1;
