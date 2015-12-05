@@ -32,7 +32,7 @@ while True:
 add_temp = ("INSERT INTO ArduinoMonitor1 "
                "(Timestamp, Power, FlowPerSecond, LitersPerMinute, OverrideTime, CurrentTime)"
                "VALUES (%s, %s, %s, %s, %s, %s)")
-url = "http://192.168.8.11/X"
+url = "http://192.168.0.9/X"
 
 while True:
     tnow = datetime.now()

@@ -4,10 +4,8 @@
 <script src="http://d3js.org/d3.v2.js"></script>
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
-<script src="sensorGraph.js"></script>
-<!--
-	courtesy: benjchristensen - Interactive Line Graph
--->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tipsy/1.0.2/jquery.tipsy.js"></script>
+<script type="text/javascript" src="sensorGraph.js"></script>
 
 <link rel="stylesheet" type="text/css" href="sensorGraphStyle.css">
 
@@ -40,8 +38,8 @@
     source1["sensorSource"] = ["ArduinoMonitor1", "RaspiTemp1"];
     source1["sensorColumn"] = ["LitersPerMinute", "Value"];
     source1["sensorAxisLocation"] = ["Left", "Right"];
-    source1["sensorInterpolation"] = ["Basis", "Basis"];
-    source1["sensorUpdateGapSeconds"] = ["15", "15"];
+    source1["sensorInterpolation"] = ["basis", "basis"];
+    source1["sensorUpdateGapSeconds"] = [10, 10];
     source1["sensorFilterTolerance"] = [0.05, 0.1];
     /*source1["sensorDisplayName"] = ["Flow"];
 	source1["sensorSource"] = ["ArduinoMonitor1"];
@@ -58,20 +56,20 @@
 	source1["graphTickLine"] = 1;
     source1["graphRightMin"] = 46;
     source1["graphRightMax"] = 52;
-    source1["graphLeftMin"] = 0;
-    source1["graphLeftMax"] = 1;
+//    source1["graphLeftMin"] = 0;
+//    source1["graphLeftMax"] = 1;
 	source1["grepLeftLegend"] = "Liters (pm)";
 	source1["grepRightLegend"] = "Degrees (C)";
 	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
 
-	var source2 = {};
+/*	var source2 = {};
 	// The source of the data and how to display it
     source2["sensorDisplayName"] = ["Flow", "Power"];
 	source2["sensorSource"] = ["ArduinoMonitor1", "ArduinoMonitor1"];
 	source2["sensorColumn"] = ["LitersPerMinute", "Power"];
 	source2["sensorAxisLocation"] = ["Left", "Right"];
-    source2["sensorInterpolation"] = ["Basis", "step-after"];
+    source2["sensorInterpolation"] = ["basis", "step-after"];
     source2["sensorUpdateGapSeconds"] = [180, 60];
     source2["sensorFilterTolerance"] = [.1, 0];
 	// Instructions for how the graph
