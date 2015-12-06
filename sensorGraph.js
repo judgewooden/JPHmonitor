@@ -72,7 +72,7 @@
 	var x, xAxis;
 	var yLeft, yAxisLeft, yRight, yAxisRight, hasYAxisLeft, hasYAxisRight;
 	var color = d3.scale.category10();
-	var drawline, linesGroup, lines, linesGroupText;
+	var drawline, theline, linesGroup, lines, linesGroupText;
 	var hoverContainer, hoverLine, hoverLineXOffset, hoverLineYOffset,
 														hoverLineGroup;
 	var lineFunctionSeriesIndex;    // special bodge !!! pay attention to it
@@ -87,7 +87,6 @@
 	var myInterval;
 	var minTime = new Date();
 	var maxTime = new Date();
-	var lastThreeValues;
 	var lastTimeValue;
 	var inProgress = false;
 
@@ -173,12 +172,10 @@
 		}
 		myurl = JSON.stringify(myurl);
 		var u="sensorSQLupdate.php?query=" + encodeURI( myurl );
-		// console.log(u);
-		// process the result
-		// Consider doing the below once during initialization
+		console.log(u);
 
 		// Prepare variables for filtering
-		// TODO
+		// TODO: Move filtercount to global variable and make it data for tooltop
 		var skipped = new Array(data.length);
 		var filtercount = new Array(data.length);
 		var prev = new Array(data.length);
@@ -197,18 +194,17 @@
 					value: +answer[row].value
 				};
 
-				// WRITE ROUTINE TO SMOOTH THE DATA
+				//  Low Pass Filter
 				if (smoothedValue[key]==null) {
-					// value starts with first value
 					smoothedValue[key]=temp.value;
 				} else {
 					smoothedValue[key] = smoothedValue[key] + ( temp.value
 										- smoothedValue[key]) / meta.smoothing[key];
 					temp.value = smoothedValue[key];
-					debug(key + " Smooth:" + temp.value);
+					//debug(key + " Smooth:" + temp.value);
 				}
 
-				//BEGIN ROUTINE FOR FILTERING
+				//  Filter data withing a tollerance range
 				if ( meta.filter[key] == -1 ) {
 					data[key].values.push(temp);
 					lastTimestamp[key]=temp.timestamp;
@@ -272,6 +268,7 @@
 
 			// Destroy answer to free up ram
 			answer=0;
+
 			//pop old data from our cache
 			var elem=0;
 			for (var key in data) {
@@ -312,6 +309,7 @@
 		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
 		myBehavior.axisLeftLegend = getOptionalVar(dataMap, 'grepLeftLegend', "");
 		myBehavior.axisRightLegend = getOptionalVar(dataMap, 'grepRightLegend', "");
+		myBehavior.interpolation = getOptionalVar(dataMap, 'graphInterpolation', "linear");
 		//TODO: program the following !!!!!!
 		myBehavior.hideLegend = getOptionalVar(dataMap, 'graphHideLegend', "");
 
@@ -342,7 +340,6 @@
 			if ( meta.datagap[key] < 0 ) {
 				meta.datagap[key] = -1;
 			}
-
 
 			// push each line to the data stack
 			var temp = {
@@ -375,11 +372,15 @@
 	 					trail: 60, fps: 20, zIndex: 2e9, className: 'spinner', top: '50%',
 	 					left: '50%', shadow: false, hwaccel: false, position: 'absolute'}
 
-	 	// Prepare variables for filtering
+	 	// Prepare global variables for filters
+		lastTimeValue = new Array(data.length);
 		lastTimestamp = new Array(data.length);
 		lastValue = new Array(data.length);
 		smoothedValue = new Array(data.length);
 		for (var i = 0; i < data.length; i++) {
+			lastTimeValue[i] = null;
+			lastTimestamp[i] = null;
+			lastValue[i] = null;
 			smoothedValue[i] = null;
 		}
 
@@ -487,35 +488,9 @@
 		// Remember to use the bodge !!!
 		lineFunctionSeriesIndex  = -1;
 		// Create the line function() !!! Remember lineFunctionSeriesIndex bodge
-
-		// Creating global variables to figure out where
-		// if there is a data gap and create a moving average
 		// NOTE: This is a serious bodge !!! but it works
-		lastTimeValue = new Array(data.length);
-		for (var row = 0; row < data.length; row++) {
-			threeLastValues = new Array(3);
-		}
 
-      	drawline = d3.svg.line()
-            // TODO: write interpolation routine
-            //.interpolate(meta.interpolation[lineFunctionSeriesIndex])
-            //.interpolate(function(d,i) { console.log(d,i);})
-            /*
-            .interpolate(function(points) {
-            	debug(lineFunctionSeriesIndex + " - " + points);
-
-  var i = 0,
-      n = points.length,
-      p = points[0],
-      path = [p[0], ",", p[1]];
-  while (++i < n) path.push("H", (p[0] + (p = points[i])[0]) / 2, "V", p[1]);
-  if (n > 1) path.push("H", p[0]);
-  return path.join("");
-
-            })
-*/
-            //.interpolate("basis")
-            //.defined()
+      	theline = d3.svg.line()
             .defined(function(d, i) {
             	// If there is no data for a certain while (stop interpolation !!)
 //				debug("defined: " + containerId + " => i: " + lineFunctionSeriesIndex);
@@ -523,8 +498,7 @@
             		if (lastTimeValue[lineFunctionSeriesIndex] != null) {
             			var dif = d.timestamp.getTime() - lastTimeValue[lineFunctionSeriesIndex].getTime();
 	        			if (dif > meta.datagap[lineFunctionSeriesIndex]) {
-/*
-            				debug("defined: " + containerId +
+/*            				debug("defined: " + containerId +
             					" => i: " + lineFunctionSeriesIndex +
             					" diff: " + dif +
             					" last: " + lastTimeValue[lineFunctionSeriesIndex].getTime() +
@@ -542,7 +516,7 @@
             })
 			.x( function(d, i) { return x(d.timestamp); })
 			.y( function(d, i) {
-				//console.log( "y-axis: ", lineFunctionSeriesIndex );
+				//debug( "y-axis: " + lineFunctionSeriesIndex );
 				if ( i == 0 ) {
 					lineFunctionSeriesIndex++;
 				}
@@ -550,43 +524,35 @@
 					return yRight(d.value);
 				} else {
 					return yLeft(d.value);
-
-					// TODO (think of a more elligent way to do this) moving average
-			        /*
-					// TODO - remember we need to reset this at the moment
-					//        the line stops being defined too !!!!!!
-					//        (so htf do we do that??? )
-			        if (i == 0) {
-			            lastThreeValues[lineFunctionSeriesIndex][2] = yLeft(d.value);
-			            lastThreeValues[lineFunctionSeriesIndex][1] = yLeft(d.value);
-			            lastThreeValues[lineFunctionSeriesIndex][0] = yLeft(d.value);
-			        } else if (i == 1) {
-			            lastThreeValues[lineFunctionSeriesIndex][2] =
-			            								lastThreeValues[lineFunctionSeriesIndex][1];
-			            lastThreeValues[lineFunctionSeriesIndex][1] =
-					              						lastThreeValues[lineFunctionSeriesIndex][0];
-			            lastThreeValues[lineFunctionSeriesIndex][0] =
-			              							   (lastThreeValues[lineFunctionSeriesIndex][1]
-			              							   + yLeft(d.value)) / 2.0;
-			        } else {
-			            lastThreeValues[lineFunctionSeriesIndex][2] =
-			              								lastThreeValues[lineFunctionSeriesIndex][1];
-			            lastThreeValues[lineFunctionSeriesIndex][1] =
-			              								lastThreeValues[lineFunctionSeriesIndex][0];
-			            lastThreeValues[lineFunctionSeriesIndex][0] =
-			              							   (lastThreeValues[lineFunctionSeriesIndex][2]
-			              							    lastThreeValues[lineFunctionSeriesIndex][1]
-			              							   + yLeft(d.value)) / 2.0;
-			        }
-			        return lastThreeValues[lineFunctionSeriesIndex][0];
-			        */
 				}
 			});
 
-	//drawline = drawline2
-	//	.interpolate("cardinal")
+		// Remember to use the bodge !!!
+		lineFunctionSeriesIndex  = -1;
 
-            //.interpolate(function() "basis")
+	    // TODO: write interpolation routine
+	    if ( myBehavior.interpolation == "custom" ) {
+			drawline = theline
+	        .interpolate(function(points) {
+	            if ( meta.interpolation[lineFunctionSeriesIndex] == "step") {
+	            	//debug(lineFunctionSeriesIndex + " - step");
+					var i = 0,
+					    n = points.length,
+					    p = points[0],
+					    path = [p[0], ",", p[1]];
+					while (++i < n) path.push("H", (p[0] + (p = points[i])[0]) / 2, "V", p[1]);
+					if (n > 1) path.push("H", p[0]);
+					return path.join("");
+				} else {
+	            	//debug(lineFunctionSeriesIndex + " - linear");
+	            	return points.join("L");
+	            }
+	        })
+	    } else {
+           	//debug(container + ": " + lineFunctionSeriesIndex + " - " + myBehavior.interpolation);
+			drawline = theline
+				.interpolate(myBehavior.interpolation);
+		}
 
 		// Draw the line
 		lines = graph.append("svg:g")

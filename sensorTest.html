@@ -34,14 +34,14 @@
 
 	var source1 = {};
 	// The source of the data and how to display it
-    source1["sensorDisplayName"] = ["Flow", "Temp"];
-    source1["sensorSource"] = ["ArduinoMonitor1", "RaspiTemp1"];
-    source1["sensorColumn"] = ["LitersPerMinute", "Value"];
-    source1["sensorAxisLocation"] = ["Left", "Right"];
-    source1["sensorInterpolation"] = ["basis", "basis"];
-    source1["sensorUpdateGapSeconds"] = [0, 0];
-    source1["sensorFilterTolerance"] = [-1, -1];
-    source1["sensorLPFsmoothing"] = [15.0, 15.0];
+    source1["sensorDisplayName"] = ["Flow", "Flow-Raw"];
+    source1["sensorSource"] = ["ArduinoMonitor1", "ArduinoMonitor1"];
+    source1["sensorColumn"] = ["LitersPerMinute", "LitersPerMinute"];
+    source1["sensorAxisLocation"] = ["Left", "Left"];
+    source1["sensorInterpolation"] = ["linear", "linear"];
+    source1["sensorUpdateGapSeconds"] = [15, 0];
+    source1["sensorFilterTolerance"] = [.2, -1];
+    source1["sensorLPFsmoothing"] = [30, 1];
     /*source1["sensorDisplayName"] = ["Flow"];
 	source1["sensorSource"] = ["ArduinoMonitor1"];
 	source1["sensorColumn"] = ["LitersPerMinute"];
@@ -49,18 +49,19 @@
     source1["sensorInterpolation"] = ["Basis"];
     source1["sensorUpdateGapSeconds"] = ["15"];*/
 
-	// Instructions for how the graph
+	// Instructions for the graph
+    source1["graphTitle"] = "Arduino Flow (Last Hour)";
+    source1["grepLeftLegend"] = "Liters (pm)";
+    //source1["graphLeftMin"] = 4.3;
+    //source1["graphLeftMax"] = 4.7;
+    source1["grepRightLegend"] = "Degrees (C)";
+    //source1["graphRightMax"] = 49;
+    //source1["graphRightMin"] = 46;
+    source1["graphInterpolation"] = ["linear"];
 	source1["graphSecondsToShow"] = 3600;
 	source1["graphAutoUpdate"] = 1;
 	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
-	source1["graphTitle"] = "Arduino Flow (Last Hour)";   // Title of grap top left
 	source1["graphTickLine"] = 1;
-    source1["graphRightMax"] = 49;
-    source1["graphRightMin"] = 46;
-    source1["graphLeftMin"] = 4.3;
-    source1["graphLeftMax"] = 4.7;
-	source1["grepLeftLegend"] = "Liters (pm)";
-	source1["grepRightLegend"] = "Degrees (C)";
 	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
 
@@ -74,17 +75,19 @@
     source2["sensorUpdateGapSeconds"] = [30];
     source2["sensorFilterTolerance"] = [0.1];
     source2["sensorLPFsmoothing"] = [15.0];
-	// Instructions for how the graph
-    //source2["graphRightMin"] = -0.1;
-    //source2["graphRightMax"] = 1.1;
+
+	// Instructions for the graph
+    source2["graphTitle"] = "Arduino Flow 2-days (not updating)";   // Title of grap top left
+    source2["grepLeftLegend"] = "Liters (pm)";
     //source2["graphLeftMin"] = 0;
     //source2["graphLeftMax"] = 1;
+    //source1["grepLeftLegend"] = "Degrees (C)";
+    //source2["graphRightMin"] = -0.1;
+    //source2["graphRightMax"] = 1.1;
+    source2["grepRightLegend"] = "Power: 1=on / 0=off";
 	source2["graphSecondsToShow"] = 172800;
 	source2["graphAutoUpdate"] = 0;
-	source2["graphTitle"] = "Arduino Flow 2-days (not updating)";   // Title of grap top left
 	source2["graphTickLine"] = 0;
-    source2["grepLeftLegend"] = "Liters (pm)";
-    source2["grepRightLegend"] = "Power: 1=on / 0=off";
 	var l2 = new LineGraph({containerId: 'graph2', data: source2});
 /*
 
