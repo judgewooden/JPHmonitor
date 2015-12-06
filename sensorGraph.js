@@ -99,6 +99,7 @@
 	// Filter data values if they are the same value as previous with tollerance ...
 	var lastTimestamp;
 	var lastValue;
+	var smoothedValue;
 
 	/* *************************************************************** */
 	/* Initiationzation and Validation */
@@ -172,7 +173,7 @@
 		}
 		myurl = JSON.stringify(myurl);
 		var u="sensorSQLupdate.php?query=" + encodeURI( myurl );
-		console.log(u);
+		// console.log(u);
 		// process the result
 		// Consider doing the below once during initialization
 
@@ -195,6 +196,17 @@
 					timestamp: parseDate(answer[row].timestamp),
 					value: +answer[row].value
 				};
+
+				// WRITE ROUTINE TO SMOOTH THE DATA
+				if (smoothedValue[key]==null) {
+					// value starts with first value
+					smoothedValue[key]=temp.value;
+				} else {
+					smoothedValue[key] = smoothedValue[key] + ( temp.value
+										- smoothedValue[key]) / meta.smoothing[key];
+					temp.value = smoothedValue[key];
+					debug(key + " Smooth:" + temp.value);
+				}
 
 				//BEGIN ROUTINE FOR FILTERING
 				if ( meta.filter[key] == -1 ) {
@@ -249,8 +261,8 @@
 				//debug(key + " end:" + temp.timestamp.getTime()
 				//				+ " V:" + temp.value + " diff:" + dif);
 			}
-			for (var i = 0; i < data.length; i++)
-				console.log("Total Values Filtered: ", meta.names[i], filtercount[i]);
+			//for (var i = 0; i < data.length; i++)
+			//	debug("Total Values Filtered: " +  meta.names[i] + " = " + filtercount[i]);
 			// END ROUTINE FOR FILTERING
 
 			redrawAxes(false);
@@ -310,10 +322,11 @@
 		meta.yaxes = getRequiredVar(dataMap, 'sensorAxisLocation', "Must specify Axis");
 		meta.datagap = getRequiredVar(dataMap, 'sensorUpdateGapSeconds', "Must specify [0=valid]");
 		meta.filter = getRequiredVar(dataMap, 'sensorFilterTolerance', "Must specify [-1=none]");
+		meta.smoothing = getRequiredVar(dataMap, 'sensorLPFsmoothing', "Must specify [1=no-effect]");
 		//TODO: program the following !!!!!!
 		meta.interpolation = getRequiredVar(dataMap, 'sensorInterpolation', "Must specify Interpolation");
 
-		console.log(myBehavior);
+		console.log(containerId, myBehavior);
 
 		//Create the data object
 		for (var key in meta.names) {
@@ -342,7 +355,7 @@
 				filter: +meta.filter[key],
 				values: []
 			};
-			console.log(temp);
+			console.log(containerId, temp);
 			data.push(temp);
 	 	}
 
@@ -365,9 +378,12 @@
 	 	// Prepare variables for filtering
 		lastTimestamp = new Array(data.length);
 		lastValue = new Array(data.length);
+		smoothedValue = new Array(data.length);
+		for (var i = 0; i < data.length; i++) {
+			smoothedValue[i] = null;
+		}
 
 	}
-
 
 	/*
 	 * Creates the SVG elements
@@ -385,7 +401,6 @@
 			.attr("transform", "translate(" + margin[3] + "," +
 												margin[0] + ")");
 
-
 		if (myBehavior.title != "" ) {
 			title = graph.append("svg:g")
 				.attr("class", "title-group")
@@ -395,6 +410,10 @@
 	        		.attr("y", 0 - 5)
 	        		.attr("text-anchor", "middle")
 	        		.text(myBehavior.title);
+
+	        debug("title tipsy 5");
+			$('#graph1 line-graph').tipsy({gravity: 's', title: 'id'});
+
 	    }
 
 	    // X - Axis
@@ -479,8 +498,23 @@
 
       	drawline = d3.svg.line()
             // TODO: write interpolation routine
-            //.interpolate("step-before")
-            .interpolate("basis")
+            //.interpolate(meta.interpolation[lineFunctionSeriesIndex])
+            //.interpolate(function(d,i) { console.log(d,i);})
+            /*
+            .interpolate(function(points) {
+            	debug(lineFunctionSeriesIndex + " - " + points);
+
+  var i = 0,
+      n = points.length,
+      p = points[0],
+      path = [p[0], ",", p[1]];
+  while (++i < n) path.push("H", (p[0] + (p = points[i])[0]) / 2, "V", p[1]);
+  if (n > 1) path.push("H", p[0]);
+  return path.join("");
+
+            })
+*/
+            //.interpolate("basis")
             //.defined()
             .defined(function(d, i) {
             	// If there is no data for a certain while (stop interpolation !!)
@@ -548,6 +582,11 @@
 			        */
 				}
 			});
+
+	//drawline = drawline2
+	//	.interpolate("cardinal")
+
+            //.interpolate(function() "basis")
 
 		// Draw the line
 		lines = graph.append("svg:g")
@@ -810,6 +849,10 @@
 			.attr("y", function(d, i) {
 				return h+28;
 			})
+//			.on('mouseover', function(d,i) {
+//				handleMouseOverLegend(d,i);
+//			});
+
 
 		legendLabelGroup.append("svg:text")
 			.attr("class", "legend value")
@@ -820,6 +863,14 @@
 			.attr("y", function(d, i) {
 				return h+28;
 			})
+//			.on('mouseover', function(d,i) {
+//				handleMouseOverLegend(d,i);
+//			});
+
+		// TODO : rewrite this !!
+		debug("I am here");
+		$('svg legend-group').tipsy({gravity: 'n', title: 'id'});
+
 	}
 
 	var redrawLegendPosition = function(animate) {
@@ -852,6 +903,13 @@
 			.attr("y", -4)
 			.attr("x", w)
 			.text(date.toDateString() + " " + date.toLocaleTimeString());
+	}
+
+	/**
+	 * Called when a user mouses over a Legend.
+	 */
+	var handleMouseOverLegend = function(legendData, index) {
+		debug("MouseOver Legend [" + containerId + "] => " + index + " Legend:" + legendData);
 	}
 
 	/**
