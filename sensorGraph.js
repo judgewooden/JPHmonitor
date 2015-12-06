@@ -945,8 +945,12 @@
 		if (i>1) {
 			if (data[index].values[i-1].value > 10)
 				v = Math.round(data[index].values[i-1].value * 10) / 10;
-			else
-				v = data[index].values[i-1].value;
+			else {
+				if (data[index].values[i-1].value > 1)
+					v = Math.round(data[index].values[i-1].value * 100) / 100;
+				else
+					v = Math.round(data[index].values[i-1].value * 1000) / 1000;
+			}
 		} else {
 			v = 0;
 		}
