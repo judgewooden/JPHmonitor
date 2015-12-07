@@ -32,8 +32,9 @@
  *  graphLeftMax        => The maximum value to show on the left Axis. If=0 auto adjust to data range. (default:0)
  *  graphRightMin       => The minimum value to show on the right Axis. If=0 auto adjust to data range. (default:0)
  *  graphRightMax       => The maximum value to show on the right Axis. If=0 auto adjust to data range. (default:0)
- *  grepLeftLegend      => The legend to show for data on the left access
- *  grepRightLegend     => The legend to show for data on the right access
+ *  graphLeftLegend     => The legend to show for data on the left access
+ *  graphRightLegend    => The legend to show for data on the right access
+ * 	graphInterpolation  => The default interpolation, use custom to config per sensor (default:Basis)
  *
  */
 
@@ -73,6 +74,7 @@
 	var yLeft, yAxisLeft, yRight, yAxisRight, hasYAxisLeft, hasYAxisRight;
 	var color = d3.scale.category10();
 	var drawline, theline, linesGroup, lines, linesGroupText;
+	var tipLegend, tipGraph;
 	var hoverContainer, hoverLine, hoverLineXOffset, hoverLineYOffset,
 														hoverLineGroup;
 	var lineFunctionSeriesIndex;    // special bodge !!! pay attention to it
@@ -99,6 +101,7 @@
 	var lastTimestamp;
 	var lastValue;
 	var smoothedValue;
+	var filtercount;
 
 	/* *************************************************************** */
 	/* Initiationzation and Validation */
@@ -175,13 +178,10 @@
 		console.log(u);
 
 		// Prepare variables for filtering
-		// TODO: Move filtercount to global variable and make it data for tooltop
 		var skipped = new Array(data.length);
-		var filtercount = new Array(data.length);
 		var prev = new Array(data.length);
 		for (var i = 0; i < data.length; i++) {
 			skipped[i] = false;
-			filtercount[i]=0;
 		}
 
 		d3.json(u, function(answer) {
@@ -307,11 +307,9 @@
 		myBehavior.axisRightMin = +getOptionalVar(dataMap, 'graphRightMin', "");
 		myBehavior.axisRightMax = +getOptionalVar(dataMap, 'graphRightMax', "");
 		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
-		myBehavior.axisLeftLegend = getOptionalVar(dataMap, 'grepLeftLegend', "");
-		myBehavior.axisRightLegend = getOptionalVar(dataMap, 'grepRightLegend', "");
+		myBehavior.axisLeftLegend = getOptionalVar(dataMap, 'graphLeftLegend', "");
+		myBehavior.axisRightLegend = getOptionalVar(dataMap, 'graphRightLegend', "");
 		myBehavior.interpolation = getOptionalVar(dataMap, 'graphInterpolation', "linear");
-		//TODO: program the following !!!!!!
-		myBehavior.hideLegend = getOptionalVar(dataMap, 'graphHideLegend', "");
 
 		// Load graph meta data
 		meta.names = getRequiredVar(dataMap, 'sensorDisplayName', "Need to plot something");
@@ -321,7 +319,6 @@
 		meta.datagap = getRequiredVar(dataMap, 'sensorUpdateGapSeconds', "Must specify [0=valid]");
 		meta.filter = getRequiredVar(dataMap, 'sensorFilterTolerance', "Must specify [-1=none]");
 		meta.smoothing = getRequiredVar(dataMap, 'sensorLPFsmoothing', "Must specify [1=no-effect]");
-		//TODO: program the following !!!!!!
 		meta.interpolation = getRequiredVar(dataMap, 'sensorInterpolation', "Must specify Interpolation");
 
 		console.log(containerId, myBehavior);
@@ -349,6 +346,7 @@
 				yaxis: meta.yaxes[key],
 				interpolation: meta.interpolation[key],
 				datagap: +meta.datagap[key],
+				smoothing: +meta.smoothing[key],
 				filter: +meta.filter[key],
 				values: []
 			};
@@ -376,11 +374,13 @@
 		lastTimeValue = new Array(data.length);
 		lastTimestamp = new Array(data.length);
 		lastValue = new Array(data.length);
-		smoothedValue = new Array(data.length);
+		filtercount = new Array(data.length);
+	 	smoothedValue = new Array(data.length);
 		for (var i = 0; i < data.length; i++) {
 			lastTimeValue[i] = null;
 			lastTimestamp[i] = null;
 			lastValue[i] = null;
+			filtercount[i]=0;
 			smoothedValue[i] = null;
 		}
 
@@ -411,9 +411,6 @@
 	        		.attr("y", 0 - 5)
 	        		.attr("text-anchor", "middle")
 	        		.text(myBehavior.title);
-
-	        debug("title tipsy 5");
-			$('#graph1 line-graph').tipsy({gravity: 's', title: 'id'});
 
 	    }
 
@@ -530,7 +527,7 @@
 		// Remember to use the bodge !!!
 		lineFunctionSeriesIndex  = -1;
 
-	    // TODO: write interpolation routine
+	    // Customer Interpolation routines per line ...
 	    if ( myBehavior.interpolation == "custom" ) {
 			drawline = theline
 	        .interpolate(function(points) {
@@ -618,6 +615,7 @@
 			createMenuButtons();
 		}
 
+		
 		setValueLabelsToLatest();
 
 		//console.log("We have finished creating Graph.");
@@ -796,12 +794,53 @@
 	 */
 	var createLegend = function() {
 
+		tipLegend = d3.tip()
+  			.attr('class', 'd3-tip')
+  			.offset([-10, 0])
+  			.html(function(d) {
+				for (var key in meta.names) {
+					if (d == meta.names[key]) {
+						var hint;
+		// indent for convenience 
+		hint="<strong style='color:red;font-size:10px'>Sensor: "+d+"</strong><br><br>";
+		hint+="<span style='font-size:10px'>";
+    	hint+="Table: "+ data[key].table + "<br>";
+    	hint+="Column: "+ data[key].column + "<br><br>";
+    	hint+="Interpolation: ";
+    	if ( myBehavior.interpolation == "custom" ) 
+    		hint+=data[key].interpolation + "<br>";
+    	else
+    		hint+=myBehavior.interpolation + "<br>";
+    	hint+="LPF smoothing: " + data[key].smoothing + "<br><br>";
+    	hint+="Filter tolerance: ";
+    	if ( data[key].filter == -1 )
+    		hint+="Off<br>";
+    	else
+    		hint+=data[key].filter + "<br>";
+    	hint+="Filter frequency: " + data[key].datagap/1000 + " seconds<br>";
+    	hint+="Values removed: " + filtercount[key] + "<br><br>";
+    	var i=data[key].values.length - 1;
+    	hint+="Last Update: " + data[key].values[i].timestamp.toLocaleTimeString() + "<br>";
+    	hint+="Last Value: " + data[key].values[i].value + "<br><br>";
+    	hint+="Last Plot Value: " + lastValue[key] + "<br>";
+    	hint+="Last Smooth Value: " + smoothedValue[key]; 
+    	hint+="</span>";
+    	// end indent
+    					return hint;
+					}
+				}
+				return "Value not found";
+  		})
+
+		graph.call(tipLegend);
+
 		var legendLabelGroup = graph.append("svg:g")
 			.attr("class", "legend-group")
 			.selectAll("g")
 			.data(meta.names)
 			.enter().append("g")
-			.attr("class", "legend-labels");
+			.attr("class", "legend-labels")
+
 
 		legendLabelGroup.append("svg:text")
 			.attr("class", "legend name")
@@ -815,9 +854,8 @@
 			.attr("y", function(d, i) {
 				return h+28;
 			})
-//			.on('mouseover', function(d,i) {
-//				handleMouseOverLegend(d,i);
-//			});
+			.on('mouseover', tipLegend.show)
+      		.on('mouseout', tipLegend.hide)
 
 
 		legendLabelGroup.append("svg:text")
@@ -829,13 +867,6 @@
 			.attr("y", function(d, i) {
 				return h+28;
 			})
-//			.on('mouseover', function(d,i) {
-//				handleMouseOverLegend(d,i);
-//			});
-
-		// TODO : rewrite this !!
-		debug("I am here");
-		$('svg legend-group').tipsy({gravity: 'n', title: 'id'});
 
 	}
 
@@ -859,6 +890,35 @@
 	 * Create a data label
 	 */
 	var createDateLabel = function() {
+
+		tipGraph = d3.tip()
+  			.attr('class', 'd3-tip')
+  			.offset([-10, 0])
+  			.direction('s')
+  			.html(function(d) {
+				var hint;
+		// indent for convenience 
+		hint="<strong style='color:red;font-size:10px'>" + myBehavior.title + "</strong><br><br>";
+		hint+="<span style='font-size:10px'>";
+		hint+="Show: " + myBehavior.secondsToShow + " seconds<br><br>";
+		hint+="Auto update: ";
+		if (myBehavior.autoUpdate == 1)
+			hint+="On<br>";
+		else
+			hint+="Off<br>";
+		hint+="Update Interval: " + myBehavior.interval + " seconds<br>"
+		hint+="Currently : "
+		if (updatePaused == "pause")
+			hint+="Paused<br><br>";
+		else
+			hint+="Updating<br><br>";
+		// end indent for convenience 
+
+				return hint;
+			})
+
+		graph.call(tipGraph);
+
 		var date = new Date();
 		var buttonGroup = graph.append("svg:g")
 			.attr("class", "date-label-group")
@@ -868,7 +928,9 @@
 			.attr("font-size", "10")
 			.attr("y", -4)
 			.attr("x", w)
-			.text(date.toDateString() + " " + date.toLocaleTimeString());
+			.text(date.toDateString() + " " + date.toLocaleTimeString())
+			.on('mouseover', tipGraph.show)
+      		.on('mouseout', tipGraph.hide)
 	}
 
 	/**
