@@ -817,13 +817,13 @@
     		hint+="Off<br>";
     	else
     		hint+=data[key].filter + "<br>";
-    	hint+="Filter frequency: " + data[key].datagap/1000 + " seconds<br>";
+    	hint+="Update frequency: " + data[key].datagap/1000 + " seconds<br>";
     	hint+="Values removed: " + filtercount[key] + "<br><br>";
     	var i=data[key].values.length - 1;
     	hint+="Last Update: " + data[key].values[i].timestamp.toLocaleTimeString() + "<br>";
-    	hint+="Last Value: " + data[key].values[i].value + "<br><br>";
-    	hint+="Last Plot Value: " + lastValue[key] + "<br>";
-    	hint+="Last Smooth Value: " + smoothedValue[key]; 
+    	hint+="Last Value: " + afronden(data[key].values[i].value) + "<br><br>";
+    	hint+="Last Plot Value: " + afronden(lastValue[key]) + "<br>";
+    	hint+="Last Smooth Value: " + afronden(smoothedValue[key]); 
     	hint+="</span>";
     	// end indent
     					return hint;
@@ -1005,14 +1005,7 @@
 		var i = bisectDate(data[index].values, xValue, 1);
 		var v;
 		if (i>1) {
-			if (data[index].values[i-1].value > 10)
-				v = Math.round(data[index].values[i-1].value * 10) / 10;
-			else {
-				if (data[index].values[i-1].value > 1)
-					v = Math.round(data[index].values[i-1].value * 100) / 100;
-				else
-					v = Math.round(data[index].values[i-1].value * 1000) / 1000;
-			}
+			v=afronden(data[index].values[i-1].value);
 		} else {
 			v = 0;
 		}
@@ -1280,6 +1273,17 @@
 			return defaultValue
 		} else {
 			return argsMap[key]
+		}
+	}
+
+	var afronden = function( inputValue ) {
+		if (inputValue > 10)
+			return  Math.round(inputValue * 10) / 10;
+		else {
+			if (inputValue > 1)
+				return Math.round(inputValue * 100) / 100;
+			else
+				return Math.round(inputValue * 1000) / 1000;
 		}
 	}
 
