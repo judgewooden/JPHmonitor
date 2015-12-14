@@ -38,8 +38,8 @@
     	// Instructions for the graph
         source1["graphTitle"] = "Arduino Flow (Last Two Hours)";
         source1["graphLeftLegend"] = "Liters (pm)";
-        source1["graphLeftMin"] = 0;
-        source1["graphLeftMax"] = 5;
+        //source1["graphLeftMin"] = 0;
+        //source1["graphLeftMax"] = 5;
         //source1["graphRightLegend"] = "Degrees (C)";
         //source1["graphRightMax"] = 49;
         //source1["graphRightMin"] = 46;
@@ -92,8 +92,8 @@
         //source3["graphLeftMin"] = 0;
         //source3["graphLeftMax"] = 1;
         //source3["graphLeftLegend"] = "Degrees (C)";
-        source3["graphRightMin"] = 0;
-        source3["graphRightMax"] = 5;
+        //source3["graphRightMin"] = 0;
+        //source3["graphRightMax"] = 5;
         source3["graphRightLegend"] = "Liters (pm)";
         source3["graphSecondsToShow"] = 300;
         source3["graphAutoUpdate"] = 1;
