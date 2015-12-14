@@ -33,7 +33,7 @@
         source1["sensorInterpolation"] = ["linear", "linear"];
         source1["sensorUpdateGapSeconds"] = [15, 15];
         source1["sensorFilterTolerance"] = [.2, .0];
-        source1["sensorLPFsmoothing"] = [30, 0];
+        source1["sensorLPFsmoothing"] = [30, 1];
 
     	// Instructions for the graph
         source1["graphTitle"] = "Arduino Flow (Last Two Hours)";
