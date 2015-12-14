@@ -6,15 +6,18 @@ webWatch()
 {
 	FILES=$@
 
+	echo "Watching: "$FILES
 	#inotifywait --quiet --monitor --event modify $FILE | while read; do
 	inotifywait --quiet --monitor --event modify $FILES | while read line;
+	#inotifywait -m $FILES | while read line;
 	do
+		echo $line
 		file=${line%% *}
-		echo sudo cp $file /usr/share/nginx/www
+		echo " "sudo cp $file /usr/share/nginx/www
 		sudo cp $file /usr/share/nginx/www
 	done
 
 }
 
-webWatch sensorGraph.js sensorSQLinitial.php sensorSQLupdate.php `ls -1 *html *css` 
+webWatch sensorGraph.js `ls -1 *html *css *php` 
 

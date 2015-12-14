@@ -1,0 +1,33 @@
+    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <span class="navbar-brand">JPH Dashboard</span>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-left">
+            <li id="sensorFlow"><a href="">Flow</a></li>
+            <li id="sensorFlowRaw"><a href="">Flow Details</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div style="position:relative;width:100%;height:22px"></div>
+    <script>
+        // Set the current page in the menu
+        $(document).ready(function() {
+            var path = window.location.pathname;
+            var page = path.split("/").pop().split(".").shift();
+            $("#" + page).addClass("active");
+        });
+
+        $("ul.navbar-nav li").click(function() {
+            var page="/" + $(this).attr('id') + ".php";
+            window.location.href=page;
+            return false;
+        });
+    </script>

@@ -158,7 +158,7 @@
 		var myurl = [];
 		for (var key in data) {
 
-			lastelem = data[key].values.length - 1;
+			var lastelem = data[key].values.length - 1;
 
 			if (lastelem < 1) {
 				queryTime=minTime.toMysqlFormat();
@@ -671,7 +671,7 @@
 	}
 
 	var redrawLines = function(withTransition) {
-		lineFunctionSeriesIndex  =-1; // Remember this bodge !!!
+		lineFunctionSeriesIndex  = -1; // Remember this bodge !!!
 
 		// redraw lines
 		if(withTransition) {

@@ -11,7 +11,7 @@ if (mysqli_connect_errno()) {
 }
 
 // TODO: Make this safe against SQL injections
-//       And remove and warning messages in the PHP log
+//       And remove any warning messages in the PHP log
 
 // Get the value table
 if ($_GET["query"]) {
