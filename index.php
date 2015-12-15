@@ -11,6 +11,7 @@
 </head>
 
 <body>
+<div>Loading...</div>
 <?php include("menubar.html"); ?>
 <div style="position:relative;width:100%;height:50px"></div>
 <div style="position:relative;width:100%;height:50px;text-align:center">
