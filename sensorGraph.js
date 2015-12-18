@@ -17,6 +17,7 @@
  *  sensorColumn       => The name of the SQL Column that function will plot in sensorSource
  *  sensorAxisLocation => Explain to what Axis this data series should be bound, values are "Left" or "Right"
  *  sensorUpdateTimeSeconds => "Show a gap in graph if data did not update for x seconds
+ *  TODO : CORRECT THIS
  *
  *  Fields to control the behaviour of the Graph (Optional)
  *  -------------------------------------------------------
@@ -615,7 +616,7 @@
 			createMenuButtons();
 		}
 
-		
+
 		setValueLabelsToLatest();
 
 		//console.log("We have finished creating Graph.");
@@ -801,13 +802,13 @@
 				for (var key in meta.names) {
 					if (d == meta.names[key]) {
 						var hint;
-		// indent for convenience 
+		// indent for convenience
 		hint="<strong style='color:red;font-size:10px'>Sensor: "+d+"</strong><br><br>";
 		hint+="<span style='font-size:10px'>";
     	hint+="Table: "+ data[key].table + "<br>";
     	hint+="Column: "+ data[key].column + "<br><br>";
     	hint+="Interpolation: ";
-    	if ( myBehavior.interpolation == "custom" ) 
+    	if ( myBehavior.interpolation == "custom" )
     		hint+=data[key].interpolation + "<br>";
     	else
     		hint+=myBehavior.interpolation + "<br>";
@@ -823,7 +824,7 @@
     	hint+="Last Update: " + data[key].values[i].timestamp.toLocaleTimeString() + "<br>";
     	hint+="Last Value: " + afronden(data[key].values[i].value) + "<br><br>";
     	hint+="Last Plot Value: " + afronden(lastValue[key]) + "<br>";
-    	hint+="Last Smooth Value: " + afronden(smoothedValue[key]); 
+    	hint+="Last Smooth Value: " + afronden(smoothedValue[key]);
     	hint+="</span>";
     	// end indent
     					return hint;
@@ -897,7 +898,7 @@
   			.direction('s')
   			.html(function(d) {
 				var hint;
-		// indent for convenience 
+		// indent for convenience
 		hint="<strong style='color:red;font-size:10px'>" + myBehavior.title + "</strong><br><br>";
 		hint+="<span style='font-size:10px'>";
 		hint+="Show: " + myBehavior.secondsToShow + " seconds<br><br>";
@@ -912,7 +913,7 @@
 			hint+="Paused<br><br>";
 		else
 			hint+="Updating<br><br>";
-		// end indent for convenience 
+		// end indent for convenience
 
 				return hint;
 			})

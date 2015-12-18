@@ -33,7 +33,7 @@
         source1["sensorLPFsmoothing"] = [30, 15];
 
     	// Instructions for the graph
-        source1["graphTitle"] = "Arduino Flow (Last Two Hours)";
+        source1["graphTitle"] = "Analysis - Last Two Hours";
         source1["graphLeftLegend"] = "Liters (pm)";
         //source1["graphLeftMin"] = 0;
         //source1["graphLeftMax"] = 5;
@@ -46,6 +46,8 @@
     	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
     	source1["graphTickLine"] = 1;
     	var l1 = new LineGraph({containerId: 'graph1', data: source1});
+
+//something = window.open("data:text/json," + encodeURI(JSON.stringify(source1)), "_blank");
 
 </script>
 </body>

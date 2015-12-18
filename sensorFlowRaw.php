@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>JPH Dashboard - Aqua Flow Graph</title>
+    <title>Flow Analysis</title>
     <!-- TODO Load all of these using a CDN and put it in a php-include file-->
     <script src="http://d3js.org/d3.v2.js"></script>
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
@@ -35,14 +35,14 @@
         source1["sensorLPFsmoothing"] = [30, 1.0];
 
     	// Instructions for the graph
-        source1["graphTitle"] = "Arduino Flow (Last Two Hours)";
+        source1["graphTitle"] = "Arduino Flow - Last Two Hours";
         source1["graphLeftLegend"] = "Liters (pm)";
         //source1["graphLeftMin"] = 0;
         //source1["graphLeftMax"] = 5;
         source1["graphInterpolation"] = ["linear"];
     	source1["graphSecondsToShow"] = 7200;
     	source1["graphAutoUpdate"] = 1;
-    	source1["graphUpdateInterval"] = 5;
+    	source1["graphUpdateInterval"] = 10;
     	source1["graphTickLine"] = 1;
     	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
@@ -58,7 +58,7 @@
         source2["sensorLPFsmoothing"] = [15.0];
 
         // Instructions for the graph
-        source2["graphTitle"] = "Arduino Flow 2-days";   // Title of grap top left
+        source2["graphTitle"] = "Arduino Flow - Last 2-days";   // Title of grap top left
         source2["graphLeftLegend"] = "Liters (pm)";
         //source2["graphLeftMin"] = 0;
         //source2["graphLeftMax"] = 1;
@@ -81,7 +81,7 @@
         source3["sensorLPFsmoothing"] = [1.0];
 
         // Instructions for the graph
-        source3["graphTitle"] = "Arduino Flow 10 minutes";   // Title of grap top left
+        source3["graphTitle"] = "Arduino Flow - Last 10 minutes";   // Title of grap top left
         source3["graphLeftLegend"] = "Liters (pm)";
         //source3["graphLeftMin"] = 0;
         //source3["graphLeftMax"] = 1;

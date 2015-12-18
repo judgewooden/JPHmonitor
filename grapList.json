@@ -1,0 +1,64 @@
+[{  "Name":"Graph1",
+    "Settings": {
+        "graphTitle":"Analysis1 - Last Two Hours",
+        "graphLeftLegend":"Liters (pm)",
+        "graphRightLegend":"Degrees (C)",
+        "graphInterpolation":"step-before",
+        "graphSecondsToShow":7200,
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":5,
+        "graphTickLine":1,
+        "Sensors": [{
+            "Name":"Flow8",
+            "Source":"Fan1",
+            "Column":"Value",
+            "AxisLocation":"Right",
+            "Interpolation":"step",
+            "UpdateGapSeconds":"456",
+            "FilterTolerance":"0.3",
+            "LPFsmoothing":"18"
+        },{
+            "Name":"RaspTemp12",
+            "Source":"RaspiTemp1",
+            "Column":"Value",
+            "AxisLocation":"Right",
+            "Interpolation":"step",
+            "UpdateGapSeconds":"897",
+            "FilterTolerance":"0.2",
+            "LPFsmoothing":"12"
+        }]
+    }
+},{
+    "Name":"Graph2",
+    "Settings": {
+        "graphTitle":"Analysis2 - Last Two Hours",
+        "graphLeftLegend":"Liters (pm)",
+        "graphRightLegend":"Degrees (C)",
+        "graphInterpolation":"linear",
+        "graphSecondsToShow":7200,
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":5,
+        "graphTickLine":1,
+        "Sensors": [{
+            "Name":"Flow99",
+            "Source":"ArduinoMonitor1",
+            "Column":"litersperminute",
+            "AxisLocation":"Left",
+            "Interpolation":"linear",
+            "UpdateGapSeconds":"9",
+            "FilterTolerance":"0.2",
+            "LPFsmoothing":"30"
+        },{
+            "Name":"RaspTemp23",
+            "Source":"RaspiTemp1",
+            "Column":"value",
+            "AxisLocation":"Right",
+            "Interpolation":"step",
+            "UpdateGapSeconds":"8",
+            "FilterTolerance":"0.2",
+            "LPFsmoothing":"30"
+        }]
+    }
+}]
+
+

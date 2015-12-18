@@ -19,5 +19,5 @@ webWatch()
 
 }
 
-webWatch sensorGraph.js `ls -1 *html *css *php` 
+webWatch `ls -1 *html *css *php *js` 
 

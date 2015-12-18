@@ -30,8 +30,8 @@ if ($_GET["column"]) {
 }
 
 // Get the numbers of seconds to extract
-if ($_GET["seconds"]) {
-	$DBseconds = $_GET["seconds"];
+if ($_GET["UpdateGapSeconds"]) {
+	$DBseconds = $_GET["UpdateGapSeconds"];
 }
 
 // Build a query a return the results as JSON
