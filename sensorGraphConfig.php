@@ -65,10 +65,9 @@
             };
             var dataAdapterSQL = new $.jqx.dataAdapter(sourceSQL, { autoBind: true,
                 loadError: function (xhr, status, error) {
-                    alert('Error loading "' + source.url + '" : ' + error);
+                    alert('Error loading "' + sourceSQL.url + '" : ' + error);
                 },
                 loadComplete: function (response) {
-                    console.log("SQLSensors:", response);
                     lastvalue="";
                     for (var key in response) {
                         if (response[key].TABLE_NAME != lastvalue) {
@@ -76,7 +75,6 @@
                             validSensors.push(lastvalue);
                         }
                     }
-                    console.log("ValidSensors:", validSensors);
                 }
             });
 
@@ -91,10 +89,7 @@
             };
             var dataAdapterGraph = new $.jqx.dataAdapter(sourceGraphs, {
                 loadError: function (xhr, status, error) {
-                    alert('Error loading "' + source.url + '" : ' + error);
-                },
-                loadComplete: function (response) {
-                    console.log("Graph:", response);
+                    alert('Error loading "' + sourceGraphs.url + '" : ' + error);
                 }
             });
 
@@ -105,7 +100,6 @@
                 if (event.args) {
                     var item = event.args.item;
                     if (item) {
-                        console.log(item);
                         $("#graphAutoUpdate").val(item.value.graphAutoUpdate);
                         $("#graphUpdateInterval").val(item.value.graphUpdateInterval);
                         $("#graphSecondsToShow").val(item.value.graphSecondsToShow);
@@ -134,10 +128,7 @@
                         };
                         var dataAdapterSensors = new $.jqx.dataAdapter(sourceSensors, {
                             loadError: function (xhr, status, error) {
-                                alert('Error loading "' + source.url + '" : ' + error);
-                            },
-                            loadComplete: function (response) {
-                                console.log("Response: ", response);
+                                alert('Error loading "' + sourceSensors.url + '" : ' + error);
                             }
                         });
                         $("#sensorsGrid").jqxGrid( {
@@ -212,11 +203,9 @@
                                         }
                                     },
                                     validation: function (cell, value) {
-                                        console.log(cell);
                                         var currentSensor = $('#sensorsGrid').jqxGrid('getcellvalue', cell.row, "Source");
                                         for (var key in dataAdapterSQL.records) {
                                             if (dataAdapterSQL.records[key].TABLE_NAME == currentSensor) {
-                                                console.log(currentSensor, " match ", dataAdapterSQL.records[key].COLUMN_NAME);
                                                 if (dataAdapterSQL.records[key].COLUMN_NAME == value) {
                                                     return true;
                                                 }
@@ -303,7 +292,6 @@
                                 Sensors: toexport
                             };
                             var jsonpretty=JSON.stringify(answer);
-                            console.log("result: ", jsonpretty, toexport);
 
                             var newWindow = window.open('', '', 'width=800, height=500, resizable=1'),
                             document = newWindow.document.open(),
