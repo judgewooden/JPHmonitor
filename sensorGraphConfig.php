@@ -39,17 +39,17 @@
              */
             var axes=["Left","Right"];
             var customInterpolations=["linear","step"];
-            var validSensors=[];
+            var validUnits=[];
             var generaterow = function () {
                 var row = {};
                 row["Name"] = "-blank-";
-                row["Source"] = "RaspiTemp1";
-                row["Column"] = "Value";
-                row["AxisLocation"] = "Left";
+                row["Unit"] = "RaspiTemp1";
+                row["Sensor"] = "Value";
+                row["Axis"] = "Left";
                 row["Interpolation"] = "linear";
-                row["UpdateGapSeconds"] = 5;
-                row["FilterTolerance"] = 0;
-                row["LPFsmoothing"] = 1;
+                row["Frequency"] = 5;
+                row["Filter"] = 0;
+                row["Smoothing"] = 1;
                 return row;
             }
             var generatejson = function(naam) {
@@ -80,9 +80,9 @@
                         graphRightMin: graphRightMin,
                         graphTitle: graphTitle,
                         graphInterpolation: graphInterpolation,
-                        graphTickLine: graphTickLine
-                    },
-                    Sensors: sensorarray
+                        graphTickLine: graphTickLine,
+                        graphSensors: sensorarray
+                    }
                 }
                 return answer;
             }
@@ -106,24 +106,29 @@
                     for (var key in response) {
                         if (response[key].TABLE_NAME != lastvalue) {
                             lastvalue=response[key].TABLE_NAME;
-                            validSensors.push(lastvalue);
+                            validUnits.push(lastvalue);
                         }
                     }
                 }
             });
 
+            // Download the list of pre-configured graphs
             var sourceGraphs =
             {
                 datatype: "json",
                 datafields: [
                     { name: 'Name' },
-                    { name: 'Settings' }
+                    { name: 'Settings' },
+                    { name: 'Sensors' }
                 ],
                 url: "graphList.json"
             };
             var dataAdapterGraph = new $.jqx.dataAdapter(sourceGraphs, {
                 loadError: function (xhr, status, error) {
                     alert('Error loading "' + sourceGraphs.url + '" : ' + error);
+                },
+                loadComplete: function (response) {
+                    console.log("Raw: ", response);
                 }
             });
 
@@ -147,22 +152,25 @@
                         $("#graphInterpolation").val(item.value.graphInterpolation);
                         $("#graphTickLine").val(item.value.graphTickLine);
                         var sourceSensors = {
-                            localdata: item.value.Sensors,
+                            localdata: item.value.graphSensors,
                             datatype: "array",
                             datafields: [
                                 { name: 'Name', type: 'string' },
-                                { name: 'Source', type: 'string' },
-                                { name: 'Column', type: 'string' },
-                                { name: 'AxisLocation', type: 'string' },
+                                { name: 'Unit', type: 'string' },
+                                { name: 'Sensor', type: 'string' },
+                                { name: 'Axis', type: 'string' },
                                 { name: 'Interpolation', type: 'string' },
-                                { name: 'UpdateGapSeconds', type: 'number' },
-                                { name: 'FilterTolerance', type: 'number' },
-                                { name: 'LPFsmoothing', type: 'number' }
+                                { name: 'Frequency', type: 'number' },
+                                { name: 'Filter', type: 'number' },
+                                { name: 'Smoothing', type: 'number' }
                             ]
                         };
                         var dataAdapterSensors = new $.jqx.dataAdapter(sourceSensors, {
                             loadError: function (xhr, status, error) {
                                 alert('Error loading "' + sourceSensors.url + '" : ' + error);
+                            },
+                            loadComplete: function (response) {
+                                console.log(response);
                             }
                         });
                         $("#sensorsGrid").jqxGrid( {
@@ -178,7 +186,7 @@
                                 container.append('<input id="addrowbutton" type="button" value="Add New Sensor" />');
                                 container.append('<input style="margin-left: 5px;" id="deleterowbutton" type="button" value="Delete Selected Sensor" />');
                                 $("#addrowbutton").jqxButton();
-                                $("#addrowbutton").on('calick', function (event) {
+                                $("#addrowbutton").on('click', function (event) {
                                     if (event.handled !== true) {
                                             //put your code here
                                     var datarow = generaterow();
@@ -206,20 +214,20 @@
                                         return true;
                                     }
                                 },
-                                { text: 'Unit', columntype: 'dropdownlist', datafield: 'Source', width: 120,
+                                { text: 'Unit', columntype: 'dropdownlist', datafield: 'Unit', width: 120,
                                     createeditor: function (row, value, editor) {
-                                        editor.jqxDropDownList({ source: validSensors });
+                                        editor.jqxDropDownList({ source: validUnits });
                                     },
                                     cellvaluechanging: function (row, datafield, columntype, oldvalue, newvalue) {
                                         if (newvalue != oldvalue) {
                                         // TODO: There is a bug where I can no reset the value
-                                        //   $("#sensorsGrid").jqxGrid('setcellvalue', row, "Value", "");
+                                        //   $("#sensorsGrid").jqxGrid('setcellvalue', row, "Sensor", "");
                                         };
                                     }
                                 },
-                                { text: 'Sensor', columntype: 'dropdownlist', datafield: 'Column', width: 120,
+                                { text: 'Sensor', columntype: 'dropdownlist', datafield: 'Sensor', width: 120,
                                     initeditor: function (row, cellvalue, editor, celltext, cellwidth, cellheight) {
-                                        var currentSensor = $('#sensorsGrid').jqxGrid('getcellvalue', row, "Source");
+                                        var currentSensor = $('#sensorsGrid').jqxGrid('getcellvalue', row, "Unit");
                                         var currentColumn = editor.val();
 
                                         var validColumns = new Array();
@@ -237,7 +245,7 @@
                                         }
                                     },
                                     validation: function (cell, value) {
-                                        var currentSensor = $('#sensorsGrid').jqxGrid('getcellvalue', cell.row, "Source");
+                                        var currentSensor = $('#sensorsGrid').jqxGrid('getcellvalue', cell.row, "Unit");
                                         for (var key in dataAdapterSQL.records) {
                                             if (dataAdapterSQL.records[key].TABLE_NAME == currentSensor) {
                                                 if (dataAdapterSQL.records[key].COLUMN_NAME == value) {
@@ -248,7 +256,7 @@
                                         return { result: false, message: "You must select a valid Sensor" };
                                     }
                                 },
-                                { text: 'Axis', columntype: 'dropdownlist', datafield: 'AxisLocation', width: 60,
+                                { text: 'Axis', columntype: 'dropdownlist', datafield: 'Axis', width: 60,
                                     createeditor: function (row, value, editor) {
                                         editor.jqxDropDownList({ source: axes });
                                     }
@@ -258,7 +266,7 @@
                                         editor.jqxDropDownList({ source: customInterpolations });
                                     }
                                 },
-                                { text: 'Frequency', datafield: 'UpdateGapSeconds', width: 85,
+                                { text: 'Frequency', datafield: 'Frequency', width: 85,
                                     align: 'right', cellsalign: 'right', columntype: 'numberinput',
                                     validation: function (cell, value) {
                                         if (value < 0) {
@@ -267,19 +275,13 @@
                                         return true;
                                     }
                                 },
-                                { text: 'Filter', datafield: 'FilterTolerance', width: 60,
+                                { text: 'Filter', datafield: 'Filter', width: 60,
                                     align: 'right', cellsalign: 'right', columntype: 'numberinput',
                                     createeditor: function (row, cellvalue, editor) {
                                         editor.jqxNumberInput({ decimalDigits: 1, digits: 2 });
-                                    },
-                                    validation: function (cell, value) {
-                                        if (value < 0) {
-                                            return { result: false, message: "Can not be negative" };
-                                        }
-                                        return true;
                                     }
                                 },
-                                { text: 'Smoothing', datafield: 'LPFsmoothing', width: 90,
+                                { text: 'Smoothing', datafield: 'Smoothing', width: 90,
                                     align: 'right', cellsalign: 'right', columntype: 'numberinput',
                                     createeditor: function (row, cellvalue, editor) {
                                         editor.jqxNumberInput({ decimalDigits: 2, digits: 3 });
@@ -298,22 +300,8 @@
                             if (event.handled !== true) {
                                 answer = generatejson("Graph1");
                                 var myurl = JSON.stringify(answer);
-                                var url="sensorGraphTest.php?search=" + encodeURI( myurl );
-                                console.log(url);
+                                var url="sensorGraphCustom.php?search=" + encodeURI( myurl );
                                 var newWindow = window.open(url, '', 'width=800, height=500, resizable=0');
-                                /*
-                                document = newWindow.document.open(),
-                                pageContent =
-                                         '<!DOCTYPE html>' +
-                                         '<html>' +
-                                         '<head>' +
-                                         '<meta charset="utf-8" />' +
-                                         '<title>Safe your Graph</title>' +
-                                         '</head>' +
-                                         '<body><script>console.log()<script><div>TESTING</div>' +  '</body></html>';
-                                document.write(pageContent);
-                                document.close();
-                                */
                                 event.handled = true;
                             }
                             return false;

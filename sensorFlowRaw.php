@@ -23,74 +23,108 @@
 <div id="graph3" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
 
 <script>
-	var source1 = {};
-    	// The source of the data and how to display it
-        source1["sensorDisplayName"] = ["Flow", "Flow-Raw"];
-        source1["sensorSource"] = ["ArduinoMonitor1", "ArduinoMonitor1"];
-        source1["sensorColumn"] = ["litersperminute", "litersperminute"];
-        source1["sensorAxisLocation"] = ["Left", "Left"];
-        source1["sensorInterpolation"] = ["linear", "linear"];
-        source1["sensorUpdateGapSeconds"] = [15, 15];
-        source1["sensorFilterTolerance"] = [.2, .0];
-        source1["sensorLPFsmoothing"] = [30, 1.0];
+	var source1 = {
+        "Name":"Flow Raw",
+        "Settings":{
+            "graphAutoUpdate":1,
+            "graphUpdateInterval":10,
+            "graphSecondsToShow":7200,
+            "graphLeftLegend":"",
+            "graphLeftMax":0,
+            "graphLeftMin":0,
+            "graphRightLegend":"Liters (pm)",
+            "graphRightMax":0,
+            "graphRightMin":0,
+            "graphTitle":"Arduino Flow - Last Two Hours",
+            "graphInterpolation":"linear",
+            "graphTickLine":1,
+            "graphSensors":[
+                {
+                    "Name":"Flow",
+                    "Unit":"ArduinoMonitor1",
+                    "Sensor":"Litersperminute",
+                    "Axis":"Right",
+                    "Interpolation":"linear",
+                    "Frequency":"15",
+                    "Filter":"0.20",
+                    "Smoothing":"30.00"
+                },
+                {
+                    "Name":"Flow-Raw",
+                    "Unit":"ArduinoMonitor1",
+                    "Sensor":"LitersPerMinute",
+                    "Axis":"Right",
+                    "Interpolation":"linear",
+                    "Frequency":"15",
+                    "Filter":"0.00",
+                    "Smoothing":"1.00"
+                }
+            ]
+        }
+    };
+    var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
-    	// Instructions for the graph
-        source1["graphTitle"] = "Arduino Flow - Last Two Hours";
-        source1["graphLeftLegend"] = "Liters (pm)";
-        //source1["graphLeftMin"] = 0;
-        //source1["graphLeftMax"] = 5;
-        source1["graphInterpolation"] = ["linear"];
-    	source1["graphSecondsToShow"] = 7200;
-    	source1["graphAutoUpdate"] = 1;
-    	source1["graphUpdateInterval"] = 10;
-    	source1["graphTickLine"] = 1;
-    	var l1 = new LineGraph({containerId: 'graph1', data: source1});
+    var source2 = {
+        "Name":"Flow - 2days",
+        "Settings":{
+            "graphAutoUpdate":1,
+            "graphUpdateInterval":10,
+            "graphSecondsToShow":172800,
+            "graphLeftLegend":"Liters (pm)",
+            "graphLeftMax":0,
+            "graphLeftMin":0,
+            "graphRightLegend":"Liters (pm)",
+            "graphRightMax":0,
+            "graphRightMin":0,
+            "graphTitle":"Arduino Flow - Last 2 days",
+            "graphInterpolation":"linear",
+            "graphTickLine":1,
+            "graphSensors":[
+                {
+                    "Name":"Flow",
+                    "Unit":"ArduinoMonitor1",
+                    "Sensor":"LitersPerMinute",
+                    "Axis":"Left",
+                    "Interpolation":"linear",
+                    "Frequency":"15.00",
+                    "Filter":"0.50",
+                    "Smoothing":"15.00"
+                }
+            ]
+        }
+    };
+    var l2 = new LineGraph({containerId: 'graph2', data: source2});
 
-    var source2 = {};
-        // The source of the data and how to display it
-        source2["sensorDisplayName"] = ["Flow"];
-        source2["sensorSource"] = ["ArduinoMonitor1"];
-        source2["sensorColumn"] = ["LitersPerMinute"];
-        source2["sensorAxisLocation"] = ["Left"];
-        source2["sensorInterpolation"] = ["basis"];
-        source2["sensorUpdateGapSeconds"] = [300];
-        source2["sensorFilterTolerance"] = [0.5];
-        source2["sensorLPFsmoothing"] = [15.0];
-
-        // Instructions for the graph
-        source2["graphTitle"] = "Arduino Flow - Last 2-days";   // Title of grap top left
-        source2["graphLeftLegend"] = "Liters (pm)";
-        //source2["graphLeftMin"] = 0;
-        //source2["graphLeftMax"] = 1;
-        source2["graphRightLegend"] = "Power: 1=on / 0=off";
-        source2["graphSecondsToShow"] = 172800;
-        source2["graphAutoUpdate"] = 1;
-        source2["graphUpdateInterval"] = 3600;
-        source2["graphTickLine"] = 0;
-        var l2 = new LineGraph({containerId: 'graph2', data: source2});
-
-    var source3 = {};
-        // The source of the data and how to display it
-        source3["sensorDisplayName"] = ["Flow-Raw"];
-        source3["sensorSource"] = ["ArduinoMonitor1"];
-        source3["sensorColumn"] = ["LitersPerMinute"];
-        source3["sensorAxisLocation"] = ["Right"];
-        source3["sensorInterpolation"] = ["basis"];
-        source3["sensorUpdateGapSeconds"] = [10];
-        source3["sensorFilterTolerance"] = [-1];
-        source3["sensorLPFsmoothing"] = [1.0];
-
-        // Instructions for the graph
-        source3["graphTitle"] = "Arduino Flow - Last 10 minutes";   // Title of grap top left
-        source3["graphLeftLegend"] = "Liters (pm)";
-        //source3["graphLeftMin"] = 0;
-        //source3["graphLeftMax"] = 1;
-        source3["graphRightLegend"] = "Liters (pm)";
-        source3["graphSecondsToShow"] = 600;
-        source3["graphAutoUpdate"] = 1;
-        source3["graphUpdateInterval"] = 5;
-        source3["graphTickLine"] = 0;
-        var l3 = new LineGraph({containerId: 'graph3', data: source3});
+    var source3 = {
+        "Name":"Flow - 10min",
+        "Settings":{
+            "graphAutoUpdate":1,
+            "graphUpdateInterval":10,
+            "graphSecondsToShow":600,
+            "graphLeftLegend":"Liters (pm)",
+            "graphLeftMax":0,
+            "graphLeftMin":0,
+            "graphRightLegend":"Liters (pm)",
+            "graphRightMax":0,
+            "graphRightMin":0,
+            "graphTitle":"Arduino Flow - Last 10 minutes",
+            "graphInterpolation":"linear",
+            "graphTickLine":1,
+            "graphSensors":[
+                {
+                    "Name":"Flow-Raw",
+                    "Unit":"ArduinoMonitor1",
+                    "Sensor":"LitersPerMinute",
+                    "Axis":"Right",
+                    "Interpolation":"linear",
+                    "Frequency":"15.00",
+                    "Filter":"-1.00",
+                    "Smoothing":"1.00"
+                }
+            ]
+        }
+    };
+    var l3 = new LineGraph({containerId: 'graph3', data: source3});
 
 </script>
 </body>

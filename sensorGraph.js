@@ -295,7 +295,6 @@
 	var loadConfig = function(dataMap) {
 
 		// Load data for graph behavior
-		console.log(dataMap);
 		myBehavior.title = getOptionalVar(dataMap.Settings, 'graphTitle', "");
 		myBehavior.secondsToShow = +getOptionalVar(dataMap.Settings,	'graphSecondsToShow', "3600");
 		myBehavior.autoUpdate = +getOptionalVar(dataMap.Settings, 'graphAutoUpdate', "0");
@@ -308,7 +307,7 @@
 		myBehavior.axisLeftLegend = getOptionalVar(dataMap.Settings, 'graphLeftLegend', "");
 		myBehavior.axisRightLegend = getOptionalVar(dataMap.Settings, 'graphRightLegend', "");
 		myBehavior.interpolation = getOptionalVar(dataMap.Settings, 'graphInterpolation', "linear");
-		console.log(myBehavior);
+		console.log(containerId, " Behavior: ", myBehavior);
 
 		// Load graph meta data
 		meta.names = new Array();
@@ -319,17 +318,22 @@
 		meta.filter = new Array();
 		meta.smoothing = new Array();
 		meta.interpolation = new Array();
-		for (var key in dataMap.Sensors) {
-			meta.names.push(getRequiredVar(dataMap.Sensors[key], 'Name', "Need to plot something"));
-			meta.tables.push(getRequiredVar(dataMap.Sensors[key], 'Unit', "Need to get data from somewhere"));
-			meta.columns.push(getRequiredVar(dataMap.Sensors[key], 'Sensor', "Need to have value to show"));
-			meta.yaxes.push(getRequiredVar(dataMap.Sensors[key], 'Axis', "Must specify Axis"));
-			meta.datagap.push(getRequiredVar(dataMap.Sensors[key], 'Frequency', "Must specify [0=valid]"));
-			meta.filter.push(getRequiredVar(dataMap.Sensors[key], 'Filter', "Must specify [-1=none]"));
-			meta.smoothing.push(getRequiredVar(dataMap.Sensors[key], 'Smoothing', "Must specify [1=no-effect]"));
-			meta.interpolation.push(getRequiredVar(dataMap.Sensors[key], 'Interpolation', "Must specify Interpolation"));
+		for (var key in dataMap.Settings.graphSensors) {
+			meta.names.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Name', "Need to plot something"));
+			meta.tables.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Unit', "Need to get data from somewhere"));
+			meta.columns.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Sensor', "Need to have value to show"));
+			meta.yaxes.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Axis', "Must specify Axis"));
+			meta.datagap.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Frequency', "Must specify [0=valid]"));
+			meta.filter.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Filter', "Must specify [-1=none]"));
+			meta.smoothing.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Smoothing', "Must specify [1=no-effect]"));
+			meta.interpolation.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Interpolation', "Must specify Interpolation"));
 		}
-		console.log(containerId, myBehavior);
+		if ( meta.length == 0) {
+			message="There is no Sensor data found in Settings"
+			alert(message);
+			throw new Error(message);
+		}
+		console.log(containerId, " Meta: ", meta);
 
 		//Create the data object
 		for (var key in meta.names) {
@@ -358,7 +362,7 @@
 				filter: +meta.filter[key],
 				values: []
 			};
-			console.log(containerId, temp);
+			console.log(containerId, " Data: ", temp);
 			data.push(temp);
 	 	}
 

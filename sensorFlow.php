@@ -21,40 +21,46 @@
 <div id="graph1" class="aGraph" style="position:relative;width:100%;height:400px"></div>
 
 <script>
-	var source1 = { "Name":"Graph1",
-        "Settings": {
-            "graphTitle":"Analysis1 - Last Two Hours",
-            "graphLeftLegend":"Liters (pm)",
-            "graphRightLegend":"Degrees (C)",
-            "graphInterpolation":"before",
-            "graphSecondsToShow":7200,
+	var source1 = {
+        "Name":"Overview",
+        "Settings":{
             "graphAutoUpdate":1,
-            "graphUpdateInterval":5,
-            "graphTickLine":1
-        },
-        "Sensors": [{
-            "Name":"Flow",
-            "Source":"ArduinoMonitor1",
-            "Column":"litersperminute",
-            "AxisLocation":"Left",
-            "Interpolation":"linear",
-            "UpdateGapSeconds":"15",
-            "FilterTolerance":"0.2",
-            "LPFsmoothing":"30"
-        },{
-            "Name":"RaspTemp",
-            "Source":"RaspiTemp1",
-            "Column":"Value",
-            "AxisLocation":"Right",
-            "Interpolation":"linear",
-            "UpdateGapSeconds":"15",
-            "FilterTolerance":"0.7",
-            "LPFsmoothing":"15"
-        }]
+            "graphUpdateInterval":10,
+            "graphSecondsToShow":7200,
+            "graphLeftLegend":"Liters (pm)",
+            "graphLeftMax":0,
+            "graphLeftMin":0,
+            "graphRightLegend":"Degrees (C)",
+            "graphRightMax":0,
+            "graphRightMin":0,
+            "graphTitle":"Overview - Last Two Hours",
+            "graphInterpolation":"linear",
+            "graphTickLine":1,
+            "graphSensors":[
+                {
+                    "Name":"Flow",
+                    "Unit":"ArduinoMonitor1",
+                    "Sensor":"Litersperminute",
+                    "Axis":"Left",
+                    "Interpolation":"linear",
+                    "Frequency":"15",
+                    "Filter":"0.20",
+                    "Smoothing":"30.00"
+                },
+                {
+                    "Name":"RaspTemp",
+                    "Unit":"RaspiTemp1",
+                    "Sensor":"value",
+                    "Axis":"Right",
+                    "Interpolation":"linear",
+                    "Frequency":"15",
+                    "Filter":"0.70",
+                    "Smoothing":"15.00"
+                }
+            ]
+        }
     }
 	var l1 = new LineGraph({containerId: 'graph1', data: source1});
-
-something = window.open("data:text/json," + encodeURI(JSON.stringify(source1)), "_blank");
 
 </script>
 </body>
