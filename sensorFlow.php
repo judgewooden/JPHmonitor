@@ -21,33 +21,40 @@
 <div id="graph1" class="aGraph" style="position:relative;width:100%;height:400px"></div>
 
 <script>
-	var source1 = {};
-    	// The source of the data and how to display it
-        source1["sensorDisplayName"] = ["Flow", "RaspiTemp"];
-        source1["sensorSource"] = ["ArduinoMonitor1", "RaspiTemp1"];
-        source1["sensorColumn"] = ["litersperminute", "Value"];
-        source1["sensorAxisLocation"] = ["Left", "Right"];
-        source1["sensorInterpolation"] = ["linear", "linear"];
-        source1["sensorUpdateGapSeconds"] = [15, 15];
-        source1["sensorFilterTolerance"] = [.2, .7];
-        source1["sensorLPFsmoothing"] = [30, 15];
+	var source1 = { "Name":"Graph1",
+        "Settings": {
+            "graphTitle":"Analysis1 - Last Two Hours",
+            "graphLeftLegend":"Liters (pm)",
+            "graphRightLegend":"Degrees (C)",
+            "graphInterpolation":"before",
+            "graphSecondsToShow":7200,
+            "graphAutoUpdate":1,
+            "graphUpdateInterval":5,
+            "graphTickLine":1
+        },
+        "Sensors": [{
+            "Name":"Flow",
+            "Source":"ArduinoMonitor1",
+            "Column":"litersperminute",
+            "AxisLocation":"Left",
+            "Interpolation":"linear",
+            "UpdateGapSeconds":"15",
+            "FilterTolerance":"0.2",
+            "LPFsmoothing":"30"
+        },{
+            "Name":"RaspTemp",
+            "Source":"RaspiTemp1",
+            "Column":"Value",
+            "AxisLocation":"Right",
+            "Interpolation":"linear",
+            "UpdateGapSeconds":"15",
+            "FilterTolerance":"0.7",
+            "LPFsmoothing":"15"
+        }]
+    }
+	var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
-    	// Instructions for the graph
-        source1["graphTitle"] = "Analysis - Last Two Hours";
-        source1["graphLeftLegend"] = "Liters (pm)";
-        //source1["graphLeftMin"] = 0;
-        //source1["graphLeftMax"] = 5;
-        source1["graphRightLegend"] = "Degrees (C)";
-        //source1["graphRightMax"] = 49;
-        //source1["graphRightMin"] = 46;
-        source1["graphInterpolation"] = ["linear"];
-    	source1["graphSecondsToShow"] = 7200;
-    	source1["graphAutoUpdate"] = 1;
-    	source1["graphUpdateInterval"] = 5;     // Will update the graph every X seconds (default:2)
-    	source1["graphTickLine"] = 1;
-    	var l1 = new LineGraph({containerId: 'graph1', data: source1});
-
-//something = window.open("data:text/json," + encodeURI(JSON.stringify(source1)), "_blank");
+something = window.open("data:text/json," + encodeURI(JSON.stringify(source1)), "_blank");
 
 </script>
 </body>

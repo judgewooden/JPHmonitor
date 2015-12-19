@@ -1,7 +1,3 @@
-/***
-	Courtesy: http://bl.ocks.org/benjchristensen/2657838
-**/
-
 /*
  * Create and draw a new graph
  *
@@ -299,29 +295,40 @@
 	var loadConfig = function(dataMap) {
 
 		// Load data for graph behavior
-		myBehavior.secondsToShow = +getOptionalVar(dataMap,	'graphSecondsToShow', "3600");
-		myBehavior.autoUpdate = +getOptionalVar(dataMap, 'graphAutoUpdate', "0");
-		myBehavior.interval = +getOptionalVar(dataMap, 'graphUpdateInterval', "5");
-		myBehavior.tickLine = +getOptionalVar(dataMap, 'graphTickLine', "");
-		myBehavior.axisLeftMin = +getOptionalVar(dataMap, 'graphLeftMin', "");
-		myBehavior.axisLeftMax = +getOptionalVar(dataMap, 'graphLeftMax', "");
-		myBehavior.axisRightMin = +getOptionalVar(dataMap, 'graphRightMin', "");
-		myBehavior.axisRightMax = +getOptionalVar(dataMap, 'graphRightMax', "");
-		myBehavior.title = getOptionalVar(dataMap, 'graphTitle', "");
-		myBehavior.axisLeftLegend = getOptionalVar(dataMap, 'graphLeftLegend', "");
-		myBehavior.axisRightLegend = getOptionalVar(dataMap, 'graphRightLegend', "");
-		myBehavior.interpolation = getOptionalVar(dataMap, 'graphInterpolation', "linear");
+		console.log(dataMap);
+		myBehavior.title = getOptionalVar(dataMap.Settings, 'graphTitle', "");
+		myBehavior.secondsToShow = +getOptionalVar(dataMap.Settings,	'graphSecondsToShow', "3600");
+		myBehavior.autoUpdate = +getOptionalVar(dataMap.Settings, 'graphAutoUpdate', "0");
+		myBehavior.interval = +getOptionalVar(dataMap.Settings, 'graphUpdateInterval', "5");
+		myBehavior.tickLine = +getOptionalVar(dataMap.Settings, 'graphTickLine', "");
+		myBehavior.axisLeftMin = +getOptionalVar(dataMap.Settings, 'graphLeftMin', "");
+		myBehavior.axisLeftMax = +getOptionalVar(dataMap.Settings, 'graphLeftMax', "");
+		myBehavior.axisRightMin = +getOptionalVar(dataMap.Settings, 'graphRightMin', "");
+		myBehavior.axisRightMax = +getOptionalVar(dataMap.Settings, 'graphRightMax', "");
+		myBehavior.axisLeftLegend = getOptionalVar(dataMap.Settings, 'graphLeftLegend', "");
+		myBehavior.axisRightLegend = getOptionalVar(dataMap.Settings, 'graphRightLegend', "");
+		myBehavior.interpolation = getOptionalVar(dataMap.Settings, 'graphInterpolation', "linear");
+		console.log(myBehavior);
 
 		// Load graph meta data
-		meta.names = getRequiredVar(dataMap, 'sensorDisplayName', "Need to plot something");
-		meta.tables = getRequiredVar(dataMap, 'sensorSource', "Need to get data from somewhere");
-		meta.columns = getRequiredVar(dataMap, 'sensorColumn', "Need to have value to show");
-		meta.yaxes = getRequiredVar(dataMap, 'sensorAxisLocation', "Must specify Axis");
-		meta.datagap = getRequiredVar(dataMap, 'sensorUpdateGapSeconds', "Must specify [0=valid]");
-		meta.filter = getRequiredVar(dataMap, 'sensorFilterTolerance', "Must specify [-1=none]");
-		meta.smoothing = getRequiredVar(dataMap, 'sensorLPFsmoothing', "Must specify [1=no-effect]");
-		meta.interpolation = getRequiredVar(dataMap, 'sensorInterpolation', "Must specify Interpolation");
-
+		meta.names = new Array();
+		meta.tables = new Array();
+		meta.columns = new Array();
+		meta.yaxes = new Array();
+		meta.datagap = new Array();
+		meta.filter = new Array();
+		meta.smoothing = new Array();
+		meta.interpolation = new Array();
+		for (var key in dataMap.Sensors) {
+			meta.names.push(getRequiredVar(dataMap.Sensors[key], 'Name', "Need to plot something"));
+			meta.tables.push(getRequiredVar(dataMap.Sensors[key], 'Unit', "Need to get data from somewhere"));
+			meta.columns.push(getRequiredVar(dataMap.Sensors[key], 'Sensor', "Need to have value to show"));
+			meta.yaxes.push(getRequiredVar(dataMap.Sensors[key], 'Axis', "Must specify Axis"));
+			meta.datagap.push(getRequiredVar(dataMap.Sensors[key], 'Frequency', "Must specify [0=valid]"));
+			meta.filter.push(getRequiredVar(dataMap.Sensors[key], 'Filter', "Must specify [-1=none]"));
+			meta.smoothing.push(getRequiredVar(dataMap.Sensors[key], 'Smoothing', "Must specify [1=no-effect]"));
+			meta.interpolation.push(getRequiredVar(dataMap.Sensors[key], 'Interpolation', "Must specify Interpolation"));
+		}
 		console.log(containerId, myBehavior);
 
 		//Create the data object

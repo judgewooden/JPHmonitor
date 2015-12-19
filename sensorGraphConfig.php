@@ -52,6 +52,40 @@
                 row["LPFsmoothing"] = 1;
                 return row;
             }
+            var generatejson = function(naam) {
+                var sensorarray = JSON.parse($("#sensorsGrid").jqxGrid('exportdata', 'json'));
+                var graphAutoUpdate=+$("#graphAutoUpdate").val();
+                var graphUpdateInterval= +$("#graphUpdateInterval").val();
+                var graphSecondsToShow= +$("#graphSecondsToShow").val();
+                var graphLeftLegend= $("#graphLeftLegend").val();
+                var graphLeftMax= +$("#graphLeftMax").val();
+                var graphLeftMin= +$("#graphLeftMin").val();
+                var graphRightLegend= $("#graphRightLegend").val();
+                var graphRightMax= +$("#graphRightMax").val();
+                var graphRightMin= +$("#graphRightMin").val();
+                var graphTitle= $("#graphTitle").val()
+                var graphInterpolation= $("#graphInterpolation").val();
+                var graphTickLine= +$("#graphTickLine").val();
+                var answer = {
+                    Name: naam,
+                    Settings: {
+                        graphAutoUpdate: graphAutoUpdate,
+                        graphUpdateInterval: graphUpdateInterval,
+                        graphSecondsToShow: graphSecondsToShow,
+                        graphLeftLegend: graphLeftLegend,
+                        graphLeftMax: graphLeftMax,
+                        graphLeftMin: graphLeftMin,
+                        graphRightLegend: graphRightLegend,
+                        graphRightMax: graphRightMax,
+                        graphRightMin: graphRightMin,
+                        graphTitle: graphTitle,
+                        graphInterpolation: graphInterpolation,
+                        graphTickLine: graphTickLine
+                    },
+                    Sensors: sensorarray
+                }
+                return answer;
+            }
 
             // Download the valid tables from SQL (these should contain all the sensors)
             var sourceSQL =
@@ -144,7 +178,7 @@
                                 container.append('<input id="addrowbutton" type="button" value="Add New Sensor" />');
                                 container.append('<input style="margin-left: 5px;" id="deleterowbutton" type="button" value="Delete Selected Sensor" />');
                                 $("#addrowbutton").jqxButton();
-                                $("#addrowbutton").on('click', function (event) {
+                                $("#addrowbutton").on('calick', function (event) {
                                     if (event.handled !== true) {
                                             //put your code here
                                     var datarow = generaterow();
@@ -259,52 +293,55 @@
                                 }
                             ]
                         });
-                        $("#jsonExport").click(function () {
-                            var toexport = JSON.parse($("#sensorsGrid").jqxGrid('exportdata', 'json'));
-                            var graphAutoUpdate=$("#graphAutoUpdate").val();
-                            var graphUpdateInterval= $("#graphUpdateInterval").val();
-                            var graphSecondsToShow= $("#graphSecondsToShow").val();
-                            var graphLeftLegend= $("#graphLeftLegend").val();
-                            var graphLeftMax= $("#graphLeftMax").val();
-                            var graphLeftMin= $("#graphLeftMin").val();
-                            var graphRightLegend= $("#graphRightLegend").val();
-                            var graphRightMax= $("#graphRightMax").val();
-                            var graphRightMin= $("#graphRightMin").val();
-                            var graphTitle= $("#graphTitle").val()
-                            var graphInterpolation= $("#graphInterpolation").val();
-                            var graphTickLine= $("#graphTickLine").val();
-                            var answer = {
-                                Name: "Graph1",
-                                Settings: {
-                                    graphAutoUpdate: graphAutoUpdate,
-                                    graphUpdateInterval: graphUpdateInterval,
-                                    graphSecondsToShow: graphSecondsToShow,
-                                    graphLeftLegend: graphLeftLegend,
-                                    graphLeftMax: graphLeftMax,
-                                    graphLeftMin: graphLeftMin,
-                                    graphRightLegend: graphRightLegend,
-                                    graphRightMax: graphRightMax,
-                                    graphRightMin: graphRightMin,
-                                    graphTitle: graphTitle,
-                                    graphInterpolation: graphInterpolation,
-                                    graphTickLine: graphTickLine
-                                },
-                                Sensors: toexport
-                            };
-                            var jsonpretty=JSON.stringify(answer);
-
-                            var newWindow = window.open('', '', 'width=800, height=500, resizable=1'),
-                            document = newWindow.document.open(),
-                            pageContent =
-                                     '<!DOCTYPE html>' +
-                                     '<html>' +
-                                     '<head>' +
-                                     '<meta charset="utf-8" />' +
-                                     '<title>Safe your Graph</title>' +
-                                     '</head>' +
-                                     '<body>' + jsonpretty + '</body></html>';
-                            document.write(pageContent);
-                            document.close();
+                        document.getElementById('graphWindow').style.visibility='visible';
+                        $("#graphWindow").click(function (event) {
+                            if (event.handled !== true) {
+                                answer = generatejson("Graph1");
+                                var myurl = JSON.stringify(answer);
+                                var url="sensorGraphTest.php?search=" + encodeURI( myurl );
+                                console.log(url);
+                                var newWindow = window.open(url, '', 'width=800, height=500, resizable=0');
+                                /*
+                                document = newWindow.document.open(),
+                                pageContent =
+                                         '<!DOCTYPE html>' +
+                                         '<html>' +
+                                         '<head>' +
+                                         '<meta charset="utf-8" />' +
+                                         '<title>Safe your Graph</title>' +
+                                         '</head>' +
+                                         '<body><script>console.log()<script><div>TESTING</div>' +  '</body></html>';
+                                document.write(pageContent);
+                                document.close();
+                                */
+                                event.handled = true;
+                            }
+                            return false;
+                        });
+                        document.getElementById('jsonExport').style.visibility='visible';
+                        $("#jsonExport").click(function (event) {
+                            if (event.handled !== true) {
+                                var naam = window.prompt("Name your Graph","Graph1");
+                                if ( naam == null ) naam = "Graph1";
+                                answer = generatejson(naam);
+                                var newWindow = window.open('', '', 'location=0, status=0, titlebar=0, toolbar=0, width=800, height=500, resizable=1'),
+                                document = newWindow.document.open(),
+                                pageContent =
+                                         '<!DOCTYPE html>' +
+                                         '<html>' +
+                                         '<head>' +
+                                         '<meta charset="utf-8" />' +
+                                         '<title>Safe your Graph</title>' +
+                                         '</head>' +
+                                         '<!-- Content-Type: application/json -->' +
+                                         '<body>' +
+                                         JSON.stringify(answer, null, '\t'); +
+                                         '</body></html>';
+                                document.write(pageContent);
+                                document.close();
+                                event.handled = true;
+                            }
+                            return false;
                         });
                     }
                 }
@@ -418,8 +455,12 @@
 <div id="sensorsGrid" style="float:left;position:relative;margin-left:5px;margin-top:10px;width:400px">
 </div>
 
-<div style='float:left;position:relative;margin-left:10px;margin-top:10px'>
+<div style='float:left;position:relative;margin-left:10px;margin-top:10px;visibility:hidden'>
     <input type="button" value="JSON" id='jsonExport' />
+</div>
+
+<div style='float:left;position:relative;margin-left:10px;margin-top:10px;visibility:hidden'>
+    <input type="button" value="Graph" id='graphWindow' />
 </div>
 
 </body>
