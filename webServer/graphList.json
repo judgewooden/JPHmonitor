@@ -1,0 +1,224 @@
+[{
+    "Name":"Overview",
+    "Settings":{
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":7200,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Degrees (C)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Overview - Last Two Hours",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"Litersperminute",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15",
+                "Filter":"0.20",
+                "Smoothing":"30.00"
+            },
+            {
+                "Name":"RaspTemp",
+                "Unit":"RaspiTemp1",
+                "Sensor":"Value",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15",
+                "Filter":"0.70",
+                "Smoothing":"15.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Flow Raw",
+    "Settings":{
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":7200,
+        "graphLeftLegend":"",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last Two Hours",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"Litersperminute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15",
+                "Filter":"0.20",
+                "Smoothing":"30.00"
+            },
+            {
+                "Name":"Flow-Raw",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Flow - 10min",
+    "Settings":{
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":600,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last 10 minutes",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"Flow-Raw",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"-1.00",
+                "Smoothing":"1.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Flow - 2days",
+    "Settings":{
+        "graphAutoUpdate":0,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":172800,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last 2 days",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.50",
+                "Smoothing":"15.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Flow - 1week",
+    "Settings":{
+        "graphAutoUpdate":0,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":604800,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last Week",
+        "graphInterpolation":"basis",
+        "graphTickLine":0,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"600.00",
+                "Filter":"0.50",
+                "Smoothing":"30.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Flow - 1month",
+    "Settings":{
+        "graphAutoUpdate":0,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":2592000,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last Month",
+        "graphInterpolation":"basis",
+        "graphTickLine":0,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"600.00",
+                "Filter":"0.50",
+                "Smoothing":"30.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Flow - 1year",
+    "Settings":{
+        "graphAutoUpdate":0,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":31536000,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last Year",
+        "graphInterpolation":"basis",
+        "graphTickLine":0,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"600.00",
+                "Filter":"0.50",
+                "Smoothing":"30.00"
+            }
+        ]
+    }
+}
+]
