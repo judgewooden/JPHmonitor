@@ -7,9 +7,7 @@ webWatch()
 	FILES=$@
 
 	echo "Watching: "$FILES
-	#inotifywait --quiet --monitor --event modify $FILE | while read; do
 	inotifywait --quiet --monitor --event modify $FILES | while read line;
-	#inotifywait -m $FILES | while read line;
 	do
 		echo $line
 		file=${line%% *}
@@ -19,5 +17,6 @@ webWatch()
 
 }
 
+cd webServer
 webWatch `ls -1 *html *css *php *js` 
 
