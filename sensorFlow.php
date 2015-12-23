@@ -1,7 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <title>JPH Dashboard - Aqua Flow Graph</title>
-    <!-- TODO Load all of these using a CDN and put it in a php-include file-->
     <script src="http://d3js.org/d3.v2.js"></script>
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>

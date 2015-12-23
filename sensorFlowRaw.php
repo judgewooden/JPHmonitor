@@ -1,7 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <title>Flow Analysis</title>
-    <!-- TODO Load all of these using a CDN and put it in a php-include file-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
     <script src="http://d3js.org/d3.v2.js"></script>
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
@@ -9,8 +11,7 @@
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+
 
     <script type="text/javascript" src="sensorGraph.js"></script>
     <link rel="stylesheet" type="text/css" href="sensorGraphStyle.css">

@@ -834,8 +834,9 @@
     	var i=data[key].values.length - 1;
     	hint+="Last Update: " + data[key].values[i].timestamp.toLocaleTimeString() + "<br>";
     	hint+="Last Value: " + afronden(data[key].values[i].value) + "<br><br>";
-    	hint+="Last Plot Value: " + afronden(lastValue[key]) + "<br>";
-    	hint+="Last Smooth Value: " + afronden(smoothedValue[key]);
+    	hint+="Total Value Shown: " + afronden(data[key].values.length);
+    	//hint+="Last Plot Value: " + afronden(lastValue[key]) + "<br>";
+    	//hint+="Last Smooth Value: " + afronden(smoothedValue[key]);
     	hint+="</span>";
     	// end indent
     					return hint;
