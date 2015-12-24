@@ -28,7 +28,7 @@ ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*
  * TODO : All Tables above this line are final
- * REMEMBER: THEY CAN CONTAIN DATA YOU WAN#!/usr/bin/env T
+ * REMEMBER: THEY CAN CONTAIN DATA YOU WANT
  */
 
 /* TODO Cleanup these tables ( they are for development only) */
@@ -47,9 +47,29 @@ CREATE TABLE `WaterTemperature1` (
   UNIQUE KEY `Timestamp` (`Timestamp`)
 )
 ENGINE=MyISAM DEFAULT CHARSET=latin1;
-CREATE TABLE `Fan1` (
+CREATE TABLE `FanSpeed1` (
   `Timestamp` timestamp NOT NULL,
   `Value` integer NOT NULL,
+  PRIMARY KEY (`Timestamp`),
+  UNIQUE KEY `Timestamp` (`Timestamp`)
+)
+ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE `SpeedfaniMonitor1` (
+  `Timestamp` timestamp NOT NULL,
+  `SystemTemp` numeric(7,3),
+  `CPUTemp` numeric(7,3),
+  `SBTemp` numeric(7,3),
+  `NBTemp` numeric(7,3),
+  `OPT_FAN_1` numeric(7,3),
+  `GPU1Temp` numeric(7,3),
+  `GPU2Temp` numeric(7,3),
+  `GPU3Temp` numeric(7,3),
+  `GPU4Temp` numeric(7,3),
+  `Core1Temp` numeric(7,3),
+  `Core2Temp` numeric(7,3),
+  `Core3Temp` numeric(7,3),
+  `Core4Temp` numeric(7,3),
   PRIMARY KEY (`Timestamp`),
   UNIQUE KEY `Timestamp` (`Timestamp`)
 )
