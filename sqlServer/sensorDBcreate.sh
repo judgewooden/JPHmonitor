@@ -15,6 +15,10 @@ if [ "$n" = "YES" ]; then
 	do
     	mysql -hlocalhost -uroot -p$sqlpw < $procedure
 	done
+	for grant in `ls -1 grant*sql`
+	do
+    	mysql -hlocalhost -uroot -p$sqlpw < $grant
+	done
 else
 	echo "abort"
 	exit
