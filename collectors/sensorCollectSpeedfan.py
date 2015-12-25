@@ -30,12 +30,11 @@ while True:
     break
 
 # Get last value loaded from SQL
-queryLastTimestamp = ("SELECT Timestamp FROM Fan1 ORDER BY Timestamp DESC LIMIT 1")
-#queryLastTimestamp = ("SELECT Timestamp FROM RaspiTemp1 ORDER BY Timestamp DESC LIMIT 1")
-lastSecond=0
-lastYear=0
-lastMonth=0
-lastDay=0
+# queryLastTimestamp = ("SELECT Timestamp FROM Fan1 ORDER BY Timestamp DESC LIMIT 1")
+queryLastTimestamp = ("SELECT Timestamp FROM RaspiTemp1 ORDER BY Timestamp DESC LIMIT 1")
+epoch = datetime.datetime.utcfromtimestamp(0)
+lastDate = epoch
+fileDate = epoch
 
 # SQL - Speedfan mapping
 sqlMap ={}
@@ -53,21 +52,19 @@ sqlMap["Core 0"] = "Core1Temp"
 sqlMap["Core 1"] = "Core2Temp"
 sqlMap["Core 2"] = "Core3Temp"
 sqlMap["Core 3"] = "Core4Temp"
-print("sqlMap:",sqlMap)
+print("sqlMap:", sqlMap)
 
 # while true: (forever loop)
+
+# get last value from SQL
 cursor = cnx.cursor()
 cursor.execute(queryLastTimestamp)
 for (lastTimestamp) in cursor:
     print ("LastTimestamp: ", lastTimestamp)
-    lastYear = lastTimestamp[0].year
-    lastMonth = lastTimestamp[0].month
-    lastDay = lastTimestamp[0].day
-    nowTemp = datetime.datetime.now()
-    midnightTemp = nowTemp.replace(hour=0, minute=0, second=0, microsecond=0)
-    lastSecond = (lastDateTime - midnightTemp).seconds
+    lastDate = lastTimestamp[0]
 cursor.close()
 
+# get last list of file
 speedfanPath="C:\Program Files (x86)\SpeedFan"
 filesList = [f for f in os.listdir(speedfanPath) if re.match(r'SFLog+.*\.csv$', f)]
 filesList.sort(key=lambda f: os.path.getmtime(os.path.join(speedfanPath, f)))
@@ -76,71 +73,95 @@ print("Order:", filesList)
 #### TODO IGNORE FILES THAT ARE SMALLER THAN MY CURRENT DATE
 sqlList=[]
 for file in filesList:
-    print ("Last Y:", lastYear, " M:", lastMonth, " D:", lastDay, " S:", lastSecond)
-    fileYear=int(file[5:9])
-    fileMonth=int(file[9:11])
-    fileDay=int(file[11:13])
-    if ( fileDay==lastDay and fileMonth==lastMonth and fileDay==lastDay ):
-        filterSeconds=1
-    else:
-        filterSeconds=0
-    print ("File:", file, " Y:", fileYear, " M:", fileMonth, " D:", fileDay, "Process Seconds:", filterSeconds)
-    if ( fileYear < lastYear ):
-        print ("...skipping old year")
+    fileDate=datetime.datetime(int(file[5:9]),int(file[9:11]),int(file[11:13]),0,0,0)
+    print ("File:", file, "Date:", fileDate.date(), "SQLdate:", lastDate, end="" )
+
+    if (fileDate.date() < lastDate.date()):
+        print (" ...skipping (already processed)")
         continue
-    if ( fileMonth < lastMonth ):
-        print ("...skipping old month")
-        continue
-    if ( fileDay < lastDay ):
-        print ("...skipping old day")
-        continue
+    print (" ...processing")
+
     fullfile = speedfanPath + "\\" + file
-    print ("...processing")
-    with open(fullfile) as f:
-        frow = 0
-        sqlList.clear()
-        for line in f:
-            # print(line)
-            columns=line.strip().split('\t')
-            if (frow==0):
-                frow=1
-                if (columns[0] != "Seconds"):
-                    print("First column in data should be \'Seconds\' abort: ", fullfile)
-                    break
-                gpuCount=0
-                for x in columns:
-                    # Fix column names for GPU (sequence) --- problem with speedfan
-                    if (x=="GPU"):
-                        x="GPU " + str(gpuCount)
-                        gpuCount = gpuCount + 1
-                    try:
-                        sqlList.append(sqlMap[x])
-                    except:
-                        sqlList.append("")
-                # print("sqlList:", sqlList)
-            else:
-                frow=frow+1
-                if (frow>2):
-                    continue
-                print ("  Time: ", columns[0])
-                if (filterSeconds==1):
-                    if (int(columns[0])<lastSeconds):
-                        print ("  ...skipping old second")
+    while True:
+
+        with open(fullfile) as f:
+            frow = 0
+            sqlList.clear()
+            for line in f:
+                # print(line)
+                columns=line.strip().split('\t')
+                if (frow==0):
+                    frow=1
+                    if (columns[0] != "Seconds"):
+                        print("First column in data should be \'Seconds\' abort: ", fullfile)
+                        forever=False
+                        break
+                    gpuCount=0
+                    for x in columns:
+                        # Fix column names for GPU (sequence) --- problem with speedfan
+                        if (x=="GPU"):
+                            x="GPU " + str(gpuCount)
+                            gpuCount = gpuCount + 1
+                        try:
+                            sqlList.append(sqlMap[x])
+                        except:
+                            sqlList.append("")
+                    print("sqlList:", sqlList)
+                else:
+                    frow=frow+1
+                    # if (frow>2):
+                    #     continue
+                    # print ("Raw: ", columns)
+                    seconds=int(columns[0])
+                    x=datetime.datetime
+                    hms=""
+                    for scale in 86400, 3600, 60:
+                        result, seconds = divmod(seconds, scale)
+                        if hms != '' or result > 0:
+                            hms += '{0:02d}:'.format(result)
+                    hms += '{0:02d}'.format(seconds)
+                    if (len(hms)<3):
+                        hms = '0:0:' + hms
+                    if (len(hms)<6):
+                        hms = '0:' + hms
+
+                    fileDate=datetime.datetime.combine(fileDate.date(), datetime.time(*map(int, hms.split(':'))))
+                    # print ("Data DT:", fileDate, "SQL:", lastDate, end="")
+                    if(fileDate<=lastDate):
+                        #print (" skip")
                         continue
-                print ("  ...processing")
-                if (filterSeconds==1):
-                    lastSecond=columns[0]
-    print ("Current Y:", lastYear, " M:", lastMonth, " D:", lastDay, " S:", lastSecond)
-    if (not(lastYear==fileYear and lastMonth==fileMonth and lastDay==fileDay)):
-        lastSecond=0
-    lastYear=fileYear
-    lastMonth=fileMonth
-    lastDay=fileDay
+                    print (" add")
 
+                    query = "INSERT INTO SpeedfanMonitor1 ("
+                    query +=', '.join(str(x) for x in sqlList if x!='')
+                    query += ") VALUES (\'"
+                    query +=fileDate.strftime('%Y-%m-%d %H:%M:%S')
+                    query +="\'"
+                    for x in range(1,int(len(sqlList))):
+                        if (sqlList[x]!=''):
+                            query += ", "
+                            query += columns[x].replace(",", ".")
+                    query += ")"
+                    print ("query:", query)
+                    cursor = cnx.cursor()
+                    try:
+                        cursor.execute(query)
+                    except:
+                        print ("error")
+                        raise
+                    cnx.commit()
 
+                    lastDate=fileDate
 
+        if ( file != filesList[-1]):
+            print ("Process more Files to process")
+            break
+        if (lastDate<(datetime.datetime.now() - datetime.timedelta(seconds=10))):
+            print ("No more updates (look for new files)")
+            break
+        print("Sleep...")
+        time.sleep(5)
 
-
-
-    #time.sleep(15)
-
+# write routine here to increase sleep if there is no update
+print("Re-look for files, sleep(30)")
+time.sleep(30)

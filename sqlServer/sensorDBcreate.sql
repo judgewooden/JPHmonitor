@@ -54,8 +54,7 @@ CREATE TABLE `FanSpeed1` (
   UNIQUE KEY `Timestamp` (`Timestamp`)
 )
 ENGINE=MyISAM DEFAULT CHARSET=latin1;
-ENGINE=MyISAM DEFAULT CHARSET=latin1;
-CREATE TABLE `SpeedfaniMonitor1` (
+CREATE TABLE `SpeedfanMonitor1` (
   `Timestamp` timestamp NOT NULL,
   `SystemTemp` numeric(7,3),
   `CPUTemp` numeric(7,3),
