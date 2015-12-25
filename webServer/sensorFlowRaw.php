@@ -25,44 +25,54 @@
 
 <script>
 	var source1 = {
-        "Name":"Flow Raw",
-        "Settings":{
-            "graphAutoUpdate":1,
-            "graphUpdateInterval":10,
-            "graphSecondsToShow":7200,
-            "graphLeftLegend":"",
-            "graphLeftMax":0,
-            "graphLeftMin":0,
-            "graphRightLegend":"Liters (pm)",
-            "graphRightMax":0,
-            "graphRightMin":0,
-            "graphTitle":"Arduino Flow - Last Two Hours",
-            "graphInterpolation":"linear",
-            "graphTickLine":1,
-            "graphSensors":[
-                {
-                    "Name":"Flow",
-                    "Unit":"ArduinoMonitor1",
-                    "Sensor":"Litersperminute",
-                    "Axis":"Right",
-                    "Interpolation":"linear",
-                    "Frequency":"15",
-                    "Filter":"0.20",
-                    "Smoothing":"30.00"
-                },
-                {
-                    "Name":"Flow-Raw",
-                    "Unit":"ArduinoMonitor1",
-                    "Sensor":"LitersPerMinute",
-                    "Axis":"Right",
-                    "Interpolation":"linear",
-                    "Frequency":"15",
-                    "Filter":"0.00",
-                    "Smoothing":"1.00"
-                }
-            ]
-        }
-    };
+    "Name":"Flow-Raw",
+    "Settings":{
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":7200,
+        "graphLeftLegend":"Degrees (C)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Arduino Flow - Last Two Hours",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"Flow",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"Litersperminute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"30.00"
+            },
+            {
+                "Name":"Flow-Raw",
+                "Unit":"ArduinoMonitor1",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
+            },
+            {
+                "Name":"Water",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"OPT_FAN_1",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.10",
+                "Smoothing":"2.00"
+            }
+        ]
+    }
+};
     var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
     var source2 = {

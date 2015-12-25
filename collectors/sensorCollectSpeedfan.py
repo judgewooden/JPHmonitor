@@ -21,12 +21,12 @@ except:
 while True:
     try:
         cnx = mysql.connector.connect(user='SpeedfanMonitor1', password=sqlpassword,
-                              host='192.168.8.4', port=3306,
+                              host='192.168.0.9', port=3306,
                               database='Sensors')
     except:
         print ("SpeedfanMonitor1: Cannot Connect to SQL (retry)")
         time.sleep(5)
-        continue
+        raise
     break
 
 # Get last value loaded from SQL
@@ -59,7 +59,7 @@ while True:
     cursor = cnx.cursor()
     cursor.execute(queryLastTimestamp)
     for (lastTimestamp) in cursor:
-        print ("LastTimestamp: ", lastTimestamp)
+        print ("last SQL value at: ", lastTimestamp)
         lastDate = lastTimestamp[0]
     cursor.close()
 
@@ -72,28 +72,26 @@ while True:
     sqlList=[]
     for file in filesList:
         fileDate=datetime.datetime(int(file[5:9]),int(file[9:11]),int(file[11:13]),0,0,0)
-        print ("File:", file, "Date:", fileDate.date(), "SQLdate:", lastDate, end="" )
+        print (file, "D:", fileDate.date(), "SQL:", lastDate, end="" )
 
         if (fileDate.date() < lastDate.date()):
-            print (" ...skipping (already processed)")
+            print (" .skip")
             continue
-        print (" ...processing")
+        print (" .process")
 
         fullfile = speedfanPath + "\\" + file
         while True:
 
             with open(fullfile) as f:
-                frow = 0
+                frow = True
                 sqlList.clear()
                 for line in f:
-                    # print(line)
                     columns=line.strip().split('\t')
-                    if (frow==0):
-                        frow=1
+                    if (frow):
+                        frow=False
                         if (columns[0] != "Seconds"):
                             print("First column in data should be \'Seconds\' abort: ", fullfile)
-                            forever=False
-                            break
+                            raise
                         gpuCount=0
                         for x in columns:
                             # Fix column names for GPU (sequence) --- problem with speedfan
@@ -104,14 +102,8 @@ while True:
                                 sqlList.append(sqlMap[x])
                             except:
                                 sqlList.append("")
-                        print("sqlList:", sqlList)
                     else:
-                        frow=frow+1
-                        # if (frow>2):
-                        #     continue
-                        # print ("Raw: ", columns)
                         seconds=int(columns[0])
-                        x=datetime.datetime
                         hms=""
                         for scale in 86400, 3600, 60:
                             result, seconds = divmod(seconds, scale)
@@ -124,11 +116,8 @@ while True:
                             hms = '0:' + hms
 
                         fileDate=datetime.datetime.combine(fileDate.date(), datetime.time(*map(int, hms.split(':'))))
-                        print ("Data DT:", fileDate, "SQL:", lastDate, end="")
                         if(fileDate<=lastDate):
-                            print (" skip")
                             continue
-                        print (" new")
 
                         query = "INSERT INTO SpeedfanMonitor1 ("
                         query +=', '.join(str(x) for x in sqlList if x!='')
@@ -140,26 +129,20 @@ while True:
                                 query += ", "
                                 query += columns[x].replace(",", ".")
                         query += ")"
-                        # print ("query:", query)
+                        print (query)
                         cursor = cnx.cursor()
                         try:
                             cursor.execute(query)
                         except:
-                            print ("error")
                             raise
                         cnx.commit()
-
                         lastDate=fileDate
-
             if ( file != filesList[-1]):
-                print ("Process more Files to process")
                 break
             if (lastDate<(datetime.datetime.now() - datetime.timedelta(seconds=10))):
                 print ("No more updates (look for new files)")
                 break
-            print("Sleep...")
             time.sleep(5)
-
     # TODO write routine here to increase sleep if there is no update
-    print("Re-look for files, sleep(30)")
+    print("Re-start after sleep(30)")
     time.sleep(30)
