@@ -160,6 +160,16 @@
                 "Frequency":"15.00",
                 "Filter":"0.50",
                 "Smoothing":"15.00"
+            },
+            {
+                "Name":"Water",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"OPT_FAN_1",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"5.00",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
             }
         ]
     }
@@ -173,7 +183,7 @@
         "graphLeftLegend":"Liters (pm)",
         "graphLeftMax":0,
         "graphLeftMin":0,
-        "graphRightLegend":"",
+        "graphRightLegend":"Degrees (C)",
         "graphRightMax":0,
         "graphRightMin":0,
         "graphTitle":"Arduino Flow - Last Week",
@@ -189,6 +199,16 @@
                 "Frequency":"600.00",
                 "Filter":"0.50",
                 "Smoothing":"30.00"
+            },
+            {
+                "Name":"Water",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"OPT_FAN_1",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"5.00",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
             }
         ]
     }
@@ -202,7 +222,7 @@
         "graphLeftLegend":"Liters (pm)",
         "graphLeftMax":0,
         "graphLeftMin":0,
-        "graphRightLegend":"Liters (pm)",
+        "graphRightLegend":"Degrees (C)",
         "graphRightMax":0,
         "graphRightMin":0,
         "graphTitle":"Arduino Flow - Last Month",
@@ -218,12 +238,22 @@
                 "Frequency":"600.00",
                 "Filter":"0.50",
                 "Smoothing":"30.00"
+            },
+            {
+                "Name":"Water",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"OPT_FAN_1",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"5.00",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
             }
         ]
     }
 },
 {
-    "Name":"Flow - 1year",
+    "Name":"Flow 1year",
     "Settings":{
         "graphAutoUpdate":0,
         "graphUpdateInterval":10,
@@ -247,6 +277,16 @@
                 "Frequency":"600.00",
                 "Filter":"0.50",
                 "Smoothing":"30.00"
+            },
+            {
+                "Name":"Water",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"OPT_FAN_1",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"5.00",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
             }
         ]
     }

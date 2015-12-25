@@ -89,7 +89,7 @@
             "graphRightMin":0,
             "graphTitle":"Arduino Flow - Last 2 days",
             "graphInterpolation":"linear",
-            "graphTickLine":1,
+            "graphTickLine":0,
             "graphSensors":[
                 {
                     "Name":"Flow",
@@ -120,7 +120,7 @@
             "graphRightMin":0,
             "graphTitle":"Arduino Flow - Last 10 minutes",
             "graphInterpolation":"linear",
-            "graphTickLine":1,
+            "graphTickLine":0,
             "graphSensors":[
                 {
                     "Name":"Flow-Raw",
