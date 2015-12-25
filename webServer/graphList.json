@@ -107,7 +107,7 @@
     }
 },
 {
-    "Name":"Flow - 10min",
+    "Name":"Flow 10min",
     "Settings":{
         "graphAutoUpdate":1,
         "graphUpdateInterval":10,
@@ -136,7 +136,7 @@
     }
 },
 {
-    "Name":"Flow - 2days",
+    "Name":"Flow 2days",
     "Settings":{
         "graphAutoUpdate":0,
         "graphUpdateInterval":10,
@@ -165,7 +165,7 @@
     }
 },
 {
-    "Name":"Flow - 1week",
+    "Name":"Flow 1week",
     "Settings":{
         "graphAutoUpdate":0,
         "graphUpdateInterval":10,
@@ -194,7 +194,7 @@
     }
 },
 {
-    "Name":"Flow - 1month",
+    "Name":"Flow 1month",
     "Settings":{
         "graphAutoUpdate":0,
         "graphUpdateInterval":10,
@@ -252,7 +252,7 @@
     }
 },
 {
-    "Name":"Aqua - GPU 10min",
+    "Name":"Aqua GPU 10min",
     "Settings":{
         "graphAutoUpdate":1,
         "graphUpdateInterval":10,
@@ -321,7 +321,7 @@
     }
 },
 {
-    "Name":"Aqua - All 10min",
+    "Name":"Aqua all 10min",
     "Settings":{
         "graphAutoUpdate":1,
         "graphUpdateInterval":10,
@@ -415,6 +415,164 @@
                 "Frequency":"5.00",
                 "Filter":"-1.00",
                 "Smoothing":"1.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Aqua CPU 10min",
+    "Settings":{
+        "graphAutoUpdate":1,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":600,
+        "graphLeftLegend":"Liters (pm)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Decrees (C)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"Aqua Cores - 10min",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"Core1",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"Core1Temp",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"-1.00",
+                "Smoothing":"1.00"
+            },
+            {
+                "Name":"Core2",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"Core4Temp",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"-1.00",
+                "Smoothing":"1.00"
+            },
+            {
+                "Name":"Core3",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"Core3Temp",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"-1.00",
+                "Smoothing":"1.00"
+            },
+            {
+                "Name":"Core4",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"Core2Temp",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"-1.00",
+                "Smoothing":"1.00"
+            }
+        ]
+    }
+},
+{
+    "Name":"Aqua all 2days",
+    "Settings":{
+        "graphAutoUpdate":0,
+        "graphUpdateInterval":10,
+        "graphSecondsToShow":172800,
+        "graphLeftLegend":"Degrees (C)",
+        "graphLeftMax":0,
+        "graphLeftMin":0,
+        "graphRightLegend":"Liters (pm)",
+        "graphRightMax":0,
+        "graphRightMin":0,
+        "graphTitle":"AQUA ALL - Last 2 days",
+        "graphInterpolation":"linear",
+        "graphTickLine":1,
+        "graphSensors":[
+            {
+                "Name":"CPU",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"CPUTemp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"GPU1",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"GPU1Temp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"GPU2",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"GPU2Temp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"GPU3",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"GPU3Temp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"GPU4",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"GPU4Temp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"NB",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"NBTemp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"SB",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"SBTemp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
+            },
+            {
+                "Name":"System",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"SystemTemp",
+                "Axis":"Left",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"15.00"
             }
         ]
     }
