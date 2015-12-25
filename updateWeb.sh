@@ -18,5 +18,5 @@ webWatch()
 }
 
 cd webServer
-webWatch `ls -1 *html *css *php *js` 
+webWatch `ls -1 *html *css *php *js *json` 
 

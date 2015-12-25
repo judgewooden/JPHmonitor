@@ -1,11 +1,21 @@
 #!/bin/sh
 
-echo "This will override your database"
-echo "(enter to continue)"
+echo "This will override your database (enter to continue)"
 read n
-
-sqlpw=`cat ~/.sqlpassword`
-
-# TODO : make conversion script once you have PROD data
-
-mysql -hlocalhost -uroot -p$sqlpw < sensorDBcreate.sql
+echo "Are you sure? (\"YES\" to continue)"
+read n
+if [ "$n" = "YES" ]; then
+	sqlpw=`cat ~/.sqlpassword` 
+    mysql -hlocalhost -uroot -p$sqlpw < databaseSensors.sql
+	for table in `ls -1 table*sql`
+	do
+    	mysql -hlocalhost -uroot -p$sqlpw < $table
+	done
+	for procedure in `ls -1 procedure*sql`
+	do
+    	mysql -hlocalhost -uroot -p$sqlpw < $procedure
+	done
+else
+	echo "abort"
+	exit
+fi

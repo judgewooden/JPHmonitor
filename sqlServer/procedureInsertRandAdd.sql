@@ -1,6 +1,5 @@
 USE Sensors;
 DROP PROCEDURE IF EXISTS InsertRandAdd;
-DELIMITER $$
 CREATE PROCEDURE InsertRandAdd()
 BEGIN
 	DECLARE i INT;
@@ -110,7 +109,4 @@ BEGIN
 		VALUES ( startdate, valueTemperature);
 
 	COMMIT;
-END$$
-DELIMITER ;
-CALL InsertRandAdd();
-DROP PROCEDURE IF EXISTS InsertRandAdd;
+END

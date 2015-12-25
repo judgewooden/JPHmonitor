@@ -1,6 +1,6 @@
+/* This creates a SQL procedure to generate random data for development */
 USE Sensors;
 DROP PROCEDURE IF EXISTS InsertRand;
-DELIMITER $$
 CREATE PROCEDURE InsertRand()
 BEGIN
 	DECLARE i INT;
@@ -56,13 +56,10 @@ BEGIN
 
 	/* Simulate Fan PWM / Voltage being added */
 
-		/* TODO Figure out all data possibilities for FANS */
+	/* TODO Figure out all data possibilities for FANS */
 
 
 		SET i = i + 1;
 	END WHILE;
 	COMMIT;
-END$$
-DELIMITER ;
-CALL InsertRand();
-DROP PROCEDURE IF EXISTS InsertRand;
+END

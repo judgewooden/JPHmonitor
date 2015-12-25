@@ -20,7 +20,7 @@
                 "Sensor":"Litersperminute",
                 "Axis":"Left",
                 "Interpolation":"linear",
-                "Frequency":"15",
+                "Frequency":"15.00",
                 "Filter":"0.20",
                 "Smoothing":"30.00"
             },
@@ -30,9 +30,29 @@
                 "Sensor":"Value",
                 "Axis":"Right",
                 "Interpolation":"linear",
-                "Frequency":"15",
+                "Frequency":"15.00",
                 "Filter":"0.70",
-                "Smoothing":"15.00"
+                "Smoothing":"30.00"
+            },
+            {
+                "Name":"WaterTemp",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"OPT_FAN_1",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"30.00"
+            },
+            {
+                "Name":"AquaGPU",
+                "Unit":"SpeedfanMonitor1",
+                "Sensor":"GPU1Temp",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.70",
+                "Smoothing":"30.00"
             }
         ]
     }
