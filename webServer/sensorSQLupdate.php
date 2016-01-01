@@ -35,8 +35,8 @@ foreach ( $myArray as $row ) {
 	$query = $query . "SELECT \"" . $row->key . "\",";
 	$query = $query . " Timestamp AS timestamp, " . $row->column . " AS value";
 	$query = $query . " FROM " . $row->table . " WHERE " . $row->column . " IS NOT NULL";
-	$query = $query . " AND CONVERT_TZ(Timestamp, \"SYSTEM\", \"UTC\") >";
-	$query = $query . " \"" . $row->time . "\"";
+	$query = $query . " AND Timestamp >";
+	$query = $query . " CONVERT_TZ(\"" . $row->time . "\", \"UTC\", \"SYSTEM\")";
 }
 $query = $query . " ORDER BY Timestamp";
 // echo "query: " . $query . "<BR />\n";
