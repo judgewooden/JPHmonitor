@@ -34,12 +34,14 @@
  * 	graphInterpolation  => The default interpolation, use custom to config per sensor (default:Basis)
  *
  */
+"use strict";
 
- function LineGraph(argsMap) {
+function LineGraph(argsMap) {
  	/* *************************************************************** */
 	/* public methods */
 	/* *************************************************************** */
 	var self = this;
+	var debug=false;
 
 	/* *************************************************************** */
 	/* private variables */
@@ -69,11 +71,13 @@
 	var graph;
 	var x, xAxis;
 	var yLeft, yAxisLeft, yRight, yAxisRight, hasYAxisLeft, hasYAxisRight;
+	var leftYaxis, leftYaxislegend, rightYaxis, rightYaxislegend;
 	var color = d3.scale.category20();
 	var drawline, theline, linesGroup, lines, linesGroupText;
 	var tipLegend, tipGraph;
 	var hoverContainer, hoverLine, hoverLineXOffset, hoverLineYOffset,
 														hoverLineGroup;
+	var titleGraph;
 	var lineFunctionSeriesIndex;    // special bodge !!! pay attention to it
 
 	// user behavior
@@ -164,6 +168,7 @@
 
 		// build a single query
 		var myurl = [];
+		var queryTime;
 		for (var key in data) {
 
 			var lastelem = data[key].values.length - 1;
@@ -183,7 +188,7 @@
 		}
 		myurl = JSON.stringify(myurl);
 		var u="sensorSQLupdate.php?query=" + encodeURI( myurl );
-		console.log(u);
+		if (debug) console.log(u);
 
 		// Prepare variables for filtering
 		var skipped = new Array(data.length);
@@ -198,13 +203,6 @@
             dataType : "json",
             url: u,
             success: function(answer, textStatus, request){
-        		//alert(request.getResponseHeader('Transfer-Encoding'));
-
-				//debug("Success");
-				//console.log("Answer :", answer);
-				//console.log("Text   :", textStatus);
-				//console.log("Request:", request);
-
 				for (var row = 0; row < answer.length; row++) {
 					var key=answer[row][0];
 
@@ -220,7 +218,7 @@
 						smoothedValue[key] = smoothedValue[key] + ( temp.value
 											- smoothedValue[key]) / meta.smoothing[key];
 						temp.value = smoothedValue[key];
-						//debug(key + " Smooth:" + temp.value);
+						//trace(key + " Smooth:" + temp.value);
 					}
 
 					//  Filter data withing a tollerance range
@@ -234,7 +232,7 @@
 							lastTimestamp[key]=temp.timestamp;
 							lastValue[key]=temp.value;
 							skipped[key]=false;
-							//debug(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
+							//trace(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
 						} else {
 							var dif = temp.timestamp.getTime() - lastTimestamp[key].getTime();
 							if  (dif > meta.datagap[key]) {
@@ -242,26 +240,26 @@
 									data[key].values.push(prev[key]);
 									lastTimestamp[key]=prev[key].timestamp;
 									lastValue[key]=prev[key].value;
-									//debug(key + " add:" + prev[key].timestamp.getTime()
+									//trace(key + " add:" + prev[key].timestamp.getTime()
 									//	+ " V:" + prev[key].value + " diff:" + dif);
 									filtercount[key] = filtercount[key] - 1;
 								}
 							}
 							var change=Math.abs(temp.value - lastValue[key]);
-							//debug(key + " del:" + change + " L:" + lastValue[key]
+							//trace(key + " del:" + change + " L:" + lastValue[key]
 							//		+ " V:" + temp.value);
 							if (change > meta.filter[key]) {
 								data[key].values.push(temp);
 								lastTimestamp[key]=temp.timestamp;
 								lastValue[key]=temp.value;
 								skipped[key]=false;
-								//debug(key + " new:" + temp.timestamp.getTime()
+								//trace(key + " new:" + temp.timestamp.getTime()
 								//		+ " V:" + temp.value + " diff:" + dif);
 							} else {
 								skipped[key]=true;
 								filtercount[key] = filtercount[key] + 1;
 								prev[key]=temp;
-								//debug(key + " hop:" + temp.timestamp.getTime()
+								//trace(key + " hop:" + temp.timestamp.getTime()
 								//	+ " V:" + temp.value + " diff:" + dif);
 							}
 						}
@@ -273,12 +271,11 @@
 					lastValue[key]=temp.value;
 					filtercount[key] = filtercount[key] - 1;
 					skipped[key]=false;
-					//debug(key + " end:" + temp.timestamp.getTime()
+					//trace(key + " end:" + temp.timestamp.getTime()
 					//				+ " V:" + temp.value + " diff:" + dif);
 				}
 				//for (var i = 0; i < data.length; i++)
-				//	debug("Total Values Filtered: " +  meta.names[i] + " = " + filtercount[i]);
-				// END ROUTINE FOR FILTERING
+				//	trace("Total Values Filtered: " +  meta.names[i] + " = " + filtercount[i]);
 
 				redrawAxes(false);
 				redrawLines(false);
@@ -292,7 +289,7 @@
 				var elem=0;
 				for (var key in data) {
 					for (elem in data[key].values) {
-						v1=new Date(data[key].values[elem].timestamp .getTime());
+						var v1=new Date(data[key].values[elem].timestamp .getTime());
 						if (v1>minTime) {
 							break;
 						}
@@ -309,7 +306,7 @@
 				}
 			},
 			error: function(request, textStatus, errorThrown) {
-				debug("Data request failure");
+				trace("Data request failure");
 				console.log("Request:", request);
 				console.log("Text   :", textStatus);
 				console.log("Thrown :", errorThrown);
@@ -344,7 +341,7 @@
 		myBehavior.hideLegend = getOptionalVar(dataMap.Settings, 'hideLegend', "0");
 		myBehavior.axisLeftDisableControls = getOptionalVar(dataMap.Settings, 'axisLeftDisableControls', "0");
 		myBehavior.axisRightDisableControls = getOptionalVar(dataMap.Settings, 'axisRightDisableControls', "0");
-		console.log(containerId, " Behavior: ", myBehavior);
+		if (debug) console.log(containerId, " Behavior: ", myBehavior);
 
 		// Load graph meta data
 		meta.names = new Array();
@@ -372,7 +369,7 @@
 			alert(message);
 			throw new Error(message);
 		}
-		console.log(containerId, " Meta: ", meta);
+		if (debug) console.log(containerId, " Meta: ", meta);
 
 		//Create the data object
 		for (var key in meta.names) {
@@ -402,7 +399,7 @@
 				hidden: +meta.hidden[key],
 				values: []
 			};
-			console.log(containerId, " Data: ", temp);
+			if (debug) console.log(containerId, " Data: ", temp);
 			data.push(temp);
 	 	}
 
@@ -417,10 +414,12 @@
 	 	}
 
 	 	// spinner variables
-	 	spinnterOpts = {lines: 13, length: 28, width: 14, radius: 42, scale: 1, corners:1,
+	 	/*
+	 	spinneropts = {lines: 13, length: 28, width: 14, radius: 42, scale: 1, corners:1,
 	 					color: '#000', opacity: 0.25, rotate: 0, direction: 1, speed: 1.1,
 	 					trail: 60, fps: 20, zIndex: 2e9, className: 'spinner', top: '50%',
 	 					left: '50%', shadow: false, hwaccel: false, position: 'absolute'}
+	 	*/
 
 	 	// Prepare global variables for filters
 		lastTimeValue = new Array(data.length);
@@ -455,7 +454,7 @@
 												margin[0] + ")");
 
 		if (myBehavior.title != "" ) {
-			title = graph.append("svg:g")
+			titleGraph = graph.append("svg:g")
 				.attr("class", "title-group")
 					.append("text")
 					.attr("class", "title")
@@ -681,12 +680,12 @@
       	theline = d3.svg.line()
             .defined(function(d, i) {
             	// If there is no data for a certain while (stop interpolation !!)
-//				debug("defined: " + containerId + " => i: " + lineFunctionSeriesIndex);
+//				trace("defined: " + containerId + " => i: " + lineFunctionSeriesIndex);
             	if (meta.datagap[lineFunctionSeriesIndex] > 0 ) {
             		if (lastTimeValue[lineFunctionSeriesIndex] != null) {
             			var dif = d.timestamp.getTime() - lastTimeValue[lineFunctionSeriesIndex].getTime();
 	        			if (dif > meta.datagap[lineFunctionSeriesIndex]) {
-/*            				debug("defined: " + containerId +
+/*            				trace("defined: " + containerId +
             					" => i: " + lineFunctionSeriesIndex +
             					" diff: " + dif +
             					" last: " + lastTimeValue[lineFunctionSeriesIndex].getTime() +
@@ -704,7 +703,7 @@
             })
 			.x( function(d, i) { return x(d.timestamp); })
 			.y( function(d, i) {
-				//debug( "y-axis: " + lineFunctionSeriesIndex );
+				//trace( "y-axis: " + lineFunctionSeriesIndex );
 				if ( i == 0 ) {
 					lineFunctionSeriesIndex++;
 				}
@@ -723,7 +722,7 @@
 			drawline = theline
 	        .interpolate(function(points) {
 	            if ( meta.interpolation[lineFunctionSeriesIndex] == "step") {
-	            	//debug(lineFunctionSeriesIndex + " - step");
+	            	//trace(lineFunctionSeriesIndex + " - step");
 					var i = 0,
 					    n = points.length,
 					    p = points[0],
@@ -732,12 +731,12 @@
 					if (n > 1) path.push("H", p[0]);
 					return path.join("");
 				} else {
-	            	//debug(lineFunctionSeriesIndex + " - linear");
+	            	//trace(lineFunctionSeriesIndex + " - linear");
 	            	return points.join("L");
 	            }
 	        })
 	    } else {
-           	//debug(container + ": " + lineFunctionSeriesIndex + " - " + myBehavior.interpolation);
+           	//trace(container + ": " + lineFunctionSeriesIndex + " - " + myBehavior.interpolation);
 			drawline = theline
 				.interpolate(myBehavior.interpolation);
 		}
@@ -815,14 +814,13 @@
 
 		setValueLabelsToLatest();
 
-		//console.log("We have finished creating Graph.");
 	}
 
 	/**
 	* Called when the window is resized to redraw graph accordingly.
 	*/
 	var handleWindowResizeEvent = function() {
-		//debug("Window Resize Event [" + containerId + "] => resizing graph")
+		//trace("Window Resize Event [" + containerId + "] => resizing graph")
 		initDimensions();
 		initX();
 		initY();
@@ -1168,14 +1166,14 @@
 	 * TODO: Think this is no longer used
 	 */
 	var handleMouseOverLegend = function(legendData, index) {
-		debug("MouseOver Legend [" + containerId + "] => " + index + " Legend:" + legendData);
+		trace("MouseOver Legend [" + containerId + "] => " + index + " Legend:" + legendData);
 	}
 
 	/**
 	 * Called when a user mouses over a line.
 	 */
 	var handleMouseOverLine = function(lineData, index) {
-//		debug("MouseOver line [" + containerId + "] => " + index);
+//		trace("MouseOver line [" + containerId + "] => " + index);
 		userCurrentlyInteracting = true;
 		currentUserLine=index;
 	}
@@ -1188,7 +1186,7 @@
 		var mouseY = event.pageY-hoverLineYOffset;
 
 /*
-		debug("MouseOver graph [" + containerId + "] => x: " + mouseX +
+		trace("MouseOver graph [" + containerId + "] => x: " + mouseX +
 			" y: " + mouseY + "  height: " + h + " event.clientY: " +
 			event.clientY + " offsetY: " + event.offsetY + " pageY: " +
 			event.pageY + " hoverLineYOffset: " + hoverLineYOffset);
@@ -1233,7 +1231,7 @@
 	 */
 	var getValueForPositionXFromData = function(xPosition, index) {
 		var xValue = x.invert(xPosition);
-//		debug("Start get Value. Position: " + xPosition + " Index: " + index);
+//		trace("Start get Value. Position: " + xPosition + " Index: " + index);
 		var i = bisectDate(data[index].values, xValue, 1);
 		var v;
 		if (i>1) {
@@ -1255,7 +1253,7 @@
 			}
 		}
 
-//		debug("Label: [" + containerId + "], " + xPosition);
+//		trace("Label: [" + containerId + "], " + xPosition);
 
 		var dateToShow;
 		var labelValueWidths = [];
@@ -1339,7 +1337,7 @@
 						return f.yaxis == 'Left';
 					}), function(m) {
 						if ( leftYaxisOverideMin == 0 ) {
-							lValue=d3.min(m.values, function(v) {
+							var lValue=d3.min(m.values, function(v) {
 									return v.value;
 							});
 							if ( lValue < myBehavior.axisLeftMin || myBehavior.axisLeftMin == 0)
@@ -1353,7 +1351,7 @@
 						return f.yaxis == 'Left';
 					}), function(m) {
 						if ( leftYaxisOverideMax == 0 ) {
-							lValue=d3.max(m.values, function(v) {
+							var lValue=d3.max(m.values, function(v) {
 								return v.value;
 							});
 							if ( lValue > myBehavior.axisLeftMax || myBehavior.axisLeftMax == 0 )
@@ -1378,7 +1376,7 @@
 						return f.yaxis == 'Right';
 					}), function(m) {
 						if ( rightYaxisOverideMin == 0 ) {
-							lValue=d3.min(m.values, function(v) {
+							var lValue=d3.min(m.values, function(v) {
 									return v.value;
 							});
 							if ( lValue < myBehavior.axisRightMin || myBehavior.axisRightMin == 0)
@@ -1392,7 +1390,7 @@
 						return f.yaxis == 'Right';
 					}), function(m) {
 						if ( rightYaxisOverideMax == 0 ) {
-							lValue=d3.max(m.values, function(v) {
+							var lValue=d3.max(m.values, function(v) {
 								return v.value;
 							});
 							if ( lValue > myBehavior.axisRightMax || myBehavior.axisRightMax == 0)
@@ -1416,7 +1414,7 @@
 	var initX = function() {
 
 		if ( myBehavior.secondsToShow != 0 ) {
-//			debug("Start:" + minTime + " End:" + maxTime);
+//			trace("Start:" + minTime + " End:" + maxTime);
 			x = d3.time.scale()
 				.domain([minTime,maxTime])
 				.range([0, w]);
@@ -1545,7 +1543,7 @@
 		console.log("ERROR: ", message)
 	}
 
-	var debug = function(message) {
+	var trace = function(message) {
 		console.log("DEBUG: ",  message)
 	}
 

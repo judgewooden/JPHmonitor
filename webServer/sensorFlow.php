@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta content="utf-8" http-equiv="encoding">
     <title>JPH Dashboard - Aqua Flow Graph</title>
     <script src="http://d3js.org/d3.v2.js"></script>
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
