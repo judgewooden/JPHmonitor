@@ -342,6 +342,7 @@
 		meta.filter = new Array();
 		meta.smoothing = new Array();
 		meta.interpolation = new Array();
+		meta.hidden = new Array();
 		for (var key in dataMap.Settings.graphSensors) {
 			meta.names.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Name', "Need to plot something"));
 			meta.tables.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Unit', "Need to get data from somewhere"));
@@ -351,6 +352,7 @@
 			meta.filter.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Filter', "Must specify [-1=none]"));
 			meta.smoothing.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Smoothing', "Must specify [1=no-effect]"));
 			meta.interpolation.push(getRequiredVar(dataMap.Settings.graphSensors[key], 'Interpolation', "Must specify Interpolation"));
+			meta.hidden.push(getOptionalVar(dataMap.Settings.graphSensors[key], 'Hidden', "0"));
 		}
 		if ( meta.length == 0) {
 			message="There is no Sensor data found in Settings"
@@ -384,6 +386,7 @@
 				datagap: +meta.datagap[key],
 				smoothing: +meta.smoothing[key],
 				filter: +meta.filter[key],
+				hidden: +meta.hidden[key],
 				values: []
 			};
 			console.log(containerId, " Data: ", temp);
@@ -483,6 +486,23 @@
 				.attr("class", "y axis left")
 				.attr("transform", "translate(-5,0)")
 				.call(yAxisLeft);
+				/*
+				.on('mousemove.drag', function() {
+					console.log("mousemove.drag");
+				})
+				.on('mouseup.drag', function() {
+					console.log("mouseup.drag");
+				})
+				.on('mouseover', function() {
+					console.log("Mousover");
+				})
+				.on('keydown', function() {
+					console.log("keydown");
+				})
+      			.on('mouseout', function() {
+					console.log("Mousout");
+				});
+				*/
 
 			if (myBehavior.axisLeftLegend != "") {
 				leftYaxislegend = leftYaxis.append("text")
@@ -494,6 +514,7 @@
 			   		.style("text-anchor", "end")
 			    	.text(myBehavior.axisLeftLegend);
 			}
+
 		}
 
 		// Add the y-axis to the right
@@ -612,6 +633,13 @@
 		linesGroup.append("path")
 			.attr("class", function(d, i) {
 				return "line series_" + i;
+			})
+			.attr("id", function(d,i) {
+				return (containerId + meta.names[i]);
+			})
+			.style("opacity", function(d, i) {
+				var newOpacity = meta.hidden[i]=="1" ? 0 : 1;
+				return newOpacity;
 			})
 			.attr("fill", "none")
 			.attr("stroke", function(d, i) {
@@ -838,8 +866,13 @@
 					if (d == meta.names[key]) {
 						var hint;
 		// indent for convenience
-		hint="<strong style='color:red;font-size:10px'>Sensor: "+d+"</strong><br><br>";
+		hint="<strong style='color:red;font-size:10px'>Sensor: "+d+"</strong><br>";
 		hint+="<span style='font-size:10px'>";
+		hint+="Status: ";
+		if ( meta.hidden[key]=="1")
+			hint+="Hidden<br><br>";
+		else
+			hint+="Shown<br><br>";
     	hint+="Table: "+ data[key].table + "<br>";
     	hint+="Column: "+ data[key].column + "<br><br>";
     	hint+="Interpolation: ";
@@ -893,7 +926,26 @@
 			})
 			.on('mouseover', tipLegend.show)
       		.on('mouseout', tipLegend.hide)
-
+      		.on("click", function(d) {
+      			for (var key in meta.names) {
+					if (d == meta.names[key]) {
+						var newOpacity;
+						if (meta.hidden[key]=="1") {
+							data[key].hidden=0;
+							meta.hidden[key]=0;
+							newOpacity=1;
+						}
+						else {
+							data[key].hidden=1;
+							meta.hidden[key]=1;
+							newOpacity=0;
+						}
+						var toselect="#" + containerId + d;
+						d3.select(toselect).style("opacity", newOpacity);
+						tipLegend.hide;
+					}
+				}
+      		})
 
 		legendLabelGroup.append("svg:text")
 			.attr("class", "legend value")
