@@ -69,7 +69,7 @@
 	var graph;
 	var x, xAxis;
 	var yLeft, yAxisLeft, yRight, yAxisRight, hasYAxisLeft, hasYAxisRight;
-	var color = d3.scale.category10();
+	var color = d3.scale.category20();
 	var drawline, theline, linesGroup, lines, linesGroupText;
 	var tipLegend, tipGraph;
 	var hoverContainer, hoverLine, hoverLineXOffset, hoverLineYOffset,
@@ -81,6 +81,7 @@
 	var updatePaused = 'update';
 	var haltedDuetoError = false;
 	var userCurrentlyInteracting = false;
+	var currentUserLine = -1;
 	var currentUserPositionX = -1;
 
 	// scrolling graph fields
@@ -340,6 +341,7 @@
 		myBehavior.axisLeftLegend = getOptionalVar(dataMap.Settings, 'graphLeftLegend', "");
 		myBehavior.axisRightLegend = getOptionalVar(dataMap.Settings, 'graphRightLegend', "");
 		myBehavior.interpolation = getOptionalVar(dataMap.Settings, 'graphInterpolation', "linear");
+		myBehavior.hideLegend = getOptionalVar(dataMap.Settings, 'hideLegend', "0");
 		myBehavior.axisLeftDisableControls = getOptionalVar(dataMap.Settings, 'axisLeftDisableControls', "0");
 		myBehavior.axisRightDisableControls = getOptionalVar(dataMap.Settings, 'axisRightDisableControls', "0");
 		console.log(containerId, " Behavior: ", myBehavior);
@@ -810,14 +812,10 @@
 		if ( myBehavior.autoUpdate == 1 ) {
 			createMenuButtons();
 		}
-		createYaxisControls();
 
 		setValueLabelsToLatest();
 
 		//console.log("We have finished creating Graph.");
-	}
-
-	var createYaxisControls = function () {
 	}
 
 	/**
@@ -1059,6 +1057,10 @@
 			.attr("y", function(d, i) {
 				return h+28;
 			})
+			.style("opacity", function() {
+				if ( myBehavior.hideLegend == "1" ) return "0";
+				return "1";
+			})
 			.on('mouseover', tipLegend.show)
       		.on('mouseout', tipLegend.hide)
       		.on("click", function(d) {
@@ -1084,6 +1086,10 @@
 		legendLabelGroup.append("svg:text")
 			.attr("class", "legend value")
 			.attr("font-size", legendFontSize)
+			.style("opacity", function() {
+				if ( myBehavior.hideLegend == "1" ) return "0";
+				return "1";
+			})
 			.attr("fill", function(d, i) {
 				return color(meta.names[i]);
 				})
@@ -1159,6 +1165,7 @@
 
 	/**
 	 * Called when a user mouses over a Legend.
+	 * TODO: Think this is no longer used
 	 */
 	var handleMouseOverLegend = function(legendData, index) {
 		debug("MouseOver Legend [" + containerId + "] => " + index + " Legend:" + legendData);
@@ -1170,6 +1177,7 @@
 	var handleMouseOverLine = function(lineData, index) {
 //		debug("MouseOver line [" + containerId + "] => " + index);
 		userCurrentlyInteracting = true;
+		currentUserLine=index;
 	}
 
 	/**
@@ -1261,6 +1269,10 @@
 			.attr("x", function(d, i) {
 				labelValueWidths[i] = this.getComputedTextLength();
 			})
+			.attr("font-weight", function(d, i) {
+				if (currentUserLine==i && userCurrentlyInteracting) return "bold";
+				return "normal"
+			})
 
 		// position label names
 		var cumulativeWidth = 0;
@@ -1273,6 +1285,10 @@
 						+4+labelValueWidths[i]+8;
 					labelNameEnd[i] = returnX + this.getComputedTextLength()+5;
 				return returnX;
+			})
+			.attr("font-weight", function(d, i) {
+				if (currentUserLine==i && userCurrentlyInteracting) return "bold";
+				return "normal"
 			})
 
 		cumulativeWidth = cumulativeWidth - 8;
