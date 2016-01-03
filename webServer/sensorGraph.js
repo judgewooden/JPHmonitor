@@ -79,6 +79,7 @@
 	// user behavior
 	var menuButtons = [['update','Updating'], ['pause','Pause']];
 	var updatePaused = 'update';
+	var haltedDuetoError = false;
 	var userCurrentlyInteracting = false;
 	var currentUserPositionX = -1;
 
@@ -181,111 +182,134 @@
 			skipped[i] = false;
 		}
 
-		d3.json(u, function(answer) {
+		//d3.json(u, function(answer) {
+		$.ajax({
+            type : "GET",
+            dataType : "json",
+            url: u,
+            success: function(answer, textStatus, request){
+        		//alert(request.getResponseHeader('Transfer-Encoding'));
 
-			for (var row = 0; row < answer.length; row++) {
-				var key=answer[row][0];
+				//debug("Success");
+				//console.log("Answer :", answer);
+				//console.log("Text   :", textStatus);
+				//console.log("Request:", request);
 
-				var temp = {
-					timestamp: parseDate(answer[row].timestamp),
-					value: +answer[row].value
-				};
+				for (var row = 0; row < answer.length; row++) {
+					var key=answer[row][0];
 
-				//  Low Pass Filter
-				if (smoothedValue[key]==null) {
-					smoothedValue[key]=temp.value;
-				} else {
-					smoothedValue[key] = smoothedValue[key] + ( temp.value
-										- smoothedValue[key]) / meta.smoothing[key];
-					temp.value = smoothedValue[key];
-					//debug(key + " Smooth:" + temp.value);
-				}
+					var temp = {
+						timestamp: parseDate(answer[row].timestamp),
+						value: +answer[row].value
+					};
 
-				//  Filter data withing a tollerance range
-				if ( meta.filter[key] == -1 ) {
-					data[key].values.push(temp);
-					lastTimestamp[key]=temp.timestamp;
-					lastValue[key]=temp.value;
-				} else {
-					if ( lastTimestamp[key] == null) {
+					//  Low Pass Filter
+					if (smoothedValue[key]==null) {
+						smoothedValue[key]=temp.value;
+					} else {
+						smoothedValue[key] = smoothedValue[key] + ( temp.value
+											- smoothedValue[key]) / meta.smoothing[key];
+						temp.value = smoothedValue[key];
+						//debug(key + " Smooth:" + temp.value);
+					}
+
+					//  Filter data withing a tollerance range
+					if ( meta.filter[key] == -1 ) {
 						data[key].values.push(temp);
 						lastTimestamp[key]=temp.timestamp;
 						lastValue[key]=temp.value;
-						skipped[key]=false;
-						//debug(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
 					} else {
-						var dif = temp.timestamp.getTime() - lastTimestamp[key].getTime();
-						if  (dif > meta.datagap[key]) {
-							if ( skipped[key] == true) {
-								data[key].values.push(prev[key]);
-								lastTimestamp[key]=prev[key].timestamp;
-								lastValue[key]=prev[key].value;
-								//debug(key + " add:" + prev[key].timestamp.getTime()
-								//	+ " V:" + prev[key].value + " diff:" + dif);
-								filtercount[key] = filtercount[key] - 1;
-							}
-						}
-						var change=Math.abs(temp.value - lastValue[key]);
-						//debug(key + " del:" + change + " L:" + lastValue[key]
-						//		+ " V:" + temp.value);
-						if (change > meta.filter[key]) {
+						if ( lastTimestamp[key] == null) {
 							data[key].values.push(temp);
 							lastTimestamp[key]=temp.timestamp;
 							lastValue[key]=temp.value;
 							skipped[key]=false;
-							//debug(key + " new:" + temp.timestamp.getTime()
-							//		+ " V:" + temp.value + " diff:" + dif);
+							//debug(key + " 1st:" + temp.timestamp.getTime() + " V:" + temp.value);
 						} else {
-							skipped[key]=true;
-							filtercount[key] = filtercount[key] + 1;
-							prev[key]=temp;
-							//debug(key + " hop:" + temp.timestamp.getTime()
-							//	+ " V:" + temp.value + " diff:" + dif);
+							var dif = temp.timestamp.getTime() - lastTimestamp[key].getTime();
+							if  (dif > meta.datagap[key]) {
+								if ( skipped[key] == true) {
+									data[key].values.push(prev[key]);
+									lastTimestamp[key]=prev[key].timestamp;
+									lastValue[key]=prev[key].value;
+									//debug(key + " add:" + prev[key].timestamp.getTime()
+									//	+ " V:" + prev[key].value + " diff:" + dif);
+									filtercount[key] = filtercount[key] - 1;
+								}
+							}
+							var change=Math.abs(temp.value - lastValue[key]);
+							//debug(key + " del:" + change + " L:" + lastValue[key]
+							//		+ " V:" + temp.value);
+							if (change > meta.filter[key]) {
+								data[key].values.push(temp);
+								lastTimestamp[key]=temp.timestamp;
+								lastValue[key]=temp.value;
+								skipped[key]=false;
+								//debug(key + " new:" + temp.timestamp.getTime()
+								//		+ " V:" + temp.value + " diff:" + dif);
+							} else {
+								skipped[key]=true;
+								filtercount[key] = filtercount[key] + 1;
+								prev[key]=temp;
+								//debug(key + " hop:" + temp.timestamp.getTime()
+								//	+ " V:" + temp.value + " diff:" + dif);
+							}
 						}
 					}
 				}
-			}
-			if ( skipped[key] == true) {
-				data[key].values.push(temp);
-				lastTimestamp[key]=temp.timestamp;
-				lastValue[key]=temp.value;
-				filtercount[key] = filtercount[key] - 1;
-				skipped[key]=false;
-				//debug(key + " end:" + temp.timestamp.getTime()
-				//				+ " V:" + temp.value + " diff:" + dif);
-			}
-			//for (var i = 0; i < data.length; i++)
-			//	debug("Total Values Filtered: " +  meta.names[i] + " = " + filtercount[i]);
-			// END ROUTINE FOR FILTERING
+				if ( skipped[key] == true) {
+					data[key].values.push(temp);
+					lastTimestamp[key]=temp.timestamp;
+					lastValue[key]=temp.value;
+					filtercount[key] = filtercount[key] - 1;
+					skipped[key]=false;
+					//debug(key + " end:" + temp.timestamp.getTime()
+					//				+ " V:" + temp.value + " diff:" + dif);
+				}
+				//for (var i = 0; i < data.length; i++)
+				//	debug("Total Values Filtered: " +  meta.names[i] + " = " + filtercount[i]);
+				// END ROUTINE FOR FILTERING
 
-			redrawAxes(false);
-			redrawLines(false);
+				redrawAxes(false);
+				redrawLines(false);
 
-			$(container).trigger('LineGraph:dataModification');
+				$(container).trigger('LineGraph:dataModification');
 
-			// Destroy answer to free up ram
-			answer=0;
+				// Destroy answer to free up ram
+				answer=0;
 
-			//pop old data from our cache
-			var elem=0;
-			for (var key in data) {
-				for (elem in data[key].values) {
-					v1=new Date(data[key].values[elem].timestamp .getTime());
-					if (v1>minTime) {
-						break;
+				//pop old data from our cache
+				var elem=0;
+				for (var key in data) {
+					for (elem in data[key].values) {
+						v1=new Date(data[key].values[elem].timestamp .getTime());
+						if (v1>minTime) {
+							break;
+						}
+					}
+					if (elem > 0 ) {
+						data[key].values.splice(0, elem);
 					}
 				}
-				if (elem > 0 ) {
-					data[key].values.splice(0, elem);
+
+				inProgress = false;
+				if (spinnerActive) {
+					spinnerActive=false;
+					spinner.stop();
 				}
+			},
+			error: function(request, textStatus, errorThrown) {
+				debug("Data request failure");
+				console.log("Request:", request);
+				console.log("Text   :", textStatus);
+				console.log("Thrown :", errorThrown);
+				alert(" Server response: " + errorThrown + ". Query might be too big.");
+				if (spinnerActive) {
+					spinnerActive=false;
+					spinner.stop();
+				}
+				haltedDuetoError=true;
 			}
-
-			inProgress = false;
-			if (spinnerActive) {
-				spinnerActive=false;
-				spinner.stop();
-			}
-
 		});
 	}
 
@@ -910,23 +934,24 @@
   			.direction('s')
   			.html(function(d) {
 				var hint;
-		// indent for convenience
-		hint="<strong style='color:red;font-size:10px'>" + myBehavior.title + "</strong><br><br>";
-		hint+="<span style='font-size:10px'>";
-		hint+="Show: " + myBehavior.secondsToShow + " seconds<br><br>";
-		hint+="Auto update: ";
-		if (myBehavior.autoUpdate == 1)
-			hint+="On<br>";
-		else
-			hint+="Off<br>";
-		hint+="Update Interval: " + myBehavior.interval + " seconds<br>"
-		hint+="Currently : "
-		if (updatePaused == "pause")
-			hint+="Paused<br><br>";
-		else
-			hint+="Updating<br><br>";
-		// end indent for convenience
-
+				// indent for convenience
+				hint="<strong style='color:red;font-size:10px'>" + myBehavior.title + "</strong><br><br>";
+				hint+="<span style='font-size:10px'>";
+				hint+="Show: " + myBehavior.secondsToShow + " seconds<br><br>";
+				hint+="Auto update: ";
+				if (myBehavior.autoUpdate == 1)
+					hint+="On<br>";
+				else
+					hint+="Off<br>";
+				hint+="Update Interval: " + myBehavior.interval + " seconds<br>"
+				hint+="Currently : "
+				if (updatePaused == "pause")
+					hint+="Paused<br><br>";
+				else
+					if (haltedDuetoError)
+						hint+="Halted Due to Error<br><br>";
+					else
+						hint+="Updating<br><br>";
 				return hint;
 			})
 
