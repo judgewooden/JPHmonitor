@@ -1,5 +1,5 @@
 /*
- * Create and draw a new graph
+ * Graph
  *
  * Arguments:
  *	containerId => id of Containter to insert SVG
@@ -101,13 +101,22 @@
 	var smoothedValue;
 	var filtercount;
 
+	// Make it possible to modify the axis manually
+	// TODO
+	var leftYaxisOverideMax=0;   // 0 means disabled
+	var leftYaxisControlMaxUp, leftYaxisControlMaxDown, leftYaxisControlMaxReset;
+	var leftYaxisOverideMin=0;   // 0 means disabled
+	var leftYaxisControlMinUp, leftYaxisControlMinDown, leftYaxisControlMinReset;
+	var rightYaxisOverideMax=0;   // 0 means disabled
+	var rightYaxisControlMaxUp, rightYaxisControlMaxDown, rightYaxisControlMaxReset;
+	var rightYaxisOverideMin=0;   // 0 means disabled
+	var rightYaxisControlMinUp, rightYaxisControlMinDown, rightYaxisControlMinReset;
 	/* *************************************************************** */
 	/* Initiationzation and Validation */
 	/* *************************************************************** */
 	var _init = function() {
 		containerId = getRequiredVar(argsMap, 'containerId');
 		container = document.querySelector('#' + containerId);
-
 
 		// load the configuration
 		loadConfig(getRequiredVar(argsMap, 'data'));
@@ -331,6 +340,8 @@
 		myBehavior.axisLeftLegend = getOptionalVar(dataMap.Settings, 'graphLeftLegend', "");
 		myBehavior.axisRightLegend = getOptionalVar(dataMap.Settings, 'graphRightLegend', "");
 		myBehavior.interpolation = getOptionalVar(dataMap.Settings, 'graphInterpolation', "linear");
+		myBehavior.axisLeftDisableControls = getOptionalVar(dataMap.Settings, 'axisLeftDisableControls', "0");
+		myBehavior.axisRightDisableControls = getOptionalVar(dataMap.Settings, 'axisRightDisableControls', "0");
 		console.log(containerId, " Behavior: ", myBehavior);
 
 		// Load graph meta data
@@ -486,23 +497,6 @@
 				.attr("class", "y axis left")
 				.attr("transform", "translate(-5,0)")
 				.call(yAxisLeft);
-				/*
-				.on('mousemove.drag', function() {
-					console.log("mousemove.drag");
-				})
-				.on('mouseup.drag', function() {
-					console.log("mouseup.drag");
-				})
-				.on('mouseover', function() {
-					console.log("Mousover");
-				})
-				.on('keydown', function() {
-					console.log("keydown");
-				})
-      			.on('mouseout', function() {
-					console.log("Mousout");
-				});
-				*/
 
 			if (myBehavior.axisLeftLegend != "") {
 				leftYaxislegend = leftYaxis.append("text")
@@ -513,6 +507,75 @@
 			    	.attr("dy", ".71em")
 			   		.style("text-anchor", "end")
 			    	.text(myBehavior.axisLeftLegend);
+			}
+
+			if (myBehavior.axisLeftDisableControls != "1") {
+				leftYaxisControlMinUp = leftYaxis.append("svg:text")
+					.attr("class", "y-left-control-max-up")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", h+12)
+			    	.attr("x", -25)
+			    	.on('click', function(d) {
+						leftYaxisOverideMin=yLeft.domain()[0] + ((yLeft.domain()[1] - yLeft.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10750));
+				leftYaxisControlMinDown = leftYaxis.append("text")
+					.attr("class", "y-left-control-max-down")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", h+12)
+			    	.attr("x", -5)
+			    	.on('click', function(d) {
+						leftYaxisOverideMin=yLeft.domain()[0] - ((yLeft.domain()[1] - yLeft.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10751));
+				leftYaxisControlMinReset = leftYaxis.append("text")
+			   		.style("text-anchor", "middle")
+					.attr("class", "y-left-control-max-reset")
+			    	.attr("y", h+12)
+			    	.attr("x", -15)
+			    	.on('click', function(d) {
+						leftYaxisOverideMin=0
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(11038));
+				leftYaxisControlMaxUp = leftYaxis.append("svg:text")
+					.attr("class", "y-left-control-max-up")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", -6)
+			    	.attr("x", -25)
+			    	.on('click', function(d) {
+						leftYaxisOverideMax=yLeft.domain()[1] + ((yLeft.domain()[1] - yLeft.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10750));
+				leftYaxisControlMaxDown = leftYaxis.append("text")
+					.attr("class", "y-left-control-max-down")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", -6)
+			    	.attr("x", -5)
+			    	.on('click', function(d) {
+						leftYaxisOverideMax=yLeft.domain()[1] - ((yLeft.domain()[1] - yLeft.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10751));
+				leftYaxisControlMaxReset = leftYaxis.append("text")
+			   		.style("text-anchor", "middle")
+					.attr("class", "y-left-control-max-reset")
+			    	.attr("y", -6)
+			    	.attr("x", -15)
+			    	.on('click', function(d) {
+						leftYaxisOverideMax=0
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(11038));
 			}
 
 		}
@@ -533,6 +596,75 @@
 			    	.attr("dy", ".71em")
 			   		.style("text-anchor", "end")
 			    	.text(myBehavior.axisRightLegend);
+			}
+
+			if (myBehavior.axisRightDisableControls != "1") {
+				rightYaxisControlMinUp = rightYaxis.append("svg:text")
+					.attr("class", "y-right-control-max-up")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", h+12)
+			    	.attr("x", 5)
+			    	.on('click', function(d) {
+						rightYaxisOverideMin=yRight.domain()[0] + ((yRight.domain()[1] - yRight.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10750));
+				rightYaxisControlMinDown = rightYaxis.append("text")
+					.attr("class", "y-right-control-max-down")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", h+12)
+			    	.attr("x", 25)
+			    	.on('click', function(d) {
+						rightYaxisOverideMin=yRight.domain()[0] - ((yRight.domain()[1] - yRight.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10751));
+				rightYaxisControlMinReset = rightYaxis.append("text")
+			   		.style("text-anchor", "middle")
+					.attr("class", "y-right-control-max-reset")
+			    	.attr("y", h+12)
+			    	.attr("x", 15)
+			    	.on('click', function(d) {
+						rightYaxisOverideMin=0
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(11038));
+				rightYaxisControlMaxUp = rightYaxis.append("svg:text")
+					.attr("class", "y-right-control-max-up")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", -6)
+			    	.attr("x", 5)
+			    	.on('click', function(d) {
+						rightYaxisOverideMax=yRight.domain()[1] + ((yRight.domain()[1] - yRight.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10750));
+				rightYaxisControlMaxDown = rightYaxis.append("text")
+					.attr("class", "y-right-control-max-down")
+			   		.style("text-anchor", "middle")
+			    	.attr("y", -6)
+			    	.attr("x", 25)
+			    	.on('click', function(d) {
+						rightYaxisOverideMax=yRight.domain()[1] - ((yRight.domain()[1] - yRight.domain()[0])/5);
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(10751));
+				rightYaxisControlMaxReset = rightYaxis.append("text")
+			   		.style("text-anchor", "middle")
+					.attr("class", "y-right-control-max-reset")
+			    	.attr("y", -6)
+			    	.attr("x", 15)
+			    	.on('click', function(d) {
+						rightYaxisOverideMax=0
+						redrawAxes(true);
+						redrawLines(true);
+			    	})
+			    	.text(String.fromCharCode(11038));
 			}
 		}
 
@@ -678,11 +810,14 @@
 		if ( myBehavior.autoUpdate == 1 ) {
 			createMenuButtons();
 		}
-
+		createYaxisControls();
 
 		setValueLabelsToLatest();
 
 		//console.log("We have finished creating Graph.");
+	}
+
+	var createYaxisControls = function () {
 	}
 
 	/**
@@ -889,11 +1024,11 @@
     	hint+="Update frequency: " + data[key].datagap/1000 + " seconds<br>";
     	hint+="Values removed: " + filtercount[key] + "<br><br>";
     	var i=data[key].values.length - 1;
-    	hint+="Last Update: " + data[key].values[i].timestamp.toLocaleTimeString() + "<br>";
-    	hint+="Last Value: " + afronden(data[key].values[i].value) + "<br><br>";
-    	hint+="Total Value Shown: " + afronden(data[key].values.length);
-    	//hint+="Last Plot Value: " + afronden(lastValue[key]) + "<br>";
-    	//hint+="Last Smooth Value: " + afronden(smoothedValue[key]);
+    	hint+="Last Update: ";
+    	if (i>0) hint+=data[key].values[i].timestamp.toLocaleTimeString();
+    	hint+="<br>Last Value: "
+    	if (i>0) hint+=afronden(data[key].values[i].value);
+    	hint+="<br><br>Total Value Shown: " + afronden(data[key].values.length);
     	hint+="</span>";
     	// end indent
     					return hint;
@@ -942,7 +1077,6 @@
 						}
 						var toselect="#" + containerId + d;
 						d3.select(toselect).style("opacity", newOpacity);
-						tipLegend.hide;
 					}
 				}
       		})
@@ -1188,25 +1322,30 @@
 					d3.min(data.filter( function (f) {
 						return f.yaxis == 'Left';
 					}), function(m) {
-						lValue=d3.min(m.values, function(v) {
-								return v.value;
-						});
-						if ( lValue < myBehavior.axisLeftMin || myBehavior.axisLeftMin == 0)
-							return lValue;
-						else
-							return myBehavior.axisLeftMin;
-						//return d3.min( lValue, myBehavior.axisLeftMin );
+						if ( leftYaxisOverideMin == 0 ) {
+							lValue=d3.min(m.values, function(v) {
+									return v.value;
+							});
+							if ( lValue < myBehavior.axisLeftMin || myBehavior.axisLeftMin == 0)
+								return lValue;
+							else
+								return myBehavior.axisLeftMin;
+						} else
+						    return leftYaxisOverideMin;
 					}),
 					d3.max(data.filter( function (f) {
 						return f.yaxis == 'Left';
 					}), function(m) {
-						lValue=d3.max(m.values, function(v) {
-							return v.value;
-						});
-						if ( lValue > myBehavior.axisLeftMax || myBehavior.axisLeftMax == 0 )
-							return lValue;
-						else
-							return myBehavior.axisLeftMax;
+						if ( leftYaxisOverideMax == 0 ) {
+							lValue=d3.max(m.values, function(v) {
+								return v.value;
+							});
+							if ( lValue > myBehavior.axisLeftMax || myBehavior.axisLeftMax == 0 )
+								return lValue;
+							else
+								return myBehavior.axisLeftMax;
+						} else
+						    return leftYaxisOverideMax;
 					})
 				])
 				.range([h, 0])
@@ -1222,24 +1361,30 @@
 					d3.min(data.filter( function (f) {
 						return f.yaxis == 'Right';
 					}), function(m) {
-						lValue=d3.min(m.values, function(v) {
-								return v.value;
-						});
-						if ( lValue < myBehavior.axisRightMin || myBehavior.axisRightMin == 0)
-							return lValue;
-						else
-							return myBehavior.axisRightMin;
+						if ( rightYaxisOverideMin == 0 ) {
+							lValue=d3.min(m.values, function(v) {
+									return v.value;
+							});
+							if ( lValue < myBehavior.axisRightMin || myBehavior.axisRightMin == 0)
+								return lValue;
+							else
+								return myBehavior.axisRightMin;
+						} else
+							return rightYaxisOverideMin;
 					}),
 					d3.max(data.filter( function (f) {
 						return f.yaxis == 'Right';
 					}), function(m) {
-						lValue=d3.max(m.values, function(v) {
-							return v.value;
-						});
-						if ( lValue > myBehavior.axisRightMax || myBehavior.axisRightMax == 0)
-							return lValue;
-						else
-							return myBehavior.axisRightMax;
+						if ( rightYaxisOverideMax == 0 ) {
+							lValue=d3.max(m.values, function(v) {
+								return v.value;
+							});
+							if ( lValue > myBehavior.axisRightMax || myBehavior.axisRightMax == 0)
+								return lValue;
+							else
+								return myBehavior.axisRightMax;
+						} else
+							return rightYaxisOverideMax;
 					})
 				])
 				.range([h, 0])
