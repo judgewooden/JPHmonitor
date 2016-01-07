@@ -78,6 +78,16 @@
                 "Frequency":"15.00",
                 "Filter":"0.70",
                 "Smoothing":"30.00"
+            },
+            {
+                "Name": "Room",
+                "Unit": "Nest",
+                "Sensor": "Temperature",
+                "Axis": "Left",
+                "Interpolation": "linear",
+                "Frequency": "120.00",
+                "Filter": "0.20",
+                "Smoothing": "30.00"
             }
         ]
     }
