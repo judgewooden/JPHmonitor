@@ -83,7 +83,7 @@
                 "Name": "Room",
                 "Unit": "Nest",
                 "Sensor": "Temperature",
-                "Axis": "Left",
+                "Axis": "Right",
                 "Interpolation": "linear",
                 "Frequency": "120.00",
                 "Filter": "0.20",
