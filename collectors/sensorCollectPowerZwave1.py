@@ -19,8 +19,12 @@ from openzwave.option import ZWaveOption
 device="/dev/ttyACM0"
 log="Info"
 
+os.chdir(os.path.expanduser("~/zwave"))
+path=os.getwd()
+print("Working Directory:", path)
+
 #Define some manager options
-options = ZWaveOption(device, config_path=os.path.expanduser("~/zwaveconfig"), \
+options = ZWaveOption(device, config_path=os.path.expanduser("~/zwave/config"), \
   user_path=".", cmd_line="")
 #options.set_log_file("OZW_Log.log")
 #options.set_append_log_file(False)
