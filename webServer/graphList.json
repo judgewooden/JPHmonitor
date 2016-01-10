@@ -784,5 +784,43 @@
             }
         ]
     }
+},{
+    "Name": "Power 2hours",
+    "Settings": {
+        "graphAutoUpdate": 1,
+        "graphUpdateInterval": 10,
+        "graphSecondsToShow": 7200,
+        "graphLeftLegend": "Liters (pm)",
+        "graphLeftMax": 0,
+        "graphLeftMin": 0,
+        "graphRightLegend": "Power (W)",
+        "graphRightMax": 0,
+        "graphRightMin": 0,
+        //"graphTitle": "Power - Last Two Hours",
+        "graphInterpolation": "linear",
+        "graphTickLine": 0,
+        "graphSensors": [
+            {
+                "Name": "Power1",
+                "Unit": "Power1",
+                "Sensor": "Power1",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "0.20",
+                "Smoothing": "30.00"
+            },
+            {
+                "Name": "Power2",
+                "Unit": "Power1",
+                "Sensor": "Power2",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "0.20",
+                "Smoothing": "30.00"
+            }
+        ]
+    }
 }
 ]
