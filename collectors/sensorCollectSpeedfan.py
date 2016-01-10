@@ -84,6 +84,7 @@ while True:
 
             with open(fullfile) as f:
                 frow = True
+                GPUis=-1
                 sqlList.clear()
                 for line in f:
                     columns=line.strip().split('\t')
@@ -102,7 +103,13 @@ while True:
                                 sqlList.append(sqlMap[x])
                             except:
                                 sqlList.append("")
+                        #fix a problem where GPU numbers are set to -999 when card resets
+                        for x in range(0, len(columns)):
+                            if columns[x]=="GPU":
+                                GPUis=x
+                                break
                     else:
+                        # TODO - figure out the position of GPU1, test if the value is == -999 and then skip SQL insertion
                         seconds=int(columns[0])
                         hms=""
                         for scale in 86400, 3600, 60:
@@ -118,6 +125,12 @@ while True:
                         fileDate=datetime.datetime.combine(fileDate.date(), datetime.time(*map(int, hms.split(':'))))
                         if(fileDate<=lastDate):
                             continue
+
+                        #fix a problem where GPU temps are set to -999 when card resets
+                        if (GPUis>0):
+                            if (float(columns[GPUis])<-99.0):
+                                print("GPU at",GPUis, "has value:", columns[GPUis], "skipping")
+                                continue
 
                         query = "INSERT INTO SpeedfanMonitor1 ("
                         query +=', '.join(str(x) for x in sqlList if x!='')
