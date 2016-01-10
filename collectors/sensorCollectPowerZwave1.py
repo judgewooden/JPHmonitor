@@ -20,7 +20,7 @@ device="/dev/ttyACM0"
 log="Info"
 
 #Define some manager options
-options = ZWaveOption(device, config_path="~/zwaveconfig", \
+options = ZWaveOption(device, config_path=os.path.expanduser("~/zwaveconfig"), \
   user_path=".", cmd_line="")
 #options.set_log_file("OZW_Log.log")
 #options.set_append_log_file(False)
