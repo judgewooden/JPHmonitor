@@ -796,7 +796,7 @@
         "graphRightLegend": "Power (W)",
         "graphRightMax": 0,
         "graphRightMin": 0,
-        //"graphTitle": "Power - Last Two Hours",
+        "graphTitle": "Power - Last Two Hours",
         "graphInterpolation": "linear",
         "graphTickLine": 0,
         "graphSensors": [
