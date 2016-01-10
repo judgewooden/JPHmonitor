@@ -20,7 +20,7 @@ device="/dev/ttyACM0"
 log="Info"
 
 os.chdir(os.path.expanduser("~/zwave"))
-path=os.getwd()
+path=os.getcwd()
 print("Working Directory:", path)
 
 #Define some manager options
