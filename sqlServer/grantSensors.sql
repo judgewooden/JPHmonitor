@@ -1,7 +1,7 @@
 /*
  * Edit this file to give your collector units the correct access
  *
- * update passwords to correspond with your install
+ * update passwords and localip address that are valid for login
  */
 DELETE from mysql.user WHERE user="webuser";
 FLUSH PRIVILEGES;
