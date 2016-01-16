@@ -40,7 +40,7 @@ bus = i2c_helper.get_smbus()
 adc = ADCPi(bus, 0x68, 0x69, 12)
 
 def phobya2temp ( voltage ):
-    temp=voltage * 4
+    temp=voltage * 3.433
     return temp
 
 tOutFlow1=-1

@@ -926,5 +926,61 @@
             }
         ]
     }
+},{
+    "Name": "Manifold 10min",
+    "Settings": {
+        "AutoUpdate": 1,
+        "UpdateInterval": 10,
+        "SecondsToShow": 600,
+        "LeftLegend": "Liters (pm)",
+        "LeftMax": 0,
+        "LeftMin": 0,
+        "RightLegend": "Degrees (C)",
+        "RightMax": 0,
+        "RightMin": 0,
+        "Title": "Manifold Temp - Last 10 minutes",
+        "Interpolation": "linear",
+        "TickLine": 1,
+        "HideDateLabel": 0,
+        "HideLegend": 0,
+        "HideXAxis": 0,
+        "HideAxisLeft": 0,
+        "HideAxisRight": 0,
+        "HideButtons": 0,
+        "HideLeftControls": 0,
+        "HideRightControls": 0,
+        "graphSensors": [
+            {
+                "Name": "In Flow",
+                "Unit": "ManifoldTemp1",
+                "Sensor": "InFlow",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "10.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Out Flow 1",
+                "Unit": "ManifoldTemp1",
+                "Sensor": "OutFlow1",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "10.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Out Flow 2",
+                "Unit": "ManifoldTemp1",
+                "Sensor": "OutFlow2",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "10.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            }
+        ]
+    }
 }
 ]
