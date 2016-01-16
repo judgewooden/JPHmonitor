@@ -5,6 +5,8 @@ import datetime
 from datetime import datetime
 #import sys
 import mysql.connector
+#
+# The files need to be installed in directory from
 from ABE_ADCPi import ADCPi
 from ABE_helpers import ABEHelpers
 
@@ -23,7 +25,7 @@ while True:
                               host='localhost',
                               database='Sensors')
     except:
-        print ("ManifoldTemp1: Cannot Connect to SQL (retry)")
+        print("ManifoldTemp1: Cannot Connect to SQL (retry)")
         time.sleep(5)
         continue
     break
@@ -46,10 +48,10 @@ tafter1=-1
 
 while True:
     tnow = datetime.now()
-    tbefore = phobya2temp(adc.read_voltage(2))
-    #tafter1 = phobya2temp(adc.read_voltage(3))
-    #tafter2 = phobya2temp(adc.read_voltage(4))
-    print ("Before:", tbefore, "After1:", tafter1, "After2:", tafter2)
+    tInFlow = phobya2temp(adc.read_voltage(2))
+    #tOutFlow1 = phobya2temp(adc.read_voltage(3))
+    #tOutFlow2 = phobya2temp(adc.read_voltage(4))
+    print ("In-flow:", tInFlow, "Out Flow1:", tOutFlow1, "Out Flow2:", tOutFlow2)
 
     cursor = cnx.cursor()
     lastValue=(tnow, tbefore, tafter1, tafter2)
