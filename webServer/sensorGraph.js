@@ -4,34 +4,7 @@
  * Arguments:
  *	containerId => id of Containter to insert SVG
  *
- *  data => containing:
- *
- *  Array of Data Elements (Mandatory)
- *  ----------------------------------
- *  sensorDisplayName  => Name of the data series to the users on the Graph
- *  sensorSource       => The Database table containing the data (Primary key = 'Timestamp')
- *  sensorColumn       => The name of the SQL Column that function will plot in sensorSource
- *  sensorAxisLocation => Explain to what Axis this data series should be bound, values are "Left" or "Right"
- *  sensorUpdateTimeSeconds => "Show a gap in graph if data did not update for x seconds
- *  TODO : CORRECT THIS
- *
- *  Fields to control the behaviour of the Graph (Optional)
- *  -------------------------------------------------------
- *  graphSecondsToShow  => The X axis range in seconds, (will load data from SQL in this range)
- *                         If 0 a static graph will be loaded with all the data stored in the SQL
- *  graphAutoUpdate     => If 1 the graph will auto update - if 0 it is static (default=0)
- *                         If 1 the graph will update every <grapUpdateInterval> seconds with new
- *                         data from SQL
- *  graphUpdateInterval => Will update the graph every X seconds (default:2)
- *  graphTitle          => Title of graph top middle (default:"")
- *  graphTickLine       => Number of horizontal lines to show per tick (default:0);
- *  graphLeftMin        => The minimum value to show on the left Axis. If=0 auto adjust to data range. (default:0)
- *  graphLeftMax        => The maximum value to show on the left Axis. If=0 auto adjust to data range. (default:0)
- *  graphRightMin       => The minimum value to show on the right Axis. If=0 auto adjust to data range. (default:0)
- *  graphRightMax       => The maximum value to show on the right Axis. If=0 auto adjust to data range. (default:0)
- *  graphLeftLegend     => The legend to show for data on the left access
- *  graphRightLegend    => The legend to show for data on the right access
- * 	graphInterpolation  => The default interpolation, use custom to config per sensor (default:Basis)
+ *  data => (See )
  *
  */
 "use strict";
@@ -326,21 +299,26 @@ function LineGraph(argsMap) {
 	var loadConfig = function(dataMap) {
 
 		// Load data for graph behavior
-		myBehavior.title = getOptionalVar(dataMap.Settings, 'graphTitle', "");
-		myBehavior.secondsToShow = +getOptionalVar(dataMap.Settings,	'graphSecondsToShow', "3600");
-		myBehavior.autoUpdate = +getOptionalVar(dataMap.Settings, 'graphAutoUpdate', "0");
-		myBehavior.interval = +getOptionalVar(dataMap.Settings, 'graphUpdateInterval', "5");
-		myBehavior.tickLine = +getOptionalVar(dataMap.Settings, 'graphTickLine', "");
-		myBehavior.axisLeftMin = +getOptionalVar(dataMap.Settings, 'graphLeftMin', "");
-		myBehavior.axisLeftMax = +getOptionalVar(dataMap.Settings, 'graphLeftMax', "");
-		myBehavior.axisRightMin = +getOptionalVar(dataMap.Settings, 'graphRightMin', "");
-		myBehavior.axisRightMax = +getOptionalVar(dataMap.Settings, 'graphRightMax', "");
-		myBehavior.axisLeftLegend = getOptionalVar(dataMap.Settings, 'graphLeftLegend', "");
-		myBehavior.axisRightLegend = getOptionalVar(dataMap.Settings, 'graphRightLegend', "");
-		myBehavior.interpolation = getOptionalVar(dataMap.Settings, 'graphInterpolation', "linear");
-		myBehavior.hideLegend = getOptionalVar(dataMap.Settings, 'hideLegend', "0");
-		myBehavior.axisLeftDisableControls = getOptionalVar(dataMap.Settings, 'axisLeftDisableControls', "0");
-		myBehavior.axisRightDisableControls = getOptionalVar(dataMap.Settings, 'axisRightDisableControls', "0");
+		myBehavior.title = getOptionalVar(dataMap.Settings, 'Title', "");
+		myBehavior.secondsToShow = +getOptionalVar(dataMap.Settings,	'SecondsToShow', "3600");
+		myBehavior.autoUpdate = +getOptionalVar(dataMap.Settings, 'AutoUpdate', "0");
+		myBehavior.interval = +getOptionalVar(dataMap.Settings, 'UpdateInterval', "5");
+		myBehavior.tickLine = +getOptionalVar(dataMap.Settings, 'TickLine', "");
+		myBehavior.axisLeftMin = +getOptionalVar(dataMap.Settings, 'LeftMin', "");
+		myBehavior.axisLeftMax = +getOptionalVar(dataMap.Settings, 'LeftMax', "");
+		myBehavior.axisRightMin = +getOptionalVar(dataMap.Settings, 'RightMin', "");
+		myBehavior.axisRightMax = +getOptionalVar(dataMap.Settings, 'RightMax', "");
+		myBehavior.axisLeftLegend = getOptionalVar(dataMap.Settings, 'LeftLegend', "");
+		myBehavior.axisRightLegend = getOptionalVar(dataMap.Settings, 'RightLegend', "");
+		myBehavior.interpolation = getOptionalVar(dataMap.Settings, 'Interpolation', "linear");
+		myBehavior.hideDateLabel = +getOptionalVar(dataMap.Settings, 'HideDateLabel', "0");
+		myBehavior.hideLegend = +getOptionalVar(dataMap.Settings, 'HideLegend', "0");
+		myBehavior.hideXAxis = +getOptionalVar(dataMap.Settings, 'HideXAxis', "0");
+		myBehavior.hideAxisLeft = +getOptionalVar(dataMap.Settings, 'HideAxisLeft', "0");
+		myBehavior.hideAxisRight = +getOptionalVar(dataMap.Settings, 'HideAxisRight', "0");
+		myBehavior.hideButtons = +getOptionalVar(dataMap.Settings, 'HideButtons', "0");
+		myBehavior.hideLeftControls = +getOptionalVar(dataMap.Settings, 'HideLeftControls', "0");
+		myBehavior.hideRightControls = +getOptionalVar(dataMap.Settings, 'HideRightControls', "0");
 		if (debug) console.log(containerId, " Behavior: ", myBehavior);
 
 		// Load graph meta data
@@ -412,14 +390,6 @@ function LineGraph(argsMap) {
 	 			throw new Error("interval must be provided for autoupdate");
 	 		}
 	 	}
-
-	 	// spinner variables
-	 	/*
-	 	spinneropts = {lines: 13, length: 28, width: 14, radius: 42, scale: 1, corners:1,
-	 					color: '#000', opacity: 0.25, rotate: 0, direction: 1, speed: 1.1,
-	 					trail: 60, fps: 20, zIndex: 2e9, className: 'spinner', top: '50%',
-	 					left: '50%', shadow: false, hwaccel: false, position: 'absolute'}
-	 	*/
 
 	 	// Prepare global variables for filters
 		lastTimeValue = new Array(data.length);
@@ -499,6 +469,9 @@ function LineGraph(argsMap) {
 				.attr("transform", "translate(-5,0)")
 				.call(yAxisLeft);
 
+			if (myBehavior.hideAxisLeft == 1)
+				leftYaxis.attr("class", "y-none axis left");
+
 			if (myBehavior.axisLeftLegend != "") {
 				leftYaxislegend = leftYaxis.append("text")
 					.attr("class", "y-left-legend")
@@ -510,7 +483,7 @@ function LineGraph(argsMap) {
 			    	.text(myBehavior.axisLeftLegend);
 			}
 
-			if (myBehavior.axisLeftDisableControls != "1") {
+			if (myBehavior.hideLeftControls != 1) {
 				leftYaxisControlMinUp = leftYaxis.append("svg:text")
 					.attr("class", "y-left-control-max-up")
 			   		.style("text-anchor", "middle")
@@ -588,6 +561,9 @@ function LineGraph(argsMap) {
 				.attr("transform", "translate(" + (w+10) + ",0)")
 				.call(yAxisRight)
 
+			if (myBehavior.hideAxisRight == 1)
+				rightYaxis.attr("class", "y-none axis right");
+
 			if (myBehavior.axisRightLegend != "") {
 				rightYaxislegend = rightYaxis.append("text")
 					.attr("class", "y-right-legend")
@@ -599,7 +575,7 @@ function LineGraph(argsMap) {
 			    	.text(myBehavior.axisRightLegend);
 			}
 
-			if (myBehavior.axisRightDisableControls != "1") {
+			if (myBehavior.hideRightControls != 1) {
 				rightYaxisControlMinUp = rightYaxis.append("svg:text")
 					.attr("class", "y-right-control-max-up")
 			   		.style("text-anchor", "middle")
@@ -809,7 +785,9 @@ function LineGraph(argsMap) {
 		createLegend();
 		// only show menu if we are updating
 		if ( myBehavior.autoUpdate == 1 ) {
-			createMenuButtons();
+			if (myBehavior.hideButtons != 1) {
+				createMenuButtons();
+			}
 		}
 
 		setValueLabelsToLatest();
@@ -1056,7 +1034,7 @@ function LineGraph(argsMap) {
 				return h+28;
 			})
 			.style("opacity", function() {
-				if ( myBehavior.hideLegend == "1" ) return "0";
+				if ( myBehavior.hideLegend == 1 ) return "0";
 				return "1";
 			})
 			.on('mouseover', tipLegend.show)
@@ -1085,7 +1063,7 @@ function LineGraph(argsMap) {
 			.attr("class", "legend value")
 			.attr("font-size", legendFontSize)
 			.style("opacity", function() {
-				if ( myBehavior.hideLegend == "1" ) return "0";
+				if ( myBehavior.hideLegend == 1 ) return "0";
 				return "1";
 			})
 			.attr("fill", function(d, i) {
@@ -1156,6 +1134,10 @@ function LineGraph(argsMap) {
 			.attr("font-size", "10")
 			.attr("y", -4)
 			.attr("x", w)
+			.style("opacity", function() {
+				if ( myBehavior.hideDateLabel == 1 ) return "0";
+				return "1";
+			})
 			.text(date.toDateString() + " " + date.toLocaleTimeString())
 			.on('mouseover', tipGraph.show)
       		.on('mouseout', tipGraph.hide)
@@ -1366,6 +1348,11 @@ function LineGraph(argsMap) {
 				.nice();
 
 			yAxisLeft = d3.svg.axis().scale(yLeft).orient("left");
+
+			if (myBehavior.hideAxisLeft == 1) {
+				yAxisLeft.tickFormat("");
+				yAxisLeft.tickSize(0);
+			}
 		}
 
 		if (hasYAxisRight) {
@@ -1405,6 +1392,11 @@ function LineGraph(argsMap) {
 				.nice();
 
 			yAxisRight = d3.svg.axis().scale(yRight).orient("right");
+
+			if (myBehavior.hideAxisRight == 1) {
+				yAxisRight.tickFormat("");
+				yAxisRight.tickSize(0);
+			}
 		}
 	}
 
@@ -1444,6 +1436,12 @@ function LineGraph(argsMap) {
 			xAxis = d3.svg.axis()
 				.scale(x);
 		}
+		//TODO GET THIS RIGHT
+		if ( myBehavior.hideXAxis == 1) {
+			xAxis.tickFormat("");
+			xAxis.tickSize(0);
+		}
+
 	}
 
 	var redrawAxes = function(withTransition) {
@@ -1505,12 +1503,12 @@ function LineGraph(argsMap) {
  	var getRequiredVar = function(argsMap, key, message) {
 		if(!argsMap[key]) {
 			if(!message) {
-				throw new Error(key + " is required")
+				throw new Error(key + " is required");
 			} else {
-				throw new Error(message)
+				throw new Error(message);
 			}
 		} else {
-			return argsMap[key]
+			return argsMap[key];
 		}
 	}
 
@@ -1519,9 +1517,14 @@ function LineGraph(argsMap) {
 	 */
 	var getOptionalVar = function(argsMap, key, defaultValue) {
 		if(!argsMap[key]) {
-			return defaultValue
+			key='graph' + key;
+			if(!argsMap[key]) {
+				return defaultValue;
+			} else {
+				return argsMap[key];
+			}
 		} else {
-			return argsMap[key]
+			return argsMap[key];
 		}
 	}
 

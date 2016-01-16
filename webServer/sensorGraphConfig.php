@@ -65,25 +65,42 @@
                 var graphTitle= $("#graphTitle").val()
                 var graphInterpolation= $("#graphInterpolation").val();
                 var graphTickLine= +$("#graphTickLine").val();
-                var answer = {
+                var graphHideDateLabel= +$("#graphHideDateLabel").val();
+                var graphHideLegend= +$("#graphHideLegend").val();
+                var graphHideXAxis= +$("#graphHideXAxis").val();
+                var graphHideAxisLeft= +$("#graphHideAxisLeft").val();
+                var graphHideAxisRight= +$("#graphHideAxisRight").val();
+                var graphHideButtons= +$("#graphHideButtons").val();
+                var graphHideLeftControls= +$("#graphHideLeftControls").val();
+                var graphHideRightControls= +$("#graphHideRightControls").val();
+                var answe3 = {
                     Name: naam,
                     Settings: {
-                        graphAutoUpdate: graphAutoUpdate,
-                        graphUpdateInterval: graphUpdateInterval,
-                        graphSecondsToShow: graphSecondsToShow,
-                        graphLeftLegend: graphLeftLegend,
-                        graphLeftMax: graphLeftMax,
-                        graphLeftMin: graphLeftMin,
-                        graphRightLegend: graphRightLegend,
-                        graphRightMax: graphRightMax,
-                        graphRightMin: graphRightMin,
-                        graphTitle: graphTitle,
-                        graphInterpolation: graphInterpolation,
-                        graphTickLine: graphTickLine,
+                        AutoUpdate: graphAutoUpdate,
+                        UpdateInterval: graphUpdateInterval,
+                        SecondsToShow: graphSecondsToShow,
+                        LeftLegend: graphLeftLegend,
+                        LeftMax: graphLeftMax,
+                        LeftMin: graphLeftMin,
+                        RightLegend: graphRightLegend,
+                        RightMax: graphRightMax,
+                        RightMin: graphRightMin,
+                        Title: graphTitle,
+                        Interpolation: graphInterpolation,
+                        TickLine: graphTickLine,
+                        HideDateLabel: graphHideDateLabel,
+                        HideLegend: graphHideLegend,
+                        HideXAxis: graphHideXAxis,
+                        HideAxisLeft: graphHideAxisLeft,
+                        HideAxisRight: graphHideAxisRight,
+                        HideButtons: graphHideButtons,
+                        HideLeftControls: graphHideLeftControls,
+                        HideRightControls: graphHideRightControls,
                         graphSensors: sensorarray
                     }
                 }
-                return answer;
+                console.log(answe3);
+                return answe3;
             }
 
             // Download the valid tables from SQL (these should contain all the sensors)
@@ -138,18 +155,26 @@
                 if (event.args) {
                     var item = event.args.item;
                     if (item) {
-                        $("#graphAutoUpdate").val(item.value.graphAutoUpdate);
-                        $("#graphUpdateInterval").val(item.value.graphUpdateInterval);
-                        $("#graphSecondsToShow").val(item.value.graphSecondsToShow);
-                        $("#graphLeftLegend").val(item.value.graphLeftLegend);
-                        $("#graphLeftMax").val(item.value.graphLeftMax);
-                        $("#graphLeftMin").val(item.value.graphLeftMin);
-                        $("#graphRightLegend").val(item.value.graphRightLegend);
-                        $("#graphRightMax").val(item.value.graphRightMax);
-                        $("#graphRightMin").val(item.value.graphRightMin);
-                        $("#graphTitle").val(item.value.graphTitle);
-                        $("#graphInterpolation").val(item.value.graphInterpolation);
-                        $("#graphTickLine").val(item.value.graphTickLine);
+                        $("#graphAutoUpdate").val(item.value.AutoUpdate);
+                        $("#graphUpdateInterval").val(item.value.UpdateInterval);
+                        $("#graphSecondsToShow").val(item.value.SecondsToShow);
+                        $("#graphLeftLegend").val(item.value.LeftLegend);
+                        $("#graphLeftMax").val(item.value.LeftMax);
+                        $("#graphLeftMin").val(item.value.LeftMin);
+                        $("#graphRightLegend").val(item.value.RightLegend);
+                        $("#graphRightMax").val(item.value.RightMax);
+                        $("#graphRightMin").val(item.value.RightMin);
+                        $("#graphTitle").val(item.value.Title);
+                        $("#graphInterpolation").val(item.value.Interpolation);
+                        $("#graphTickLine").val(item.value.TickLine);
+                        $("#graphHideDateLabel").val(item.value.HideDateLabel);
+                        $("#graphHideLegend").val(item.value.HideLegend);
+                        $("#graphHideXAxis").val(item.value.HideXAxis);
+                        $("#graphHideAxisLeft").val(item.value.HideAxisLeft);
+                        $("#graphHideAxisRight").val(item.value.HideAxisRight);
+                        $("#graphHideButtons").val(item.value.HideButtons);
+                        $("#graphHideLeftControls").val(item.value.HideLeftControls);
+                        $("#graphHideRightControls").val(item.value.HideRightControls);
                         var sourceSensors = {
                             localdata: item.value.graphSensors,
                             datatype: "array",
@@ -311,19 +336,19 @@
                                 var naam = window.prompt("Name your Graph","Graph1");
                                 if ( naam == null ) naam = "Graph1";
                                 answer = generatejson(naam);
-                                var newWindow = window.open('', '', 'location=0, status=0, titlebar=0, toolbar=0, width=800, height=500, resizable=1'),
+                                console.log("answer: ", answer);
+                                var newWindow = window.open('', '', 'scrollbars=1, location=0, status=0, titlebar=0, toolbar=0, width=800, height=700, resizable=1'),
                                 document = newWindow.document.open(),
                                 pageContent =
                                          '<!DOCTYPE html>' +
                                          '<html>' +
                                          '<head>' +
-                                         '<meta charset="utf-8" />' +
-                                         '<title>Safe your Graph</title>' +
+                                         '<meta http-equiv="content-type" content="application/json; charset=utf-8" />' +
+                                         '<title>Save your Graph</title>' +
                                          '</head>' +
-                                         '<!-- Content-Type: application/json -->' +
-                                         '<body>' +
+                                         '<body><pre>' +
                                          JSON.stringify(answer, null, '\t'); +
-                                         '</body></html>';
+                                         '</pre></body></html>';
                                 document.write(pageContent);
                                 document.close();
                                 event.handled = true;
@@ -347,34 +372,62 @@
     <div class="row">
         <div class="col-xs-3" style="text-align:right">Title:</div>
         <div class="col-xs-9">
-            <input type="text" style="width:250px" id="graphTitle">
+            <input type="text" style="width:260px" id="graphTitle">
         </div>
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Seconds:</div>
-        <div class="col-xs-9">
-            <input type="number" style="width:100px" id="graphSecondsToShow">
+        <div class="col-xs-3">
+            <input type="number" style="width:80px" id="graphSecondsToShow">
+        </div>
+        <div class="col-xs-3" style="text-align:right">Legend:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideLegend">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Auto:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3">
             <select type="text" id="graphAutoUpdate">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
         </div>
+        <div class="col-xs-3" style="text-align:right">Buttons:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideButtons">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
+        </div>
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Interval:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3">
             <input type="number" style="width:80px" id="graphUpdateInterval">
+        </div>
+        <div class="col-xs-3" style="text-align:right">X-Axis:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideXAxis">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Line Tics:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3">
             <input type="number" style="width:80px" id="graphTickLine">
+        </div>
+        <div class="col-xs-3" style="text-align:right">Date-Label:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideDateLabel">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">
@@ -400,14 +453,28 @@
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Minimum:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3">
             <input type="number" style="width:80px" id="graphLeftMin">
+        </div>
+        <div class="col-xs-3" style="text-align:right">Left Axis:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideAxisLeft">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">
-        <div class="col-xs-3" style="text-align:right">Msximum:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3" style="text-align:right">Maximum:</div>
+        <div class="col-xs-3">
             <input type="number" style="width:80px" id="graphLeftMax">
+        </div>
+        <div class="col-xs-3" style="text-align:right">Controls:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideLeftControls">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">
@@ -421,14 +488,28 @@
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Minimum:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3">
             <input type="number" style="width:80px" id="graphRightMin">
+        </div>
+        <div class="col-xs-3" style="text-align:right">Right Axis:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideAxisRight">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">
         <div class="col-xs-3" style="text-align:right">Maximum:</div>
-        <div class="col-xs-9">
+        <div class="col-xs-3">
             <input type="number" style="width:80px" id="graphRightMax">
+        </div>
+        <div class="col-xs-3" style="text-align:right">Controls:</div>
+        <div class="col-xs-3">
+            <select type="text" id="graphHideRightControls">
+                <option value="1">Hide</option>
+                <option value="0">Show</option>
+            </select>
         </div>
     </div>
     <div class="row" style="margin-top:3px">

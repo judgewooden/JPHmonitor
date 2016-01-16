@@ -86,6 +86,7 @@ while True:
                 frow = True
                 GPUis=-1
                 sqlList.clear()
+                print("Line:", line)
                 for line in f:
                     columns=line.strip().split('\t')
                     if (frow):
@@ -109,7 +110,7 @@ while True:
                                 GPUis=x
                                 break
                     else:
-                        # TODO - figure out the position of GPU1, test if the value is == -999 and then skip SQL insertion
+
                         seconds=int(columns[0])
                         hms=""
                         for scale in 86400, 3600, 60:

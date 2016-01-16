@@ -113,3 +113,30 @@ p {
 div.aGraph {
         margin-bottom: 30px;
 }
+
+/* Dashboard containers */
+
+.dash-box {
+  border: 1px solid navy;
+  height: 70px;
+  width: 120px;
+  box-sizing: border-box;
+  background-color: #dddddd;
+  display: table;
+}
+
+.dash-title {
+  font-size:10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dash-value {
+  font-size:28px;
+  text-align: center;
+}
+
+.dash-time {
+  font-size:8px;
+  text-align: center;
+}

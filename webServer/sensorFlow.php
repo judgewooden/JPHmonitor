@@ -108,6 +108,7 @@
             "graphRightMax": 0,
             "graphRightMin": 0,
             //"graphTitle": "Power - Last Two Hours",
+            "hideXAxis": 0,
             "graphInterpolation": "linear",
             "graphTickLine": 0,
             "graphSensors": [
