@@ -32,7 +32,7 @@ while True:
 
 # GLOBAL
 add_temp = ("INSERT INTO ManifoldTemp1 "
-               "(Timestamp, Before, After1, After2) "
+               "(Timestamp, InFlow, OutFlow1, OutFlow2) "
                "VALUES (%s, %s, %s, %s)")
 
 i2c_helper = ABEHelpers()
@@ -43,18 +43,18 @@ def phobya2temp ( voltage ):
     temp=voltage * 4
     return temp
 
-tafter2=-1
-tafter1=-1
+tOutFlow1=-1
+tOutFlow2=-1
 
 while True:
     tnow = datetime.now()
     tInFlow = phobya2temp(adc.read_voltage(2))
-    #tOutFlow1 = phobya2temp(adc.read_voltage(3))
-    #tOutFlow2 = phobya2temp(adc.read_voltage(4))
+    tOutFlow1 = phobya2temp(adc.read_voltage(3))
+    tOutFlow2 = phobya2temp(adc.read_voltage(4))
     print ("In-flow:", tInFlow, "Out Flow1:", tOutFlow1, "Out Flow2:", tOutFlow2)
 
     cursor = cnx.cursor()
-    lastValue=(tnow, tbefore, tafter1, tafter2)
+    lastValue=(tnow, tInFlow, tOutFlow1, tOutFlow2)
     cursor.execute(add_temp, lastValue)
     cnx.commit()
 
