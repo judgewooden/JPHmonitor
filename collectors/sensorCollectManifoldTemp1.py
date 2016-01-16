@@ -45,15 +45,15 @@ tafter2=-1
 tafter1=-1
 
 while True:
-	tnow = datetime.now()
-  tbefore = phobya2temp(adc.read_voltage(2))
-  #tafter1 = phobya2temp(adc.read_voltage(3))
-  #tafter2 = phobya2temp(adc.read_voltage(4))
-	print ("Before:", tbefore, "After1:", tafter1, "After2:" tafter2))
+    tnow = datetime.now()
+    tbefore = phobya2temp(adc.read_voltage(2))
+    #tafter1 = phobya2temp(adc.read_voltage(3))
+    #tafter2 = phobya2temp(adc.read_voltage(4))
+    print ("Before:", tbefore, "After1:", tafter1, "After2:" tafter2))
 
-	cursor = cnx.cursor()
-	lastValue=(tnow, tbefore, tafter1, tafter2)
-	cursor.execute(add_temp, lastValue)
-	cnx.commit()
+    cursor = cnx.cursor()
+    lastValue=(tnow, tbefore, tafter1, tafter2)
+    cursor.execute(add_temp, lastValue)
+    cnx.commit()
 
-	time.sleep(5)
+    time.sleep(5)
