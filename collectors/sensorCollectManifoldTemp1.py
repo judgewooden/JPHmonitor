@@ -43,15 +43,17 @@ def phobya2temp ( voltage ):
     temp=voltage * 3.433
     return temp
 
-tOutFlow1=-1
-tOutFlow2=-1
 
 while True:
     tnow = datetime.now()
-    tInFlow = phobya2temp(adc.read_voltage(2))
-    tOutFlow1 = phobya2temp(adc.read_voltage(3))
-    tOutFlow2 = phobya2temp(adc.read_voltage(4))
-    print ("In-flow:", tInFlow, "Out Flow1:", tOutFlow1, "Out Flow2:", tOutFlow2)
+    tInFlow-before = adc.read_voltage(2)
+    tInFlow=tInFlow-before*3.46
+    tOutFlow1-before = adc.read_voltage(3)
+    tOutFlow1=tOutFlow1-before*2.69
+    tOutFlow2-before = adc.read_voltage(4)
+    tOutFlow2=tOutFlow2-before*3.46
+    print ("In-flow-r:", tInFlow-before, "Flow1-r:", tOutFlow1, "Flow2-r:", tOutFlow2)
+    print ("In-flow-n:", tInFlow, "Out Flow1-n:", tOutFlow1, "Flow2-n:", tOutFlow2)
 
     cursor = cnx.cursor()
     lastValue=(tnow, tInFlow, tOutFlow1, tOutFlow2)
