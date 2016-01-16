@@ -49,7 +49,7 @@ while True:
     tInFlowBefore = adc.read_voltage(2)
     tInFlow=tInFlowBefore*3.46
     tOutFlow1Before = adc.read_voltage(3)
-    tOutFlow1=tOutFlow1Before*2.69
+    tOutFlow1=tOutFlow1Before*3.46
     tOutFlow2Before = adc.read_voltage(4)
     tOutFlow2=tOutFlow2Before*3.46
     print ("In-flow-r:", tInFlowBefore, "Flow1-r:", tOutFlow1Before, "Flow2-r:", tOutFlow2Before)
