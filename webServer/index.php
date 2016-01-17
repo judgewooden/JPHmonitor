@@ -12,10 +12,16 @@
 
 <?php include("menubar.html"); ?>
 
-<!-- Put your HTML here -->
+<!-- Put your HTML here
 <div style="position:relative;width:100%;height:50px"></div>
 <div style="position:relative;width:100%;height:50px;text-align:center">
-    <span style="align:center">This site is in development</span>
+-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <p class="jumbotron text-center">This site is in development</p>
+        </div>
+    </div>
 </div>
 
 <!-- Put your HTML SCRIPT here -->
