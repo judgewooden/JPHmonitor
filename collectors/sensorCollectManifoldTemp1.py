@@ -42,7 +42,8 @@ adc = ADCPi(bus, 0x68, 0x69, 12)
 
 def phobya2temp ( voltageOut ):
     ohm=(5-voltageOut)/voltageOut*16800/1000
-    temp=(0.755*math.pow(ohm,2))-4.2327*ohm+60.589
+    print(voltageOut, ohm)
+    temp=(0.0755*math.pow(ohm,2))-4.2327*ohm+60.589
     return temp
 
 
