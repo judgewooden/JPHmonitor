@@ -48,11 +48,11 @@ def phobya2temp ( voltageOut ):
 while True:
     tnow = datetime.now()
     tInFlowBefore = adc.read_voltage(2)
-    tInFlow=(phobya2temp(tInFlowBefore, 5,
+    tInFlow=phobya2temp(tInFlowBefore)
     tOutFlow1Before = adc.read_voltage(3)
-    tOutFlow1=tOutFlow1Before*3.46
+    tOutFlow1=phobya2temp(tOutFlow1Before)
     tOutFlow2Before = adc.read_voltage(4)
-    tOutFlow2=tOutFlow2Before*3.46
+    tOutFlow2=phobya2temp(tOutFlow2Before)
 
     print ("In-flow", tInFlowBefore, "->",tInFlow \
            "Out-flow-1", tOutFlow1Before, "->", tOutFlow1, \
