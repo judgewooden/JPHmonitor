@@ -54,7 +54,7 @@ while True:
     tOutFlow2Before = adc.read_voltage(4)
     tOutFlow2=phobya2temp(tOutFlow2Before)
 
-    print ("In-flow", tInFlowBefore, "->",tInFlow \
+    print ("In-flow", tInFlowBefore, "->", tInFlow, \
            "Out-flow-1", tOutFlow1Before, "->", tOutFlow1, \
            "Out-flow-2", tOutFlow2Before, "->", tOutFlow2)
 
