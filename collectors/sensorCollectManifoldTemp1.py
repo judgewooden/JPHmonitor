@@ -39,21 +39,24 @@ i2c_helper = ABEHelpers()
 bus = i2c_helper.get_smbus()
 adc = ADCPi(bus, 0x68, 0x69, 12)
 
-def phobya2temp ( voltage ):
-    temp=voltage * 3.433
+def phobya2temp ( voltageOut ):
+    ohm=(5-voltageOut)/voltageOut*16800/1000
+    temp=(0.755*ohm^2)-4.2327*ohm+60.589
     return temp
 
 
 while True:
     tnow = datetime.now()
     tInFlowBefore = adc.read_voltage(2)
-    tInFlow=tInFlowBefore*3.46
+    tInFlow=(phobya2temp(tInFlowBefore, 5,
     tOutFlow1Before = adc.read_voltage(3)
     tOutFlow1=tOutFlow1Before*3.46
     tOutFlow2Before = adc.read_voltage(4)
     tOutFlow2=tOutFlow2Before*3.46
-    print ("In-flow-r:", tInFlowBefore, "Flow1-r:", tOutFlow1Before, "Flow2-r:", tOutFlow2Before)
-    print ("In-flow-n:", tInFlow, "Out Flow1-n:", tOutFlow1, "Flow2-n:", tOutFlow2)
+
+    print ("In-flow", tInFlowBefore, "->",tInFlow \
+           "Out-flow-1", tOutFlow1Before, "->", tOutFlow1, \
+           "Out-flow-2", tOutFlow2Before, "->", tOutFlow2)
 
     cursor = cnx.cursor()
     lastValue=(tnow, tInFlow, tOutFlow1, tOutFlow2)
