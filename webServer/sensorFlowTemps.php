@@ -51,7 +51,7 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "In Flow",
+                    "Name": "In-Flow",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "InFlow",
                     "Axis": "Right",
@@ -61,7 +61,7 @@
                     "Smoothing": "1.00"
                 },
                 {
-                    "Name": "Out Flow 1",
+                    "Name": "Out-Flow",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "OutFlow1",
                     "Axis": "Right",
@@ -159,7 +159,7 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "RaspiTemp1",
+                    "Name": "Raspi-Temp",
                     "Unit": "RaspiTemp1",
                     "Sensor": "Value",
                     "Axis": "Right",
