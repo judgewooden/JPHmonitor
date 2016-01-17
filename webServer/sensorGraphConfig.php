@@ -524,11 +524,11 @@
 </div>
 
 <div style='float:left;position:relative;margin-left:10px;margin-top:10px;visibility:hidden'>
-    <input type="button" value="JSON" id='jsonExport' />
+    <input class="btn btn-danger" type="button" value="JSON" id='jsonExport' />
 </div>
 
 <div style='float:left;position:relative;margin-left:10px;margin-top:10px;visibility:hidden'>
-    <input type="button" value="Graph" id='graphWindow' />
+    <input class="btn btn-primary" type="button" value="Graph" id='graphWindow' />
 </div>
 
 </body>
