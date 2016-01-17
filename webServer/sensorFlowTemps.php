@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta content="utf-8" http-equiv="encoding">
-    <title>Flow Analysis</title>
+    <title>Water Temperature</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
     <script src="http://d3js.org/d3.v2.js"></script>
@@ -38,7 +38,7 @@
             "RightLegend": "Degrees (C)",
             "RightMax": 0,
             "RightMin": 0,
-            "Title": "Manifold Temp - Last 3 minutes",
+            "Title": "Manifold Temp - Last 30 minutes",
             "Interpolation": "linear",
             "TickLine": 1,
             "HideDateLabel": 0,
