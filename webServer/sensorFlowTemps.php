@@ -164,7 +164,7 @@
                     "Sensor": "Value",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "5.00",
+                    "Frequency": "15.00",
                     "Filter": "0.00",
                     "Smoothing": "1.00"
                 },
@@ -174,7 +174,7 @@
                     "Sensor": "OutFlow2",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "5.00",
+                    "Frequency": "15.00",
                     "Filter": "0.00",
                     "Smoothing": "1.00"
                 }
