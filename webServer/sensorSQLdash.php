@@ -30,29 +30,32 @@ if ($_GET["column"]) {
 }
 
 // Get the value column
-if ($_GET["UpdateGapSeconds"]) {
-    $DBseconds = $_GET["UpdateGapSeconds"];
+if ($_GET["id"]) {
+    $DBid = $_GET["id"];
 } else {
-    $DBseconds = -1;
+    $DBid = 0;
 }
 
 $query = "";
-$query = $query . "SELECT Timestamp AS timestamp, " . $DBcolumn . " AS value";
+$query = $query . "SELECT \"" . $DBid . "\" AS id, Timestamp AS timestamp, " . $DBcolumn . " AS value";
 $query = $query . " FROM " . $DBtable . " WHERE " . $DBcolumn . " IS NOT NULL";
-if ($DBseconds>-1) {
-    $query = $query . " AND timestamp > DATE_SUB(NOW(), INTERVAL " . $DBseconds . " SECOND)";
-}
 $query = $query . " ORDER BY Timestamp DESC LIMIT 1";
 // echo "query: " . $query . "<BR />\n";
 
 if ($result = $mysqli->query($query)) {
+    $ans=0;
     while ($row = $result->fetch_array(MYSQL_ASSOC)) {
-		$outputArray[] = $row;
+        $ans=$ans+1;
+        $outputArray[] = $row;
     }
-	echo json_encode($outputArray);
+    if ($ans==0) {
+        echo "[{\"id\":\"" . $DBid . "\"}]";
+    } else {
+        echo json_encode($outputArray);
+    }
 } else {
-	printf("Query Failed: %s\n", $query);
-	die;
+    printf("Query Failed: %s\n", $query);
+    die;
 }
 
 $mysqli->close();
