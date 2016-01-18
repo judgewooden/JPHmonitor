@@ -144,13 +144,3 @@ div.aGraph {
   padding: 0;
 }
 
-.row{
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
-.not-first-row
-{
-   position: relative;
-   top: -20px;
-}
