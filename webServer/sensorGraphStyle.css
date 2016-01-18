@@ -89,7 +89,7 @@ svg.line-graph .date-label {
 .navbar-nav > li > a, .navbar-brand {
     padding-top:2px !important;
     padding-bottom:2px !important;
-    height: 22px;
+    height: 28px;
 }
 
 .navbar {
@@ -118,25 +118,39 @@ div.aGraph {
 
 .dash-box {
   border: 1px solid navy;
-  height: 70px;
-  width: 120px;
-  box-sizing: border-box;
+  min-height: 70px;
+  min-width: 120px;
   background-color: #dddddd;
-  display: table;
 }
 
 .dash-title {
   font-size:10px;
   font-weight: bold;
   text-align: center;
+  padding: 0;
 }
 
 .dash-value {
-  font-size:28px;
+  font-size:24px;
   text-align: center;
+  background-color: #dddddd;
+  padding: 0;
 }
 
 .dash-time {
   font-size:8px;
   text-align: center;
+  background-color: #dddddd;
+  padding: 0;
+}
+
+.row{
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.not-first-row
+{
+   position: relative;
+   top: -20px;
 }
