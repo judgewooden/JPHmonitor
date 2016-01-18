@@ -181,7 +181,7 @@
 </head>
 <body style="background:white;">
 <?php include("menubar.html"); ?>
-<div class="container">
+<div class="container-fluid">
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Raspi Temp</div>
             <div class="panel-body dash-value" id="r1" data-source="RaspiTemp1"
