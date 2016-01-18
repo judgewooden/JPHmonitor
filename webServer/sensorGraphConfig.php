@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title id='Description'>Custom Graph</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id='Description'>Customize</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="jqwidgets/styles/jqx.base.css" rel="stylesheet">
     <link href="jqwidgets/styles/jqx.bootstrap.css" rel="stylesheet">
