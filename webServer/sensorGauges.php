@@ -114,9 +114,21 @@
             };
             initializeValues();
             updateValues();
+            var uinterval=10000;
+            var nupdateDate=new Date();
+            nupdateDate=new Date();
+            nupdateDate=new Date(nupdateDate.getTime() + uinterval)
+            var nowDate=new Date();
+            $("#updateX").html(uinterval/1000);
             var ttimer = setInterval(function () {
-                updateValues();
-            }, 5000);
+                nowDate=new Date();
+                if (nupdateDate.getSeconds() <= nowDate.getSeconds()) {
+                    nupdateDate=new Date();
+                    nupdateDate=new Date(nupdateDate.getTime() + uinterval)
+                    updateValues();
+                }
+                $("#updatet").html(time_ago(nupdateDate));
+            }, 1000);
             function time_ago(time) {
                 switch (typeof time) {
                     case 'number': break;
@@ -183,9 +195,9 @@
 <?php include("menubar.html"); ?>
 <div class="container-fluid">
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Next Update</div>
-            <div class="panel-body dash-value" id="update">(TBC)</div>
-            <div class="panel-footer dash-time" id="r1t"></div>
+            <div class="panel-heading dash-title">Next Auto Update</div>
+            <div class="panel-body dash-value" id="updateX">(TBC)</div>
+            <div class="panel-footer dash-time" id="updatet"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Raspi Temp</div>
