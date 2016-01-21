@@ -79,7 +79,7 @@
                     "Interpolation": "linear",
                     "Frequency": "15.00",
                     "Filter": "0.10",
-                    "Smoothing": "15.00"
+                    "Smoothing": "5.00"
                 }
             ]
         }
