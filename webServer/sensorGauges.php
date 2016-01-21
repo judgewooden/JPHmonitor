@@ -183,6 +183,11 @@
 <?php include("menubar.html"); ?>
 <div class="container-fluid">
         <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Next Update</div>
+            <div class="panel-body dash-value" id="update">(TBC)</div>
+            <div class="panel-footer dash-time" id="r1t"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Raspi Temp</div>
             <div class="panel-body dash-value" id="r1" data-source="RaspiTemp1"
                             data-column="Value" data-indicator="C", data-time-target="r1t"></div>

@@ -58,8 +58,8 @@
                     "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "10.00",
-                    "Filter": "-1.00",
-                    "Smoothing": "1.00"
+                    "Filter": "0.10",
+                    "Smoothing": "15.00"
                 },
                 {
                     "Name": "Out-Flow",
@@ -68,8 +68,8 @@
                     "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "10.00",
-                    "Filter": "-1.00",
-                    "Smoothing": "1.00"
+                    "Filter": "0.10",
+                    "Smoothing": "15.00"
                 },
                 {
                     "Name": "Computer",
@@ -78,8 +78,8 @@
                     "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "10.00",
-                    "Filter": "-1.00",
-                    "Smoothing": "1.00"
+                    "Filter": "0.10",
+                    "Smoothing": "15.00"
                 }
             ]
         }
