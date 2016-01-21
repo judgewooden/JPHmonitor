@@ -77,7 +77,7 @@
                     "Sensor": "OPT_FAN_1",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "10.00",
+                    "Frequency": "15.00",
                     "Filter": "0.10",
                     "Smoothing": "15.00"
                 }
