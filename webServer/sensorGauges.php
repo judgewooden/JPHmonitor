@@ -193,6 +193,7 @@
 </head>
 <body style="background:white;">
 <?php include("menubar.html"); ?>
+<div style="position:relative;width:100%;height:7px"></div>
 <div class="container-fluid">
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Next Auto Update</div>
