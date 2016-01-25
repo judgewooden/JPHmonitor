@@ -86,7 +86,7 @@ while True:
                 frow = True
                 GPUis=-1
                 sqlList.clear()
-                print("Line:", line)
+
                 for line in f:
                     columns=line.strip().split('\t')
                     if (frow):
@@ -111,7 +111,13 @@ while True:
                                 break
                     else:
 
-                        seconds=int(columns[0])
+                        try:
+                            seconds=int(columns[0])
+                        except:
+                            print("Corrupt file. skipping.....")
+                            time.sleep(1)
+                            break
+
                         hms=""
                         for scale in 86400, 3600, 60:
                             result, seconds = divmod(seconds, scale)
