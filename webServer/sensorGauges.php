@@ -107,11 +107,13 @@
                             $("#"+elem[ckey].ttarget).html(time_ago(d));
                             //console.log("answer:", val1, d);
                         } else {
-                            console.log("php/sql result");
+                            console.log("php/sql ERROR result");
                         }
                     });
                 }
             };
+            // re-write this rubish !
+
             initializeValues();
             updateValues();
             var uinterval=10000;
@@ -119,16 +121,31 @@
             nupdateDate=new Date();
             nupdateDate=new Date(nupdateDate.getTime() + uinterval)
             var nowDate=new Date();
+            var IamInProgress = false;
             $("#updateX").html(uinterval/1000);
             var ttimer = setInterval(function () {
+                if (IamInProgress)
+                    return;
+                IamInProgress=true;
                 nowDate=new Date();
-                if (nupdateDate.getSeconds() <= nowDate.getSeconds()) {
+                //milliSecondsLeft=nupdateDate.getMilliseconds()-nowDate.getMilliseconds();
+                secondsLeft=nupdateDate.getSeconds()-nowDate.getSeconds();
+                //milliSecondsLeft2=(secondsLeft*1000) + milliSecondsLeft;
+                //console.log(nupdateDate,nowDate,secondsLeft,milliSecondsLeft,milliSecondsLeft2);
+                if (secondsLeft<=0) {
                     nupdateDate=new Date();
                     nupdateDate=new Date(nupdateDate.getTime() + uinterval)
                     updateValues();
                 }
                 $("#updatet").html(time_ago(nupdateDate));
-            }, 1000);
+                $("#pbV").html(time_ago(nupdateDate));
+                $("#pbL").attr('aria-valuenow',secondsLeft);
+                percentage=secondsLeft/((uinterval-1000)/1000)*100;
+                //percentage=milliSecondsLeft2/100;
+                //console.log(percentage, "%");
+                $("#pbL").width(percentage+"%").attr('aria-valuenow',percentage);
+                IamInProgress=false;
+            }, 100);
             function time_ago(time) {
                 switch (typeof time) {
                     case 'number': break;
@@ -194,7 +211,14 @@
 <body style="background:white;">
 <?php include("menubar.html"); ?>
 <div style="position:relative;width:100%;height:7px"></div>
-<div class="container-fluid">
+        <div class="container-fluid" style="width:100%">
+         <div class="progress">
+          <div class="progress-bar" id="pbL" role="progressbar" aria-valuenow="10"
+          aria-valuemin="0" aria-valuemax="90" style="width:100%">
+            <span class="sr-only" id="pbV">Next Update</span>
+          </div>
+        </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Next Auto Update</div>
             <div class="panel-body dash-value" id="updateX">(TBC)</div>

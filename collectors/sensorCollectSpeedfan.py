@@ -82,81 +82,85 @@ while True:
         fullfile = speedfanPath + "\\" + file
         while True:
 
-            with open(fullfile) as f:
-                frow = True
-                GPUis=-1
-                sqlList.clear()
+            try:
+                with open(fullfile) as f:
+                    frow = True
+                    GPUis=-1
+                    sqlList.clear()
 
-                for line in f:
-                    columns=line.strip().split('\t')
-                    if (frow):
-                        frow=False
-                        if (columns[0] != "Seconds"):
-                            print("First column in data should be \'Seconds\' abort: ", fullfile)
-                            raise
-                        gpuCount=0
-                        for x in columns:
-                            # Fix column names for GPU (sequence) --- problem with speedfan
-                            if (x=="GPU"):
-                                x="GPU " + str(gpuCount)
-                                gpuCount = gpuCount + 1
+                    for line in f:
+                        columns=line.strip().split('\t')
+                        if (frow):
+                            frow=False
+                            if (columns[0] != "Seconds"):
+                                print("First column in data should be \'Seconds\' abort: ", fullfile)
+                                raise
+                            gpuCount=0
+                            for x in columns:
+                                # Fix column names for GPU (sequence) --- problem with speedfan
+                                if (x=="GPU"):
+                                    x="GPU " + str(gpuCount)
+                                    gpuCount = gpuCount + 1
+                                try:
+                                    sqlList.append(sqlMap[x])
+                                except:
+                                    sqlList.append("")
+                            #fix a problem where GPU numbers are set to -999 when card resets
+                            for x in range(0, len(columns)):
+                                if columns[x]=="GPU":
+                                    GPUis=x
+                                    break
+                        else:
+
                             try:
-                                sqlList.append(sqlMap[x])
+                                seconds=int(columns[0])
                             except:
-                                sqlList.append("")
-                        #fix a problem where GPU numbers are set to -999 when card resets
-                        for x in range(0, len(columns)):
-                            if columns[x]=="GPU":
-                                GPUis=x
+                                print("Corrupt file. skipping.....")
+                                time.sleep(1)
                                 break
-                    else:
 
-                        try:
-                            seconds=int(columns[0])
-                        except:
-                            print("Corrupt file. skipping.....")
-                            time.sleep(1)
-                            break
+                            hms=""
+                            for scale in 86400, 3600, 60:
+                                result, seconds = divmod(seconds, scale)
+                                if hms != '' or result > 0:
+                                    hms += '{0:02d}:'.format(result)
+                            hms += '{0:02d}'.format(seconds)
+                            if (len(hms)<3):
+                                hms = '0:0:' + hms
+                            if (len(hms)<6):
+                                hms = '0:' + hms
 
-                        hms=""
-                        for scale in 86400, 3600, 60:
-                            result, seconds = divmod(seconds, scale)
-                            if hms != '' or result > 0:
-                                hms += '{0:02d}:'.format(result)
-                        hms += '{0:02d}'.format(seconds)
-                        if (len(hms)<3):
-                            hms = '0:0:' + hms
-                        if (len(hms)<6):
-                            hms = '0:' + hms
-
-                        fileDate=datetime.datetime.combine(fileDate.date(), datetime.time(*map(int, hms.split(':'))))
-                        if(fileDate<=lastDate):
-                            continue
-
-                        #fix a problem where GPU temps are set to -999 when card resets
-                        if (GPUis>0):
-                            if (float(columns[GPUis])<-99.0):
-                                print("GPU at",GPUis, "has value:", columns[GPUis], "skipping")
+                            fileDate=datetime.datetime.combine(fileDate.date(), datetime.time(*map(int, hms.split(':'))))
+                            if(fileDate<=lastDate):
                                 continue
 
-                        query = "INSERT INTO SpeedfanMonitor1 ("
-                        query +=', '.join(str(x) for x in sqlList if x!='')
-                        query += ") VALUES (\'"
-                        query +=fileDate.strftime('%Y-%m-%d %H:%M:%S')
-                        query +="\'"
-                        for x in range(1,int(len(sqlList))):
-                            if (sqlList[x]!=''):
-                                query += ", "
-                                query += columns[x].replace(",", ".")
-                        query += ")"
-                        print (query)
-                        cursor = cnx.cursor()
-                        try:
-                            cursor.execute(query)
-                        except:
-                            raise
-                        cnx.commit()
-                        lastDate=fileDate
+                            #fix a problem where GPU temps are set to -999 when card resets
+                            if (GPUis>0):
+                                if (float(columns[GPUis])<-99.0):
+                                    print("GPU at",GPUis, "has value:", columns[GPUis], "skipping")
+                                    continue
+
+                            query = "INSERT INTO SpeedfanMonitor1 ("
+                            query +=', '.join(str(x) for x in sqlList if x!='')
+                            query += ") VALUES (\'"
+                            query +=fileDate.strftime('%Y-%m-%d %H:%M:%S')
+                            query +="\'"
+                            for x in range(1,int(len(sqlList))):
+                                if (sqlList[x]!=''):
+                                    query += ", "
+                                    query += columns[x].replace(",", ".")
+                            query += ")"
+                            print (query)
+                            cursor = cnx.cursor()
+                            try:
+                                cursor.execute(query)
+                            except:
+                                raise
+                            cnx.commit()
+                            lastDate=fileDate
+            except:
+                print("File has been renamed. Skipping......")
+                break
             if ( file != filesList[-1]):
                 break
             if (lastDate<(datetime.datetime.now() - datetime.timedelta(seconds=10))):
@@ -164,5 +168,5 @@ while True:
                 break
             time.sleep(5)
     # TODO write routine here to increase sleep if there is no update
-    print("Re-start after sleep(30)")
-    time.sleep(30)
+    print("Re-start after sleep(10)")
+    time.sleep(10)
