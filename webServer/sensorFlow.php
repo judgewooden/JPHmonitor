@@ -143,12 +143,12 @@
         "Name": "Hash 2hours",
         "Settings": {
             "AutoUpdate": 1,
-            "UpdateInterval": 10,
+            "UpdateInterval": 120,
             "SecondsToShow": 7200,
             "LeftLegend": "",
             "LeftMax": 0,
             "LeftMin": 0,
-            "RightLegend": "Hash (pm)",
+            "RightLegend": "MHash/ps",
             "RightMax": 0,
             "RightMin": 0,
             "Title": "Eutherum Mining - Last Two Hours",
@@ -171,7 +171,7 @@
                     "Interpolation": "linear",
                     "Frequency": "150.00",
                     "Filter": "0.00",
-                    "Smoothing": "30.00"
+                    "Smoothing": "0.00"
                 },
                 {
                     "Name": "Calc_Hashrate",
@@ -181,7 +181,7 @@
                     "Interpolation": "linear",
                     "Frequency": "150.00",
                     "Filter": "0.00",
-                    "Smoothing": "30.00"
+                    "Smoothing": "0.00"
                 }
             ]
         }
