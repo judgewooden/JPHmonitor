@@ -982,5 +982,51 @@
             }
         ]
     }
+},{
+    "Name": "Hash 2hours",
+    "Settings": {
+        "AutoUpdate": 1,
+        "UpdateInterval": 10,
+        "SecondsToShow": 7200,
+        "LeftLegend": "Liters (pm)",
+        "LeftMax": 0,
+        "LeftMin": 0,
+        "RightLegend": "Hash (pm)",
+        "RightMax": 0,
+        "RightMin": 0,
+        "Title": "Eutherum Mining - Last Two Hours",
+        "Interpolation": "linear",
+        "TickLine": 1,
+        "HideDateLabel": 0,
+        "HideLegend": 0,
+        "HideXAxis": 0,
+        "HideAxisLeft": 0,
+        "HideAxisRight": 0,
+        "HideButtons": 0,
+        "HideLeftControls": 0,
+        "HideRightControls": 0,
+        "graphSensors": [
+            {
+                "Name": "Hashrate",
+                "Unit": "EthereumMiningAqua",
+                "Sensor": "hashrate",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "150.00",
+                "Filter": "0.00",
+                "Smoothing": "30.00"
+            },
+            {
+                "Name": "Calc_Hastrate",
+                "Unit": "EthereumMiningAqua",
+                "Sensor": "hashrate_calculated",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "150.00",
+                "Filter": "0.00",
+                "Smoothing": "30.00"
+            }
+        ]
+    }
 }
 ]

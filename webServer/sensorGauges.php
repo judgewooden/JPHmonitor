@@ -44,6 +44,8 @@
                 loadValues("room1");
                 loadValues("room2");
                 loadValues("room3");
+                loadValues("hashAqua");
+                loadValues("hashAquaC");
                 console.log(elem);
             };
             var loadValues = function(id) {
@@ -113,7 +115,6 @@
                 }
             };
             // re-write this rubish !
-
             initializeValues();
             updateValues();
             var uinterval=10000;
@@ -128,10 +129,7 @@
                     return;
                 IamInProgress=true;
                 nowDate=new Date();
-                //milliSecondsLeft=nupdateDate.getMilliseconds()-nowDate.getMilliseconds();
                 secondsLeft=nupdateDate.getSeconds()-nowDate.getSeconds();
-                //milliSecondsLeft2=(secondsLeft*1000) + milliSecondsLeft;
-                //console.log(nupdateDate,nowDate,secondsLeft,milliSecondsLeft,milliSecondsLeft2);
                 if (secondsLeft<=0) {
                     nupdateDate=new Date();
                     nupdateDate=new Date(nupdateDate.getTime() + uinterval)
@@ -141,8 +139,6 @@
                 $("#pbV").html(time_ago(nupdateDate));
                 $("#pbL").attr('aria-valuenow',secondsLeft);
                 percentage=secondsLeft/((uinterval-1000)/1000)*100;
-                //percentage=milliSecondsLeft2/100;
-                //console.log(percentage, "%");
                 $("#pbL").width(percentage+"%").attr('aria-valuenow',percentage);
                 IamInProgress=false;
             }, 100);
@@ -379,6 +375,19 @@
             <div class="panel-body dash-value" id="aquaC" data-source="SpeedfanMonitor1"
                             data-column="Core4Temp" data-indicator="C", data-time-target="aquaCt"></div>
             <div class="panel-footer dash-time" id="aquaCt"></div>
+        </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Hash</div>
+            <div class="panel-body dash-value" id="hashAqua" data-source="EthereumMiningAqua"
+                            data-column="hashrate" data-indicator="C", data-time-target="hashAquat"></div>
+            <div class="panel-footer dash-time" id="hashAquat"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Hash Calc</div>
+            <div class="panel-body dash-value" id="hashAquaC" data-source="EthereumMiningAqua"
+                            data-column="hashrate_calculated" data-indicator="C", data-time-target="hashAquaCt"></div>
+            <div class="panel-footer dash-time" id="hashAquaCt"></div>
         </div>
     </div>
 </div>

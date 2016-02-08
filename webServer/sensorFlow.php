@@ -22,7 +22,8 @@
 <body>
 <?php include("menubar.html"); ?>
 <div id="graph1" class="aGraph" style="position:relative;width:100%;height:400px"></div>
-<div id="graph2" class="aGraph" style="position:relative;width:100%;height:200px"></div>
+<div id="graph2" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
+<div id="graph3" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
 
 <script>
     var source1 = {
@@ -102,13 +103,13 @@
             "graphAutoUpdate": 1,
             "graphUpdateInterval": 10,
             "graphSecondsToShow": 7200,
-            "graphLeftLegend": "Liters (pm)",
+            "graphLeftLegend": "Power (W)",
             "graphLeftMax": 0,
             "graphLeftMin": 0,
             "graphRightLegend": "Power (W)",
             "graphRightMax": 0,
             "graphRightMin": 0,
-            //"graphTitle": "Power - Last Two Hours",
+            "graphTitle": "Power - Last Two Hours",
             "hideXAxis": 0,
             "graphInterpolation": "linear",
             "graphTickLine": 0,
@@ -117,7 +118,7 @@
                     "Name": "Power1",
                     "Unit": "Power1",
                     "Sensor": "Power1",
-                    "Axis": "Right",
+                    "Axis": "Left",
                     "Interpolation": "linear",
                     "Frequency": "15.00",
                     "Filter": "0.20",
@@ -127,7 +128,7 @@
                     "Name": "Power2",
                     "Unit": "Power1",
                     "Sensor": "Power2",
-                    "Axis": "Right",
+                    "Axis": "Left",
                     "Interpolation": "linear",
                     "Frequency": "15.00",
                     "Filter": "0.20",
@@ -135,8 +136,57 @@
                 }
             ]
         }
-    }
+    };
     var l2 = new LineGraph({containerId: 'graph2', data: source2});
+
+    var source3 = {
+        "Name": "Hash 2hours",
+        "Settings": {
+            "AutoUpdate": 1,
+            "UpdateInterval": 10,
+            "SecondsToShow": 7200,
+            "LeftLegend": "",
+            "LeftMax": 0,
+            "LeftMin": 0,
+            "RightLegend": "Hash (pm)",
+            "RightMax": 0,
+            "RightMin": 0,
+            "Title": "Eutherum Mining - Last Two Hours",
+            "Interpolation": "linear",
+            "TickLine": 0,
+            "HideDateLabel": 0,
+            "HideLegend": 0,
+            "HideXAxis": 0,
+            "HideAxisLeft": 0,
+            "HideAxisRight": 0,
+            "HideButtons": 0,
+            "HideLeftControls": 0,
+            "HideRightControls": 0,
+            "graphSensors": [
+                {
+                    "Name": "Hashrate",
+                    "Unit": "EthereumMiningAqua",
+                    "Sensor": "hashrate",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "150.00",
+                    "Filter": "0.00",
+                    "Smoothing": "30.00"
+                },
+                {
+                    "Name": "Calc_Hashrate",
+                    "Unit": "EthereumMiningAqua",
+                    "Sensor": "hashrate_calculated",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "150.00",
+                    "Filter": "0.00",
+                    "Smoothing": "30.00"
+                }
+            ]
+        }
+    };
+    var l3 = new LineGraph({containerId: 'graph3', data: source3});
 
 </script>
 </body>
