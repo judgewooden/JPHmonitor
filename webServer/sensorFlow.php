@@ -145,7 +145,7 @@
             "AutoUpdate": 1,
             "UpdateInterval": 120,
             "SecondsToShow": 7200,
-            "LeftLegend": "",
+            "LeftLegend": "Liters (pm)",
             "LeftMax": 0,
             "LeftMin": 0,
             "RightLegend": "MHash/s",

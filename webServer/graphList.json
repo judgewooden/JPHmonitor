@@ -991,7 +991,7 @@
         "LeftLegend": "Liters (pm)",
         "LeftMax": 0,
         "LeftMin": 0,
-        "RightLegend": "Hash (pm)",
+        "RightLegend": "MHash/s",
         "RightMax": 0,
         "RightMin": 0,
         "Title": "Eutherum Mining - Last Two Hours",
