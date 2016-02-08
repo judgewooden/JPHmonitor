@@ -148,7 +148,7 @@
             "LeftLegend": "",
             "LeftMax": 0,
             "LeftMin": 0,
-            "RightLegend": "MHash/ps",
+            "RightLegend": "MHash/s",
             "RightMax": 0,
             "RightMin": 0,
             "Title": "Eutherum Mining - Last Two Hours",
@@ -169,9 +169,9 @@
                     "Sensor": "hashrate",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "150.00",
+                    "Frequency": "240.00",
                     "Filter": "0.00",
-                    "Smoothing": "0.00"
+                    "Smoothing": "1.00"
                 },
                 {
                     "Name": "Calc_Hashrate",
@@ -179,9 +179,9 @@
                     "Sensor": "hashrate_calculated",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "150.00",
+                    "Frequency": "240.00",
                     "Filter": "0.00",
-                    "Smoothing": "0.00"
+                    "Smoothing": "1.00"
                 }
             ]
         }

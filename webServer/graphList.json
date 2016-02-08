@@ -986,7 +986,7 @@
     "Name": "Hash 2hours",
     "Settings": {
         "AutoUpdate": 1,
-        "UpdateInterval": 10,
+        "UpdateInterval": 100,
         "SecondsToShow": 7200,
         "LeftLegend": "Liters (pm)",
         "LeftMax": 0,
@@ -1012,9 +1012,9 @@
                 "Sensor": "hashrate",
                 "Axis": "Right",
                 "Interpolation": "linear",
-                "Frequency": "150.00",
+                "Frequency":"240.00",
                 "Filter": "0.00",
-                "Smoothing": "30.00"
+                "Smoothing": "1.00"
             },
             {
                 "Name": "Calc_Hastrate",
@@ -1022,9 +1022,9 @@
                 "Sensor": "hashrate_calculated",
                 "Axis": "Right",
                 "Interpolation": "linear",
-                "Frequency": "150.00",
+                "Frequency": "240.00",
                 "Filter": "0.00",
-                "Smoothing": "30.00"
+                "Smoothing": "1.00"
             }
         ]
     }
