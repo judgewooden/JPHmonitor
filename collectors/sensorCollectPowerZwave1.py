@@ -26,12 +26,12 @@ print("Working Directory:", path)
 #Define some manager options
 options = ZWaveOption(device, config_path=os.path.expanduser("~/zwave/config"), \
   user_path=".", cmd_line="")
-#options.set_log_file("OZW_Log.log")
+options.set_log_file("/dev/null")
 #options.set_append_log_file(False)
 options.set_console_output(False)
 #options.set_save_log_level(log)
 #options.set_save_log_level('Info')
-#options.set_logging(False)
+options.set_logging(False)
 options.lock()
 
 
