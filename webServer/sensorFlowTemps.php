@@ -147,7 +147,7 @@
             "RightLegend": "Degrees (C)",
             "RightMax": 0,
             "RightMin": 0,
-            "Title": "Other Temps - Last 10 minutes",
+            "Title": "Second Loop - Last 10 minutes",
             "Interpolation": "linear",
             "TickLine": 1,
             "HideDateLabel": 0,
@@ -161,7 +161,7 @@
             "graphSensors": [
                 {
                     "Name": "Flow2",
-                    "Unit": "ArduinoMonitor1",
+                    "Unit": "ArduinoMonitor2",
                     "Sensor": "Litersperminute",
                     "Axis": "Left",
                     "Interpolation": "linear",
