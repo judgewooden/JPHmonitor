@@ -44,7 +44,27 @@
         "graphTickLine":1,
         "graphSensors":[
             {
-                "Name":"Flow",
+                "Name":"Flow2",
+                "Unit":"ArduinoMonitor2",
+                "Sensor":"Litersperminute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.20",
+                "Smoothing":"30.00"
+            },
+            {
+                "Name":"Flow2-Raw",
+                "Unit":"ArduinoMonitor2",
+                "Sensor":"LitersPerMinute",
+                "Axis":"Right",
+                "Interpolation":"linear",
+                "Frequency":"15.00",
+                "Filter":"0.00",
+                "Smoothing":"1.00"
+            },
+            {
+                "Name":"Flow1",
                 "Unit":"ArduinoMonitor1",
                 "Sensor":"Litersperminute",
                 "Axis":"Right",
@@ -54,7 +74,7 @@
                 "Smoothing":"30.00"
             },
             {
-                "Name":"Flow-Raw",
+                "Name":"Flow1-Raw",
                 "Unit":"ArduinoMonitor1",
                 "Sensor":"LitersPerMinute",
                 "Axis":"Right",
@@ -95,7 +115,17 @@
             "graphTickLine":0,
             "graphSensors":[
                 {
-                    "Name":"Flow",
+                    "Name":"Flow2",
+                    "Unit":"ArduinoMonitor2",
+                    "Sensor":"LitersPerMinute",
+                    "Axis":"Left",
+                    "Interpolation":"linear",
+                    "Frequency":"15.00",
+                    "Filter":"0.50",
+                    "Smoothing":"15.00"
+                },
+                {
+                    "Name":"Flow1",
                     "Unit":"ArduinoMonitor1",
                     "Sensor":"LitersPerMinute",
                     "Axis":"Left",
@@ -126,8 +156,18 @@
             "graphTickLine":0,
             "graphSensors":[
                 {
-                    "Name":"Flow-Raw",
+                    "Name":"Flow1-Raw",
                     "Unit":"ArduinoMonitor1",
+                    "Sensor":"LitersPerMinute",
+                    "Axis":"Right",
+                    "Interpolation":"linear",
+                    "Frequency":"15.00",
+                    "Filter":"-1.00",
+                    "Smoothing":"1.00"
+                },
+                {
+                    "Name":"Flow2-Raw",
+                    "Unit":"ArduinoMonitor2",
                     "Sensor":"LitersPerMinute",
                     "Axis":"Right",
                     "Interpolation":"linear",

@@ -141,7 +141,7 @@
             "AutoUpdate": 1,
             "UpdateInterval": 10,
             "SecondsToShow": 600,
-            "LeftLegend": "Degrees (C)",
+            "LeftLegend": "Liters (pm)",
             "LeftMax": 0,
             "LeftMin": 0,
             "RightLegend": "Degrees (C)",
@@ -160,14 +160,14 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "Raspi-Temp",
-                    "Unit": "RaspiTemp1",
-                    "Sensor": "Value",
-                    "Axis": "Right",
+                    "Name": "Flow2",
+                    "Unit": "ArduinoMonitor1",
+                    "Sensor": "Litersperminute",
+                    "Axis": "Left",
                     "Interpolation": "linear",
                     "Frequency": "15.00",
-                    "Filter": "0.00",
-                    "Smoothing": "1.00"
+                    "Filter": "0.20",
+                    "Smoothing": "30.00"
                 },
                 {
                     "Name": "Out-Flow2",
