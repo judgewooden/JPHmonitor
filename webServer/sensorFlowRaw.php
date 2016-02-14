@@ -148,7 +148,7 @@
             "graphLeftLegend":"Liters (pm)",
             "graphLeftMax":0,
             "graphLeftMin":0,
-            "graphRightLegend":"Liters (pm)",
+            "graphRightLegend":"Flow/sec",
             "graphRightMax":0,
             "graphRightMin":0,
             "graphTitle":"Arduino Flow - Last 10 minutes",
@@ -158,7 +158,7 @@
                 {
                     "Name":"Flow1-Raw",
                     "Unit":"ArduinoMonitor1",
-                    "Sensor":"LitersPerMinute",
+                    "Sensor":"FlowPerSecond",
                     "Axis":"Right",
                     "Interpolation":"linear",
                     "Frequency":"15.00",
@@ -168,7 +168,7 @@
                 {
                     "Name":"Flow2-Raw",
                     "Unit":"ArduinoMonitor2",
-                    "Sensor":"LitersPerMinute",
+                    "Sensor":"FlowPerSecond",
                     "Axis":"Right",
                     "Interpolation":"linear",
                     "Frequency":"15.00",
