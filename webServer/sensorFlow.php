@@ -151,7 +151,7 @@
             "RightLegend": "MHash/s",
             "RightMax": 0,
             "RightMin": 0,
-            "Title": "Eutherum Mining - Last Two Hours",
+            "Title": "Ethereum Mining - Last Two Hours",
             "Interpolation": "linear",
             "TickLine": 0,
             "HideDateLabel": 0,
@@ -169,7 +169,7 @@
                     "Sensor": "hashrate",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "240.00",
+                    "Frequency": "340.00",
                     "Filter": "0.00",
                     "Smoothing": "1.00"
                 },
@@ -179,7 +179,7 @@
                     "Sensor": "hashrate_calculated",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "240.00",
+                    "Frequency": "340.00",
                     "Filter": "0.00",
                     "Smoothing": "1.00"
                 }
