@@ -21,6 +21,8 @@ GRANT SELECT,INSERT ON Sensors.KastTemperature1 To 'kastpi'@'192.168.0.100' IDEN
 FLUSH PRIVILEGES;
 GRANT SELECT,INSERT ON Sensors.AirTemperature1 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
+GRANT SELECT,INSERT ON Sensors.RaspiTemp2 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+FLUSH PRIVILEGES;
 
 /* Cleanup historical rubish */
 DELETE from mysql.user WHERE user="Sensors_admin";

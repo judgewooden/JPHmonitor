@@ -17,6 +17,7 @@
         $(document).ready(function () {
             var elem= new Array();
             var initializeValues = function() {
+                // consider using  document.getElementsByTagName
                 loadValues("aqua1");
                 loadValues("aqua2");
                 loadValues("aqua3");
@@ -114,7 +115,7 @@
                     });
                 }
             };
-            // re-write this rubish !
+            // re-write this rubish ! -- think about the way to make 1 constant for loop value
             initializeValues();
             updateValues();
             var uinterval=10000;
@@ -136,13 +137,13 @@
                     updateValues();
                 }
                 $("#updatet").html(time_ago(nupdateDate));
-                $("#pbV").html(time_ago(nupdateDate));
-                $("#pbL").attr('aria-valuenow',secondsLeft);
+                //$("#pbV").html(time_ago(nupdateDate));
+               //$("#pbL").attr('aria-valuenow',secondsLeft);
                 percentage=secondsLeft/((uinterval-1000)/1000)*100;
                 $("#pbL").width(percentage+"%").attr('aria-valuenow',percentage);
                 IamInProgress=false;
             }, 100);
-            function time_ago(time) {
+            function time_ago(time) { // add a parameter to add red items that are old than X time
                 switch (typeof time) {
                     case 'number': break;
                     case 'string': time = +new Date(time); break;
