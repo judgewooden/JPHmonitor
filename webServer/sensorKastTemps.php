@@ -83,7 +83,7 @@
             {
                 "Name": "Water-from-AQUA",
                 "Unit": "ManifoldTemp1",
-                "Sensor": "OutFlow2",
+                "Sensor": "OutFlow1",
                 "Axis": "Right",
                 "Interpolation": "linear",
                 "Frequency": "15.00",
