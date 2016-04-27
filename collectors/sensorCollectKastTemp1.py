@@ -38,8 +38,8 @@ add_temp = ("INSERT INTO KastTemperature1 "
 
 while True:
     tnow = datetime.now()
-    # 2302 is for the type of sensor, 25 is the GPIO number for the pin connect
-    humidity, temperature = Adafruit_DHT.read_retry(2302, 26)
+    # 25 is the GPIO number for the pin connect
+    humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 26)
     if humidity is None and temperature is  None:
         print ("sensors return None (retry)")
     else:
