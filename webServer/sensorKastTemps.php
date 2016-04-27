@@ -51,7 +51,7 @@
         "HideRightControls": 0,
         "graphSensors": [
             {
-                "Name": "Inside",
+                "Name": "Air-Inside",
                 "Unit": "KastTemperature1",
                 "Sensor": "Temperature",
                 "Axis": "Right",
@@ -61,7 +61,7 @@
                 "Smoothing": "1.00"
             },
             {
-                "Name": "Outside",
+                "Name": "Air-Outside",
                 "Unit": "AirTemperature1",
                 "Sensor": "Temperature",
                 "Axis": "Right",
