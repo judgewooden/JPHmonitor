@@ -1085,7 +1085,7 @@
             {
                 "Name": "Water-from-AQUA",
                 "Unit": "ManifoldTemp1",
-                "Sensor": "OutFlow2",
+                "Sensor": "OutFlow1",
                 "Axis": "Right",
                 "Interpolation": "linear",
                 "Frequency": "15.00",
@@ -1152,7 +1152,7 @@
                 "Name": "Inside-Temp",
                 "Unit": "KastTemperature1",
                 "Sensor": "Temperature",
-                "Axis": "Left",
+                "Axis": "Right",
                 "Interpolation": "linear",
                 "Frequency": "240.00",
                 "Filter": "0.50",
