@@ -1170,5 +1170,71 @@
             }
         ]
     }
+},{
+    "Name": "CoolRoom 10min",
+    "Settings": {
+        "AutoUpdate": 1,
+        "UpdateInterval": 10,
+        "SecondsToShow": 600,
+        "LeftLegend": "Humidity (%)",
+        "LeftMax": 0,
+        "LeftMin": 0,
+        "RightLegend": "Degrees (C)",
+        "RightMax": 0,
+        "RightMin": 0,
+        "Title": "Cool Room Temps - Last 10 minutes",
+        "Interpolation": "linear",
+        "TickLine": 1,
+        "HideDateLabel": 0,
+        "HideLegend": 0,
+        "HideXAxis": 0,
+        "HideAxisLeft": 0,
+        "HideAxisRight": 0,
+        "HideButtons": 0,
+        "HideLeftControls": 0,
+        "HideRightControls": 0,
+        "graphSensors": [
+            {
+                "Name": "Outside-Temp",
+                "Unit": "AirTemperature1",
+                "Sensor": "Temperature",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Ouside-Raspi",
+                "Unit": "RaspiTemp2",
+                "Sensor": "Value",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Inside-Temp",
+                "Unit": "KastTemperature1",
+                "Sensor": "Temperature",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "House-Raspi",
+                "Unit": "RaspiTemp1",
+                "Sensor": "Value",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            }
+        ]
+    }
 }
 ]
