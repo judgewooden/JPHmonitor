@@ -1028,5 +1028,147 @@
             }
         ]
     }
+},{
+    "Name": "CoolRoom 2hours",
+    "Settings": {
+        "AutoUpdate": 1,
+        "UpdateInterval": 10,
+        "SecondsToShow": 7200,
+        "LeftLegend": "Degrees ",
+        "LeftMax": 0,
+        "LeftMin": 0,
+        "RightLegend": "Degrees (C)",
+        "RightMax": 0,
+        "RightMin": 0,
+        "Title": "Cool room - Last two hours ",
+        "Interpolation": "linear",
+        "TickLine": 1,
+        "HideDateLabel": 0,
+        "HideLegend": 0,
+        "HideXAxis": 0,
+        "HideAxisLeft": 0,
+        "HideAxisRight": 0,
+        "HideButtons": 0,
+        "HideLeftControls": 0,
+        "HideRightControls": 0,
+        "graphSensors": [
+            {
+                "Name": "Binnen",
+                "Unit": "KastTemperature1",
+                "Sensor": "Temperature",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Buiten",
+                "Unit": "AirTemperature1",
+                "Sensor": "Temperature",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Water-to-AQUA",
+                "Unit": "ManifoldTemp1",
+                "Sensor": "InFlow",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Water-from-AQUA",
+                "Unit": "ManifoldTemp1",
+                "Sensor": "OutFlow2",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            },
+            {
+                "Name": "Water-in-AQUA",
+                "Unit": "SpeedfanMonitor1",
+                "Sensor": "OPT_FAN_1",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "15.00",
+                "Filter": "-1.00",
+                "Smoothing": "1.00"
+            }
+        ]
+    }
+},{
+    "Name": "CoolRoom 2days",
+    "Settings": {
+        "AutoUpdate": 0,
+        "UpdateInterval": 10,
+        "SecondsToShow": 172800,
+        "LeftLegend": "Humidity (%)",
+        "LeftMax": 0,
+        "LeftMin": 0,
+        "RightLegend": "Degrees (C)",
+        "RightMax": 0,
+        "RightMin": 0,
+        "Title": "Cool Room - Last Two Days",
+        "Interpolation": "linear",
+        "TickLine": 1,
+        "HideDateLabel": 0,
+        "HideLegend": 0,
+        "HideXAxis": 0,
+        "HideAxisLeft": 0,
+        "HideAxisRight": 0,
+        "HideButtons": 0,
+        "HideLeftControls": 0,
+        "HideRightControls": 0,
+        "graphSensors": [
+            {
+                "Name": "Outside-Temp",
+                "Unit": "AirTemperature1",
+                "Sensor": "Temperature",
+                "Axis": "Right",
+                "Interpolation": "linear",
+                "Frequency": "240.00",
+                "Filter": "0.50",
+                "Smoothing": "15.00"
+            },
+            {
+                "Name": "Outside-Humidity",
+                "Unit": "AirTemperature1",
+                "Sensor": "Humidity",
+                "Axis": "Left",
+                "Interpolation": "linear",
+                "Frequency": "240.00",
+                "Filter": "1.00",
+                "Smoothing": "15.00"
+            },
+            {
+                "Name": "Inside-Temp",
+                "Unit": "KastTemperature1",
+                "Sensor": "Temperature",
+                "Axis": "Left",
+                "Interpolation": "linear",
+                "Frequency": "240.00",
+                "Filter": "0.50",
+                "Smoothing": "15.00"
+            },
+            {
+                "Name": "Inside-Humidity",
+                "Unit": "KastTemperature1",
+                "Sensor": "Humidity",
+                "Axis": "Left",
+                "Interpolation": "linear",
+                "Frequency": "240.00",
+                "Filter": "1.00",
+                "Smoothing": "15.00"
+            }
+        ]
+    }
 }
 ]
