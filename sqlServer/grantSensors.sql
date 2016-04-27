@@ -7,11 +7,19 @@ DELETE from mysql.user WHERE user="webuser";
 FLUSH PRIVILEGES;
 GRANT SELECT ON Sensors.* To 'webuser'@'localhost' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
+
 DELETE from mysql.user WHERE user="SpeedfanMonitor1";
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.* To 'SpeedfanMonitor1'@'192.168.8.10' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.SpeedfanMonitor1 To 'SpeedfanMonitor1'@'192.168.8.10' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.* To 'SpeedfanMonitor1'@'192.168.0.101' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.SpeedfanMonitor1 To 'SpeedfanMonitor1'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+FLUSH PRIVILEGES;
+
+DELETE from mysql.user WHERE user="kastpi";
+FLUSH PRIVILEGES;
+GRANT SELECT,INSERT ON Sensors.KastTemperature1 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+FLUSH PRIVILEGES;
+GRANT SELECT,INSERT ON Sensors.AirTemperature1 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
 
 /* Cleanup historical rubish */
