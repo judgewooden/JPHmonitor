@@ -175,20 +175,20 @@
     var l2 = new LineGraph({containerId: 'graph2', data: source2});
 
     var source3 = {
-        "Name": "Hash 2hours",
+        "Name": "CoolRoom 10min",
         "Settings": {
             "AutoUpdate": 1,
-            "UpdateInterval": 120,
-            "SecondsToShow": 7200,
-            "LeftLegend": "Liters (pm)",
+            "UpdateInterval": 10,
+            "SecondsToShow": 600,
+            "LeftLegend": "Humidity (%)",
             "LeftMax": 0,
             "LeftMin": 0,
-            "RightLegend": "MHash/s",
+            "RightLegend": "Degrees (C)",
             "RightMax": 0,
             "RightMin": 0,
-            "Title": "Ethereum Mining - Last Two Hours",
+            "Title": "Cool Room Temps - Last 10 minutes",
             "Interpolation": "linear",
-            "TickLine": 0,
+            "TickLine": 1,
             "HideDateLabel": 0,
             "HideLegend": 0,
             "HideXAxis": 0,
@@ -199,23 +199,43 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "Hashrate",
-                    "Unit": "EthereumMiningAqua",
-                    "Sensor": "hashrate",
+                    "Name": "Outside-Temp",
+                    "Unit": "AirTemperature1",
+                    "Sensor": "Temperature",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "340.00",
-                    "Filter": "0.00",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
                     "Smoothing": "1.00"
                 },
                 {
-                    "Name": "Calc_Hashrate",
-                    "Unit": "EthereumMiningAqua",
-                    "Sensor": "hashrate_calculated",
+                    "Name": "Ouside-Raspi",
+                    "Unit": "RaspiTemp2",
+                    "Sensor": "Value",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "340.00",
-                    "Filter": "0.00",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
+                    "Smoothing": "1.00"
+                },
+                {
+                    "Name": "Inside-Temp",
+                    "Unit": "KastTemperature1",
+                    "Sensor": "Temperature",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
+                    "Smoothing": "1.00"
+                },
+                {
+                    "Name": "House-Raspi",
+                    "Unit": "RaspiTemp1",
+                    "Sensor": "Value",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
                     "Smoothing": "1.00"
                 }
             ]
