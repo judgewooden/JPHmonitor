@@ -8,8 +8,15 @@ from datetime import datetime
 import mysql.connector
 #
 # The files need to be installed in directory from
-from ABE_ADCPi import ADCPi
-from ABE_helpers import ABEHelpers
+
+sys.path.append("/home/jphmonitor")
+sys.path.append('/home/jphmonitor/ABElectronics_Python_Libraries/ADCPi')
+try:
+    from ABE_ADCPi import ADCPi
+    from ABE_helpers import ABEHelpers
+except ImportError:
+    print ("in sensors, importing ABE_ADCPi failed")
+    raise
 
 # Get config info
 try:

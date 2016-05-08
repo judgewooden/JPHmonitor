@@ -29,8 +29,8 @@ except:
 
 while True:
     try:
-        cnx = mysql.connector.connect(user='root', password=sqlpassword,
-                              host='localhost',
+        cnx = mysql.connector.connect(user='kastpi', password=sqlpassword,
+                              host='sqlserver',
                               database='Sensors')
     except:
         print("RadiatorTemp1: Cannot Connect to SQL (retry)")

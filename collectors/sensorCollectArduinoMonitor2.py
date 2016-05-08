@@ -14,7 +14,7 @@ try:
     sqlpassword=f.read().strip()
     f.close
 except:
-    print ("ArduinoMonitor1: Unexpected error opening .sqlpassword")
+    print ("ArduinoMonitor2: Unexpected error opening .sqlpassword")
     raise
 
 while True:
