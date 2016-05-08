@@ -4,7 +4,7 @@ import time
 import datetime
 import math
 from datetime import datetime
-#import sys
+import sys
 import mysql.connector
 #
 # The files need to be installed in directory from
