@@ -37,10 +37,10 @@
                 loadValues("tem2");
                 loadValues("tem3");
                 loadValues("ard1p");
-                loadValues("ard1lps");
+                loadValues("ard1lpm");
                 loadValues("ard1fps");
                 loadValues("ard2p");
-                loadValues("ard2lps");
+                loadValues("ard2lpm");
                 loadValues("ard2fps");
                 loadValues("p1");
                 loadValues("p2");
