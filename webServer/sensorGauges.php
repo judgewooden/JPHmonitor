@@ -443,11 +443,14 @@
                             data-column="hashrate_calculated" data-indicator="C" data-time-target="hashAquaCt"></div>
             <div class="panel-footer dash-time" id="hashAquaCt"></div>
         </div>
-
-
-
     </div>
 </div>
-
 </body>
 </html>
+
+<!---
+setx GPU_MAX_ALLOC_PERCENT 100
+setx GPU_USE_SYNC_OBJECTS 1
+ethminer -F http://eth-eu.dwarfpool.com:80/0x03145c9f20af9272cc87ee62c27b608c3b004f6a/AQUA/douwe.jong@gmail.com -G -t 4
+pause
+ -->
