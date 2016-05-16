@@ -16,47 +16,18 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var elem= new Array();
+
+            //
+            // Loop throught the all elements with class name <dash-value> and
+            // load the unique <id> into an array for processing.
+            //
             var initializeValues = function() {
-                // consider using  document.getElementsByTagName
-                //'DO THIS !!!!'
-                loadValues("aqua1");
-                loadValues("aqua2");
-                loadValues("aqua3");
-                loadValues("aqua4");
-                loadValues("aqua5");
-                loadValues("aqua6");
-                loadValues("aqua7");
-                loadValues("aqua8");
-                loadValues("aqua9");
-                loadValues("aqua0");
-                loadValues("aquaA");
-                loadValues("aquaB");
-                loadValues("aquaC");
-                loadValues("tem1");
-                loadValues("tem2");
-                loadValues("tem3");
-                loadValues("ard1p");
-                loadValues("ard1lpm");
-                loadValues("ard1fps");
-                loadValues("ard2p");
-                loadValues("ard2lpm");
-                loadValues("ard2fps");
-                loadValues("p1");
-                loadValues("p2");
-                loadValues("p3");
-                loadValues("r1");
-                loadValues("r2");
-                loadValues("kastt");
-                loadValues("kasth");
-                loadValues("airt");
-                loadValues("airh");
-                loadValues("radti");
-                loadValues("radto");
-                loadValues("room1");
-                loadValues("room2");
-                loadValues("room3");
-                loadValues("hashAqua");
-                loadValues("hashAquaC");
+                var dash = document.getElementsByClassName("dash-value");
+                var i;
+                for (var i = 1; i < dash.length; i++) {
+                    loadValues(dash[i].id);
+                    console.log(dash[i].id);
+                }
                 console.log(elem);
             };
             var loadValues = function(id) {
@@ -82,9 +53,9 @@
                         ttarget: ttarget
                     };
                     elem.push(temp);
-                    //console.log(temp);
                 }
             };
+
             var updateValues = function() {
                 for (var key in elem) {
                     surl="sensorSQLdash.php?id="+key+"&source="+elem[key].table+"&column="+elem[key].column;
@@ -112,7 +83,7 @@
                                     else
                                         val1="Off"
                                 } else
-            val1=afronden(parseFloat(response[0].value).toFixed(1)) + "" + elem[ckey].indicator;
+                                    val1=afronden(parseFloat(response[0].value).toFixed(1)) + "" + elem[ckey].indicator;
                             }
                             $("#"+elem[ckey].id).html(val1);
                             var t = response[0].timestamp.split(/[- :]/);
@@ -234,14 +205,14 @@
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Raspi Temp</div>
+            <div class="panel-heading dash-title">pihost Temp</div>
             <div class="panel-body dash-value" id="r1" data-source="RaspiTemp1"
                             data-column="Value" data-indicator="C" data-time-target="r1t"></div>
             <div class="panel-footer dash-time" id="r1t"></div>
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Raspi Temp</div>
+            <div class="panel-heading dash-title">kastpi Temp</div>
             <div class="panel-body dash-value" id="r2" data-source="RaspiTemp2"
                             data-column="Value" data-indicator="C" data-time-target="r2t"></div>
             <div class="panel-footer dash-time" id="r2t"></div>
@@ -422,39 +393,39 @@
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Closet Temp</div>
+            <div class="panel-warning dash-title">Closet Temp</div>
             <div class="panel-body dash-value" id="kastt" data-source="KastTemperature1"
                             data-column="Temperature" data-indicator="C" data-time-target="kasttt"></div>
             <div class="panel-footer dash-time" id="kasttt"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Closet Humidity</div>
+            <div class="panel-warning dash-title">Closet Humidity</div>
             <div class="panel-body dash-value" id="kasth" data-source="KastTemperature1"
                             data-column="Humidity" data-indicator="%" data-time-target="kastht"></div>
             <div class="panel-footer dash-time" id="kastht"></div>
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Air Temp</div>
+            <div class="panel-warning dash-title">Air Temp</div>
             <div class="panel-body dash-value" id="airt" data-source="AirTemperature1"
                             data-column="Temperature" data-indicator="C" data-time-target="airtt"></div>
             <div class="panel-footer dash-time" id="airtt"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Air Humidity</div>
+            <div class="panel-warning dash-title">Air Humidity</div>
             <div class="panel-body dash-value" id="airh" data-source="AirTemperature1"
                             data-column="Humidity" data-indicator="%" data-time-target="airht"></div>
             <div class="panel-footer dash-time" id="airht"></div>
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Rad in-Temp</div>
+            <div class="panel-warning dash-title">Rad in-Temp</div>
             <div class="panel-body dash-value" id="radti" data-source="RadiatorTemp1"
                             data-column="Temperature" data-indicator="C" data-time-target="radtit"></div>
             <div class="panel-footer dash-time" id="radtit"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Rad out-Temp</div>
+            <div class="panel-warning dash-title">Rad out-Temp</div>
             <div class="panel-body dash-value" id="radto" data-source="RadiatorTemp1"
                             data-column="Humidity" data-indicator="C" data-time-target="radtot"></div>
             <div class="panel-footer dash-time" id="radtot"></div>

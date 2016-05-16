@@ -123,6 +123,14 @@ div.aGraph {
   background-color: #dddddd;
 }
 
+.panel > .panel-heading {
+   background-color: #337ab7;
+}
+
+.panel > .panel-warning {
+   background-color: #b74f33;
+}
+
 .dash-title {
   font-size:10px;
   font-weight: bold;
