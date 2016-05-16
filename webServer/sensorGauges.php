@@ -18,6 +18,7 @@
             var elem= new Array();
             var initializeValues = function() {
                 // consider using  document.getElementsByTagName
+                //'DO THIS !!!!'
                 loadValues("aqua1");
                 loadValues("aqua2");
                 loadValues("aqua3");
@@ -35,13 +36,23 @@
                 loadValues("tem1");
                 loadValues("tem2");
                 loadValues("tem3");
-                loadValues("ard1");
-                loadValues("ard2");
-                loadValues("ard3");
+                loadValues("ard1p");
+                loadValues("ard1lps");
+                loadValues("ard1fps");
+                loadValues("ard2p");
+                loadValues("ard2lps");
+                loadValues("ard2fps");
                 loadValues("p1");
                 loadValues("p2");
                 loadValues("p3");
                 loadValues("r1");
+                loadValues("r2");
+                loadValues("kastt");
+                loadValues("kasth");
+                loadValues("airt");
+                loadValues("airh");
+                loadValues("radti");
+                loadValues("radto");
                 loadValues("room1");
                 loadValues("room2");
                 loadValues("room3");
@@ -107,6 +118,7 @@
                             $("#"+elem[ckey].id).html(val1);
                             var t = response[0].timestamp.split(/[- :]/);
                             var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+                            // figure out how to change colour on age?
                             $("#"+elem[ckey].ttarget).html(time_ago(d));
                             //console.log("answer:", val1, d);
                         } else {
@@ -221,12 +233,21 @@
             <div class="panel-body dash-value" id="updateX">(TBC)</div>
             <div class="panel-footer dash-time" id="updatet"></div>
         </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Raspi Temp</div>
             <div class="panel-body dash-value" id="r1" data-source="RaspiTemp1"
                             data-column="Value" data-indicator="C", data-time-target="r1t"></div>
             <div class="panel-footer dash-time" id="r1t"></div>
         </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Raspi Temp</div>
+            <div class="panel-body dash-value" id="r2" data-source="RaspiTemp2"
+                            data-column="Value" data-indicator="C", data-time-target="r2t"></div>
+            <div class="panel-footer dash-time" id="r2t"></div>
+        </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Current Power</div>
             <div class="panel-body dash-value" id="p1" data-source="Power1"
@@ -245,6 +266,7 @@
                             data-column="Energy"data-indicator="kwh", data-time-target="p3t"></div>
             <div class="panel-footer dash-time" id="p3t"></div>
         </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Room Temp</div>
             <div class="panel-body dash-value" id="room1" data-source="Nest"
@@ -263,24 +285,45 @@
                                 data-column="Away" data-indicator="home/away", data-time-target="room3t"></div>
             <div class="panel-footer dash-time" id="room3t"></div>
         </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Loop 1 Power</div>
-            <div class="panel-body dash-value" id="ard1" data-source="ArduinoMonitor1"
-                            data-column="Power" data-indicator="power", data-time-target="ard1t"></div>
-            <div class="panel-footer dash-time" id="ard1t"></div>
+            <div class="panel-body dash-value" id="ard1p" data-source="ArduinoMonitor1"
+                            data-column="Power" data-indicator="power", data-time-target="ard1tp"></div>
+            <div class="panel-footer dash-time" id="ard1tp"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Loop 1 Flow</div>
-            <div class="panel-body dash-value" id="ard2" data-source="ArduinoMonitor1"
-                            data-column="LitersPerMinute" data-indicator="lpm", data-time-target="ard2t"></div>
-            <div class="panel-footer dash-time" id="ard2t"></div>
+            <div class="panel-body dash-value" id="ard1lpm" data-source="ArduinoMonitor1"
+                            data-column="LitersPerMinute" data-indicator="lpm", data-time-target="ard1tlpm"></div>
+            <div class="panel-footer dash-time" id="ard1tlpm"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Loop 1 refs</div>
-            <div class="panel-body dash-value" id="ard3" data-source="ArduinoMonitor1"
-                            data-column="FlowPerSecond" data-indicator="rps", data-time-target="ard3t"></div>
-            <div class="panel-footer dash-time" id="ard3t"></div>
+            <div class="panel-body dash-value" id="ard1fps" data-source="ArduinoMonitor1"
+                            data-column="FlowPerSecond" data-indicator="rps", data-time-target="ard1tfps"></div>
+            <div class="panel-footer dash-time" id="ard1tfps"></div>
         </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Loop 2 Power</div>
+            <div class="panel-body dash-value" id="ard2p" data-source="ArduinoMonitor2"
+                            data-column="Power" data-indicator="power", data-time-target="ard2tp"></div>
+            <div class="panel-footer dash-time" id="ard2tp"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Loop 2 Flow</div>
+            <div class="panel-body dash-value" id="ard2lpm" data-source="ArduinoMonitor2"
+                            data-column="LitersPerMinute" data-indicator="lpm", data-time-target="ard2tlpm"></div>
+            <div class="panel-footer dash-time" id="ard2tlpm"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Loop 2 refs</div>
+            <div class="panel-body dash-value" id="ard2fps" data-source="ArduinoMonitor2"
+                            data-column="FlowPerSecond" data-indicator="rps", data-time-target="ard2tfps"></div>
+            <div class="panel-footer dash-time" id="ard2tfps"></div>
+        </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Inflow Temp</div>
             <div class="panel-body dash-value" id="tem1" data-source="ManifoldTemp1"
@@ -299,6 +342,7 @@
                             data-column="OutFlow2" data-indicator="C", data-time-target="tem3t"></div>
             <div class="panel-footer dash-time" id="tem3t"></div>
         </div>
+
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">CPU Temp</div>
             <div class="panel-body dash-value" id="aqua1" data-source="SpeedfanMonitor1"
@@ -379,6 +423,45 @@
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Closet Temp</div>
+            <div class="panel-body dash-value" id="kastt" data-source="KastTemperature1"
+                            data-column="Temperature" data-indicator="C", data-time-target="kasttt"></div>
+            <div class="panel-footer dash-time" id="kasttt"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Closet Humidity</div>
+            <div class="panel-body dash-value" id="kasth" data-source="KastTemperature1"
+                            data-column="Humidity" data-indicator="%", data-time-target="kastht"></div>
+            <div class="panel-footer dash-time" id="kastht"></div>
+        </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Air Temp</div>
+            <div class="panel-body dash-value" id="airt" data-source="AirTemperature1"
+                            data-column="Temperature" data-indicator="C", data-time-target="airtt"></div>
+            <div class="panel-footer dash-time" id="airtt"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Air Humidity</div>
+            <div class="panel-body dash-value" id="airh" data-source="AirTemperature1"
+                            data-column="Humidity" data-indicator="%", data-time-target="airht"></div>
+            <div class="panel-footer dash-time" id="airht"></div>
+        </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Rad in-Temp</div>
+            <div class="panel-body dash-value" id="radti" data-source="RadiatorTemp1"
+                            data-column="Temperature" data-indicator="C", data-time-target="radtit"></div>
+            <div class="panel-footer dash-time" id="radtit"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Rad out-Temp</div>
+            <div class="panel-body dash-value" id="radto" data-source="RadiatorTemp1"
+                            data-column="Humidity" data-indicator="C", data-time-target="radtot"></div>
+            <div class="panel-footer dash-time" id="radtot"></div>
+        </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Hash</div>
             <div class="panel-body dash-value" id="hashAqua" data-source="EthereumMiningAqua"
                             data-column="hashrate" data-indicator="C", data-time-target="hashAquat"></div>
@@ -390,6 +473,9 @@
                             data-column="hashrate_calculated" data-indicator="C", data-time-target="hashAquaCt"></div>
             <div class="panel-footer dash-time" id="hashAquaCt"></div>
         </div>
+
+
+
     </div>
 </div>
 
