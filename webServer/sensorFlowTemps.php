@@ -62,7 +62,7 @@
                     "Smoothing": "15.00"
                 },
                 {
-                    "Name": "Out-Flow",
+                    "Name": "Out-Flow-1",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "OutFlow1",
                     "Axis": "Right",
@@ -72,7 +72,17 @@
                     "Smoothing": "15.00"
                 },
                 {
-                    "Name": "Computer",
+                    "Name": "Out-Flow-2",
+                    "Unit": "ManifoldTemp1",
+                    "Sensor": "OutFlow2",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "10.00",
+                    "Filter": "0.10",
+                    "Smoothing": "15.00"
+                },
+                {
+                    "Name": "AQUA",
                     "Unit": "SpeedfanMonitor1",
                     "Sensor": "OPT_FAN_1",
                     "Axis": "Right",
