@@ -57,11 +57,11 @@ while True:
     tnow = datetime.now()
     tInFlowBefore = adc.read_voltage(2)
     tInFlow=phobya2temp(tInFlowBefore)
-    tOutFlowBefore = adc.read_voltage(3)
-    tOutFlow=phobya2temp(tOutFlow1Before)
+    tOutFlowBefore = adc.read_voltage(1)
+    tOutFlow=phobya2temp(tOutFlowBefore)
 
     print ("In-flow", tInFlowBefore, "->", tInFlow, \
-           "Out-flow-1", tOutFlow1Before, "->", tOutFlow )
+           "Out-flow-1", tOutFlowBefore, "->", tOutFlow )
 
     cursor = cnx.cursor()
     lastValue=(tnow, tInFlow, tOutFlow)
