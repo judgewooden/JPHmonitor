@@ -145,7 +145,7 @@
             "AutoUpdate": 1,
             "UpdateInterval": 120,
             "SecondsToShow": 7200,
-            "LeftLegend": "Liters (pm)",
+            "LeftLegend": "",
             "LeftMax": 0,
             "LeftMin": 0,
             "RightLegend": "MHash/s",
@@ -164,7 +164,7 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "Hashrate",
+                    "Name": "Hashrate-AQUA",
                     "Unit": "EthereumMiningAqua",
                     "Sensor": "hashrate",
                     "Axis": "Right",
@@ -174,9 +174,9 @@
                     "Smoothing": "1.00"
                 },
                 {
-                    "Name": "Calc_Hashrate",
-                    "Unit": "EthereumMiningAqua",
-                    "Sensor": "hashrate_calculated",
+                    "Name": "Hashrate-MAD",
+                    "Unit": "EthereumMiningMAD",
+                    "Sensor": "hashrate",
                     "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "340.00",
