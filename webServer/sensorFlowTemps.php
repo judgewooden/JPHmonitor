@@ -52,7 +52,7 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "In-Flow",
+                    "Name": "Man-In",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "InFlow",
                     "Axis": "Right",
@@ -62,7 +62,7 @@
                     "Smoothing": "15.00"
                 },
                 {
-                    "Name": "Out-Flow-1",
+                    "Name": "Man-Out-1",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "OutFlow1",
                     "Axis": "Right",
@@ -72,9 +72,29 @@
                     "Smoothing": "15.00"
                 },
                 {
-                    "Name": "Out-Flow-2",
+                    "Name": "Man-Out-2",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "OutFlow2",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "10.00",
+                    "Filter": "0.10",
+                    "Smoothing": "15.00"
+                },
+                {
+                    "Name": "Rad-In",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "InFlow",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "10.00",
+                    "Filter": "0.10",
+                    "Smoothing": "15.00"
+                },
+                {
+                    "Name": "Rad-Out",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "OutFlow",
                     "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "10.00",
@@ -121,25 +141,55 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "In-Flow",
+                    "Name": "Man-In",
                     "Unit": "ManifoldTemp1",
                     "Sensor": "InFlow",
-                    "Axis": "Left",
+                    "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "15.00",
-                    "Filter": "1.00",
+                    "Filter": "1.0",
                     "Smoothing": "15.00"
                 },
                 {
-                    "Name": "Out-Flow",
+                    "Name": "Man-Out-1",
                     "Unit": "ManifoldTemp1",
-                    "Sensor": "OutFlow2",
-                    "Axis": "Left",
+                    "Sensor": "OutFlow1",
+                    "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "15.00",
-                    "Filter": "1.00",
+                    "Filter": "1.0",
                     "Smoothing": "15.00"
-                }
+                },
+                {
+                    "Name": "Man-Out-2",
+                    "Unit": "ManifoldTemp1",
+                    "Sensor": "OutFlow2",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "1.0",
+                    "Smoothing": "15.00"
+                },
+                {
+                    "Name": "Rad-In",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "InFlow",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "1.0",
+                    "Smoothing": "15.00"
+                },
+                {
+                    "Name": "Rad-Out",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "OutFlow",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "1.0",
+                    "Smoothing": "15.00"
+                },
             ]
         }
     };
@@ -170,24 +220,24 @@
             "HideRightControls": 0,
             "graphSensors": [
                 {
-                    "Name": "Flow2",
-                    "Unit": "ArduinoMonitor2",
-                    "Sensor": "Litersperminute",
-                    "Axis": "Left",
-                    "Interpolation": "linear",
-                    "Frequency": "15.00",
-                    "Filter": "0.20",
-                    "Smoothing": "30.00"
-                },
-                {
-                    "Name": "Out-Flow2",
+                    "Name": "Man-In",
                     "Unit": "ManifoldTemp1",
-                    "Sensor": "OutFlow2",
+                    "Sensor": "InFlow",
                     "Axis": "Right",
                     "Interpolation": "linear",
                     "Frequency": "15.00",
-                    "Filter": "0.00",
-                    "Smoothing": "1.00"
+                    "Filter": "0.02",
+                    "Smoothing": "30.00"
+                },
+                {
+                    "Name": "Rad-In",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "InFlow",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "0.02",
+                    "Smoothing": "30.00"
                 }
             ]
         }
