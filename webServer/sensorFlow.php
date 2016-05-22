@@ -169,7 +169,7 @@
                     "Sensor": "hashrate",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "340.00",
+                    "Frequency": "600.00",
                     "Filter": "0.00",
                     "Smoothing": "1.00"
                 },
@@ -179,7 +179,7 @@
                     "Sensor": "hashrate",
                     "Axis": "Right",
                     "Interpolation": "linear",
-                    "Frequency": "340.00",
+                    "Frequency": "600.00",
                     "Filter": "0.00",
                     "Smoothing": "1.00"
                 }
