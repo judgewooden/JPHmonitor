@@ -27,7 +27,7 @@
 
 <script>
     var source1 = {
-    "Name": "CoolRoom 2hours",
+    "Name": "Cloom Room last 2 hours",
     "Settings": {
         "AutoUpdate": 1,
         "UpdateInterval": 10,
@@ -71,8 +71,8 @@
                 "Smoothing": "1.00"
             },
             {
-                "Name": "Water-to-AQUA",
-                "Unit": "ManifoldTemp1",
+                "Name": "Rad-In",
+                "Unit": "RadiatorTemp1",
                 "Sensor": "InFlow",
                 "Axis": "Right",
                 "Interpolation": "linear",
@@ -81,19 +81,9 @@
                 "Smoothing": "1.00"
             },
             {
-                "Name": "Water-from-AQUA",
-                "Unit": "ManifoldTemp1",
+                "Name": "Rad-Out",
+                "Unit": "RadiatorTemp1",
                 "Sensor": "OutFlow1",
-                "Axis": "Right",
-                "Interpolation": "linear",
-                "Frequency": "15.00",
-                "Filter": "-1.00",
-                "Smoothing": "1.00"
-            },
-            {
-                "Name": "Water-in-AQUA",
-                "Unit": "SpeedfanMonitor1",
-                "Sensor": "OPT_FAN_1",
                 "Axis": "Right",
                 "Interpolation": "linear",
                 "Frequency": "15.00",
@@ -103,6 +93,9 @@
         ]
     }
 }
+
+
+
     var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
     var source2 = {
