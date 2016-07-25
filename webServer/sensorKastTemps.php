@@ -27,74 +27,72 @@
 
 <script>
     var source1 = {
-    "Name": "Cloom Room last 2 hours",
-    "Settings": {
-        "AutoUpdate": 1,
-        "UpdateInterval": 10,
-        "SecondsToShow": 7200,
-        "LeftLegend": "Degrees ",
-        "LeftMax": 0,
-        "LeftMin": 0,
-        "RightLegend": "Degrees (C)",
-        "RightMax": 0,
-        "RightMin": 0,
-        "Title": "Cool room - Last two hours ",
-        "Interpolation": "linear",
-        "TickLine": 1,
-        "HideDateLabel": 0,
-        "HideLegend": 0,
-        "HideXAxis": 0,
-        "HideAxisLeft": 0,
-        "HideAxisRight": 0,
-        "HideButtons": 0,
-        "HideLeftControls": 0,
-        "HideRightControls": 0,
-        "graphSensors": [
-            {
-                "Name": "Air-Inside",
-                "Unit": "KastTemperature1",
-                "Sensor": "Temperature",
-                "Axis": "Right",
-                "Interpolation": "linear",
-                "Frequency": "15.00",
-                "Filter": "-1.00",
-                "Smoothing": "1.00"
-            },
-            {
-                "Name": "Air-Outside",
-                "Unit": "AirTemperature1",
-                "Sensor": "Temperature",
-                "Axis": "Right",
-                "Interpolation": "linear",
-                "Frequency": "15.00",
-                "Filter": "-1.00",
-                "Smoothing": "1.00"
-            },
-            {
-                "Name": "Rad-In",
-                "Unit": "RadiatorTemp1",
-                "Sensor": "InFlow",
-                "Axis": "Right",
-                "Interpolation": "linear",
-                "Frequency": "15.00",
-                "Filter": "-1.00",
-                "Smoothing": "1.00"
-            },
-            {
-                "Name": "Rad-Out",
-                "Unit": "RadiatorTemp1",
-                "Sensor": "OutFlow1",
-                "Axis": "Right",
-                "Interpolation": "linear",
-                "Frequency": "15.00",
-                "Filter": "-1.00",
-                "Smoothing": "1.00"
-            }
-        ]
+        "Name": "Graph1",
+        "Settings": {
+            "AutoUpdate": 1,
+            "UpdateInterval": 10,
+            "SecondsToShow": 7200,
+            "LeftLegend": "Degrees ",
+            "LeftMax": 0,
+            "LeftMin": 0,
+            "RightLegend": "Degrees (C)",
+            "RightMax": 0,
+            "RightMin": 0,
+            "Title": "Cool room - Last two hours ",
+            "Interpolation": "linear",
+            "TickLine": 1,
+            "HideDateLabel": 0,
+            "HideLegend": 0,
+            "HideXAxis": 0,
+            "HideAxisLeft": 0,
+            "HideAxisRight": 0,
+            "HideButtons": 0,
+            "HideLeftControls": 0,
+            "HideRightControls": 0,
+            "graphSensors": [
+                {
+                    "Name": "Air-Inside",
+                    "Unit": "KastTemperature1",
+                    "Sensor": "Temperature",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
+                    "Smoothing": "1.00"
+                },
+                {
+                    "Name": "Air-Outside",
+                    "Unit": "AirTemperature1",
+                    "Sensor": "Temperature",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
+                    "Smoothing": "1.00"
+                },
+                {
+                    "Name": "Water-In",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "InFlow",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "15.00",
+                    "Filter": "-1.00",
+                    "Smoothing": "1.00"
+                },
+                {
+                    "Name": "Water-Out",
+                    "Unit": "RadiatorTemp1",
+                    "Sensor": "OutFlow",
+                    "Axis": "Right",
+                    "Interpolation": "linear",
+                    "Frequency": "5.00",
+                    "Filter": "0.00",
+                    "Smoothing": "1.00"
+                }
+            ]
+        }
     }
-}
-
-
 
     var l1 = new LineGraph({containerId: 'graph1', data: source1});
 
