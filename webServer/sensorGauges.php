@@ -295,7 +295,7 @@
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-warning dash-title">Inflow Temp</div>
+            <div class="panel-heading dash-title">Inflow Temp</div>
             <div class="panel-body dash-value" id="tem1" data-source="ManifoldTemp1"
                             data-column="InFlow" data-indicator="C" data-time-target="tem1t"></div>
             <div class="panel-footer dash-time" id="tem1t"></div>
@@ -307,7 +307,7 @@
             <div class="panel-footer dash-time" id="tem2t"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-warning dash-title">Loop 2 Temp</div>
+            <div class="panel-heading dash-title">Loop 2 Temp</div>
             <div class="panel-body dash-value" id="tem3" data-source="ManifoldTemp1"
                             data-column="OutFlow2" data-indicator="C", data-time-target="tem3t"></div>
             <div class="panel-footer dash-time" id="tem3t"></div>
