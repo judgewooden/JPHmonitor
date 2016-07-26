@@ -434,13 +434,13 @@
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Hash</div>
             <div class="panel-body dash-value" id="hashAqua" data-source="EthereumMiningAqua"
-                            data-column="hashrate" data-indicator="C" data-time-target="hashAquat"></div>
+                            data-column="hashrate" data-indicator="MH/s" data-time-target="hashAquat"></div>
             <div class="panel-footer dash-time" id="hashAquat"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
             <div class="panel-heading dash-title">Hash Calc</div>
             <div class="panel-body dash-value" id="hashAquaC" data-source="EthereumMiningAqua"
-                            data-column="hashrate_calculated" data-indicator="C" data-time-target="hashAquaCt"></div>
+                            data-column="hashrate_calculated" data-indicator="MH/s" data-time-target="hashAquaCt"></div>
             <div class="panel-footer dash-time" id="hashAquaCt"></div>
         </div>
     </div>
