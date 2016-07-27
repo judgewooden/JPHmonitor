@@ -432,16 +432,29 @@
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Hash</div>
+            <div class="panel-heading dash-title">Hash Aqua</div>
             <div class="panel-body dash-value" id="hashAqua" data-source="EthereumMiningAqua"
                             data-column="hashrate" data-indicator="MH/s" data-time-target="hashAquat"></div>
             <div class="panel-footer dash-time" id="hashAquat"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-heading dash-title">Hash Calc</div>
+            <div class="panel-heading dash-title">Hash Aqua (Calc)</div>
             <div class="panel-body dash-value" id="hashAquaC" data-source="EthereumMiningAqua"
                             data-column="hashrate_calculated" data-indicator="MH/s" data-time-target="hashAquaCt"></div>
             <div class="panel-footer dash-time" id="hashAquaCt"></div>
+        </div>
+
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Hash MAD</div>
+            <div class="panel-body dash-value" id="hashMAD" data-source="EthereumMiningMAD"
+                            data-column="hashrate" data-indicator="MH/s" data-time-target="hashMADt"></div>
+            <div class="panel-footer dash-time" id="hashMADt"></div>
+        </div>
+        <div class="panel panel-primary col-xs-1 dash-box">
+            <div class="panel-heading dash-title">Hash MAD (Calc)</div>
+            <div class="panel-body dash-value" id="hashMADC" data-source="EthereumMiningMAD"
+                            data-column="hashrate_calculated" data-indicator="MH/s" data-time-target="hashMADCt"></div>
+            <div class="panel-footer dash-time" id="hashMADCt"></div>
         </div>
     </div>
 </div>
