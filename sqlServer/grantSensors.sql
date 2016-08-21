@@ -10,20 +10,20 @@ FLUSH PRIVILEGES;
 
 DELETE from mysql.user WHERE user="SpeedfanMonitor1";
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.SpeedfanMonitor1 To 'SpeedfanMonitor1'@'192.168.8.10' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.SpeedfanMonitor1 To 'SpeedfanMonitor1'@'192.168.0.18' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.SpeedfanMonitor1 To 'SpeedfanMonitor1'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.SpeedfanMonitor1 To 'SpeedfanMonitor1'@'192.168.0.18' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
 
 DELETE from mysql.user WHERE user="kastpi";
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.KastTemperature1 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.KastTemperature1 To 'kastpi'@'192.168.0.5' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.AirTemperature1 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.AirTemperature1 To 'kastpi'@'192.168.0.5' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.RaspiTemp2 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.RaspiTemp2 To 'kastpi'@'192.168.0.5' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
-GRANT SELECT,INSERT ON Sensors.RadiatorTemp1 To 'kastpi'@'192.168.0.100' IDENTIFIED BY 'xxxxxxxxxx';
+GRANT SELECT,INSERT ON Sensors.RadiatorTemp1 To 'kastpi'@'192.168.0.5' IDENTIFIED BY 'xxxxxxxxxx';
 FLUSH PRIVILEGES;
 
 
