@@ -419,13 +419,13 @@
         </div>
 
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-warning dash-title">Rad in-Temp</div>
+            <div class="panel-heading dash-title">Rad in-Temp</div>
             <div class="panel-body dash-value" id="radti" data-source="RadiatorTemp1"
                             data-column="InFlow" data-indicator="C" data-time-target="radtit"></div>
             <div class="panel-footer dash-time" id="radtit"></div>
         </div>
         <div class="panel panel-primary col-xs-1 dash-box">
-            <div class="panel-warning dash-title">Rad out-Temp</div>
+            <div class="panel-heading dash-title">Rad out-Temp</div>
             <div class="panel-body dash-value" id="radto" data-source="RadiatorTemp1"
                             data-column="OutFlow" data-indicator="C" data-time-target="radtot"></div>
             <div class="panel-footer dash-time" id="radtot"></div>
