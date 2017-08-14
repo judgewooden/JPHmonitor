@@ -1,5 +1,5 @@
 
-# DEPRECIATED
+# DEPRECATED / OBSOLETE
 
 ## Active version https://github.com/judgewooden/multi-sensor/
 
