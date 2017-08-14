@@ -39,6 +39,7 @@ add_temp = ("INSERT INTO AirTemperature1 "
 while True:
     tnow = datetime.now()
     # 21 is the GPIO number for the pin connect
+    import Adafruit_DHT
     humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, 21)
     if humidity is None and temperature is  None:
         print ("sensors return None (retry)")

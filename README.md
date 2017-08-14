@@ -1,11 +1,13 @@
 
+# DEPRECIATED: Active version https://github.com/judgewooden/multi-sensor/
+
 JPHmonitor
 ----------
 
 Control and monitor water cooling system using raspi
 
-		- sqlServer			Create database tables
-		- webServer			Containing client views
+		- sqlServer		Create database tables
+		- webServer		Containing client views
 		- collectors		Python scripts to collect sensor data
 
 Basic Architecture:
