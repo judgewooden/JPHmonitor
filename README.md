@@ -6,9 +6,6 @@
 ___
 
 
-JPHmonitor
-----------
-
 Control and monitor water cooling system using raspi
 
 		- sqlServer		Create database tables
